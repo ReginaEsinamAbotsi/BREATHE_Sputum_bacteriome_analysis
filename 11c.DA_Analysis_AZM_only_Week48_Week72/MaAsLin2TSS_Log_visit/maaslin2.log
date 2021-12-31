@@ -1,0 +1,204 @@
+2021-12-17 19:54:38 INFO::Writing function arguments to log file
+2021-12-17 19:54:38 DEBUG::Function arguments
+2021-12-17 19:54:39 DEBUG::Output folder: ./MaAsLin2TSS_Log_visit
+2021-12-17 19:54:39 DEBUG::Min Abundance: 0.000000
+2021-12-17 19:54:39 DEBUG::Min Prevalence: 0.000000
+2021-12-17 19:54:39 DEBUG::Normalization: TSS
+2021-12-17 19:54:39 DEBUG::Transform: LOG
+2021-12-17 19:54:39 DEBUG::Analysis method: LM
+2021-12-17 19:54:39 DEBUG::Max significance: 0.050000
+2021-12-17 19:54:39 DEBUG::Random effects:
+2021-12-17 19:54:39 DEBUG::Fixed effects: visit
+2021-12-17 19:54:39 DEBUG::Correction method: BH
+2021-12-17 19:54:39 DEBUG::Standardize: FALSE
+2021-12-17 19:54:39 DEBUG::Cores: 1
+2021-12-17 19:54:39 INFO::Verifying options selected are valid
+2021-12-17 19:54:39 INFO::Determining format of input files
+2021-12-17 19:54:39 INFO::Input format is data samples as columns and metadata samples as rows
+2021-12-17 19:54:39 DEBUG::Transformed data so samples are rows
+2021-12-17 19:54:39 DEBUG::A total of 232 samples were found in both the data and metadata
+2021-12-17 19:54:39 DEBUG::Reordering data/metadata to use same sample ordering
+2021-12-17 19:54:39 INFO::Formula for fixed effects: expr ~  visit
+2021-12-17 19:54:39 INFO::Filter data based on min abundance and min prevalence
+2021-12-17 19:54:39 INFO::Total samples in data: 232
+2021-12-17 19:54:39 INFO::Min samples required with min abundance for a feature not to be filtered: 0.000000
+2021-12-17 19:54:39 INFO::Total filtered features: 0
+2021-12-17 19:54:39 INFO::Filtered feature names from abundance and prevalence filtering:
+2021-12-17 19:54:39 INFO::Running selected normalization method: TSS
+2021-12-17 19:54:39 INFO::Total filtered features with variance filtering: 0
+2021-12-17 19:54:39 INFO::Filtered feature names from variance filtering:
+2021-12-17 19:54:39 INFO::Bypass z-score application to metadata
+2021-12-17 19:54:39 INFO::Running selected transform method: LOG
+2021-12-17 19:54:39 INFO::Running selected analysis method: LM
+2021-12-17 19:54:39 INFO::Fitting model to feature number 1, Neisseria
+2021-12-17 19:54:39 INFO::Fitting model to feature number 2, Streptococcus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 3, Haemophilus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 4, Prevotella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 5, Moraxella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 6, Veillonella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 7, Fusobacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 8, Porphyromonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 9, Lautropia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 10, Actinobacillus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 11, Gemella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 12, Alloprevotella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 13, Leptotrichia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 14, Rothia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 15, Aggregatibacter
+2021-12-17 19:54:39 INFO::Fitting model to feature number 16, Granulicatella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 17, Escherichia.Shigella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 18, ASV_52
+2021-12-17 19:54:39 INFO::Fitting model to feature number 19, Actinomyces
+2021-12-17 19:54:39 INFO::Fitting model to feature number 20, Pseudomonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 21, ASV_62
+2021-12-17 19:54:39 INFO::Fitting model to feature number 22, Campylobacter
+2021-12-17 19:54:39 INFO::Fitting model to feature number 23, Bergeyella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 24, ASV_68
+2021-12-17 19:54:39 INFO::Fitting model to feature number 25, ASV_77
+2021-12-17 19:54:39 INFO::Fitting model to feature number 26, Enterococcus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 27, Dolosigranulum
+2021-12-17 19:54:39 INFO::Fitting model to feature number 28, Corynebacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 29, Streptobacillus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 30, Oribacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 31, ASV_112
+2021-12-17 19:54:39 INFO::Fitting model to feature number 32, Stomatobaculum
+2021-12-17 19:54:39 INFO::Fitting model to feature number 33, Lachnoanaerobaculum
+2021-12-17 19:54:39 INFO::Fitting model to feature number 34, ASV_120
+2021-12-17 19:54:39 INFO::Fitting model to feature number 35, ASV_126
+2021-12-17 19:54:39 INFO::Fitting model to feature number 36, Mannheimia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 37, TM7x
+2021-12-17 19:54:39 INFO::Fitting model to feature number 38, Tropheryma
+2021-12-17 19:54:39 INFO::Fitting model to feature number 39, Solobacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 40, Peptostreptococcus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 41, Abiotrophia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 42, Oceanivirga
+2021-12-17 19:54:39 INFO::Fitting model to feature number 43, ASV_157
+2021-12-17 19:54:39 INFO::Fitting model to feature number 44, ASV_163
+2021-12-17 19:54:39 INFO::Fitting model to feature number 45, ASV_180
+2021-12-17 19:54:39 INFO::Fitting model to feature number 46, ASV_182
+2021-12-17 19:54:39 INFO::Fitting model to feature number 47, ASV_187
+2021-12-17 19:54:39 INFO::Fitting model to feature number 48, Treponema
+2021-12-17 19:54:39 INFO::Fitting model to feature number 49, Eikenella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 50, ASV_203
+2021-12-17 19:54:39 INFO::Fitting model to feature number 51, ASV_205
+2021-12-17 19:54:39 INFO::Fitting model to feature number 52, ASV_209
+2021-12-17 19:54:39 INFO::Fitting model to feature number 53, F0058
+2021-12-17 19:54:39 INFO::Fitting model to feature number 54, ASV_214
+2021-12-17 19:54:39 INFO::Fitting model to feature number 55, ASV_216
+2021-12-17 19:54:39 INFO::Fitting model to feature number 56, Conchiformibius
+2021-12-17 19:54:39 INFO::Fitting model to feature number 57, Hydrogenophaga
+2021-12-17 19:54:39 INFO::Fitting model to feature number 58, Catonella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 59, Candidatus_Saccharimonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 60, ASV_239
+2021-12-17 19:54:39 INFO::Fitting model to feature number 61, Mogibacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 62, Atopobium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 63, Selenomonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 64, ASV_260
+2021-12-17 19:54:39 INFO::Fitting model to feature number 65, Cardiobacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 66, ASV_280
+2021-12-17 19:54:39 INFO::Fitting model to feature number 67, ASV_283
+2021-12-17 19:54:39 INFO::Fitting model to feature number 68, Comamonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 69, ASV_286
+2021-12-17 19:54:39 INFO::Fitting model to feature number 70, Capnocytophaga
+2021-12-17 19:54:39 INFO::Fitting model to feature number 71, Kingella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 72, Butyrivibrio
+2021-12-17 19:54:39 INFO::Fitting model to feature number 73, ASV_307
+2021-12-17 19:54:39 INFO::Fitting model to feature number 74, Mycoplasma
+2021-12-17 19:54:39 INFO::Fitting model to feature number 75, Tannerella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 76, Parvimonas
+2021-12-17 19:54:39 INFO::Fitting model to feature number 77, ASV_329
+2021-12-17 19:54:39 INFO::Fitting model to feature number 78, ASV_331
+2021-12-17 19:54:39 INFO::Fitting model to feature number 79, Filifactor
+2021-12-17 19:54:39 INFO::Fitting model to feature number 80, Dialister
+2021-12-17 19:54:39 INFO::Fitting model to feature number 81, ASV_339
+2021-12-17 19:54:39 INFO::Fitting model to feature number 82, Peptococcus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 83, Staphylococcus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 84, Hyphomicrobium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 85, ASV_383
+2021-12-17 19:54:39 INFO::Fitting model to feature number 86, Psychrobacter
+2021-12-17 19:54:39 INFO::Fitting model to feature number 87, ASV_409
+2021-12-17 19:54:39 INFO::Fitting model to feature number 88, F0332
+2021-12-17 19:54:39 INFO::Fitting model to feature number 89, ASV_421
+2021-12-17 19:54:39 INFO::Fitting model to feature number 90, ASV_426
+2021-12-17 19:54:39 INFO::Fitting model to feature number 91, ASV_428
+2021-12-17 19:54:39 INFO::Fitting model to feature number 92, Peptoanaerobacter
+2021-12-17 19:54:39 INFO::Fitting model to feature number 93, Delftia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 94, Sphingopyxis
+2021-12-17 19:54:39 INFO::Fitting model to feature number 95, Lentimicrobium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 96, ASV_461
+2021-12-17 19:54:39 INFO::Fitting model to feature number 97, ASV_472
+2021-12-17 19:54:39 INFO::Fitting model to feature number 98, Amnipila
+2021-12-17 19:54:39 INFO::Fitting model to feature number 99, Bulleidia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 100, Anaeroglobus
+2021-12-17 19:54:39 INFO::Fitting model to feature number 101, ASV_508
+2021-12-17 19:54:39 INFO::Fitting model to feature number 102, ASV_525
+2021-12-17 19:54:39 INFO::Fitting model to feature number 103, Sneathia
+2021-12-17 19:54:39 INFO::Fitting model to feature number 104, ASV_540
+2021-12-17 19:54:39 INFO::Fitting model to feature number 105, Centipeda
+2021-12-17 19:54:39 INFO::Fitting model to feature number 106, ASV_561
+2021-12-17 19:54:39 INFO::Fitting model to feature number 107, Carnobacterium
+2021-12-17 19:54:39 INFO::Fitting model to feature number 108, ASV_586
+2021-12-17 19:54:39 INFO::Fitting model to feature number 109, ASV_591
+2021-12-17 19:54:39 INFO::Fitting model to feature number 110, ASV_596
+2021-12-17 19:54:39 INFO::Fitting model to feature number 111, Johnsonella
+2021-12-17 19:54:39 INFO::Fitting model to feature number 112, ASV_639
+2021-12-17 19:54:39 INFO::Fitting model to feature number 113, ASV_644
+2021-12-17 19:54:39 INFO::Fitting model to feature number 114, ASV_653
+2021-12-17 19:54:39 INFO::Fitting model to feature number 115, Pantoea
+2021-12-17 19:54:39 INFO::Fitting model to feature number 116, Rodentibacter
+2021-12-17 19:54:39 INFO::Fitting model to feature number 117, ASV_682
+2021-12-17 19:54:39 INFO::Fitting model to feature number 118, ASV_689
+2021-12-17 19:54:40 INFO::Fitting model to feature number 119, Shuttleworthia
+2021-12-17 19:54:40 INFO::Fitting model to feature number 120, Family_XIII_UCG.001
+2021-12-17 19:54:40 INFO::Fitting model to feature number 121, Alysiella
+2021-12-17 19:54:40 INFO::Fitting model to feature number 122, ASV_767
+2021-12-17 19:54:40 INFO::Fitting model to feature number 123, ASV_817
+2021-12-17 19:54:40 INFO::Fitting model to feature number 124, ASV_821
+2021-12-17 19:54:40 INFO::Fitting model to feature number 125, Lactobacillus
+2021-12-17 19:54:40 INFO::Fitting model to feature number 126, ASV_854
+2021-12-17 19:54:40 INFO::Fitting model to feature number 127, ASV_860
+2021-12-17 19:54:40 INFO::Fitting model to feature number 128, ASV_894
+2021-12-17 19:54:40 INFO::Fitting model to feature number 129, Olsenella
+2021-12-17 19:54:40 INFO::Fitting model to feature number 130, Scardovia
+2021-12-17 19:54:40 INFO::Fitting model to feature number 131, Acinetobacter
+2021-12-17 19:54:40 INFO::Fitting model to feature number 132, Prevotellaceae_YAB2003_group
+2021-12-17 19:54:40 INFO::Fitting model to feature number 133, ASV_964
+2021-12-17 19:54:40 INFO::Fitting model to feature number 134, Mobiluncus
+2021-12-17 19:54:40 INFO::Fitting model to feature number 135, ASV_1004
+2021-12-17 19:54:40 INFO::Fitting model to feature number 136, ASV_1054
+2021-12-17 19:54:40 INFO::Fitting model to feature number 137, ASV_1121
+2021-12-17 19:54:40 INFO::Fitting model to feature number 138, ASV_1135
+2021-12-17 19:54:40 INFO::Fitting model to feature number 139, ASV_1235
+2021-12-17 19:54:40 INFO::Fitting model to feature number 140, ASV_1272
+2021-12-17 19:54:40 INFO::Fitting model to feature number 141, ASV_1306
+2021-12-17 19:54:40 INFO::Fitting model to feature number 142, ASV_1325
+2021-12-17 19:54:40 INFO::Fitting model to feature number 143, ASV_1343
+2021-12-17 19:54:40 INFO::Fitting model to feature number 144, ASV_1398
+2021-12-17 19:54:40 INFO::Fitting model to feature number 145, ASV_1415
+2021-12-17 19:54:40 INFO::Fitting model to feature number 146, Desulfobulbus
+2021-12-17 19:54:40 INFO::Fitting model to feature number 147, Brevundimonas
+2021-12-17 19:54:40 INFO::Fitting model to feature number 148, Weissella
+2021-12-17 19:54:40 INFO::Fitting model to feature number 149, Leuconostoc
+2021-12-17 19:54:40 INFO::Fitting model to feature number 150, ASV_1895
+2021-12-17 19:54:40 INFO::Fitting model to feature number 151, Helicobacter
+2021-12-17 19:54:40 INFO::Fitting model to feature number 152, Fretibacterium
+2021-12-17 19:54:40 INFO::Counting total values for each feature
+2021-12-17 19:54:40 INFO::Writing residuals to file ./MaAsLin2TSS_Log_visit/residuals.rds
+2021-12-17 19:54:40 INFO::Writing all results to file (ordered by increasing q-values): ./MaAsLin2TSS_Log_visit/all_results.tsv
+2021-12-17 19:54:40 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.050000 ) to file (ordered by increasing q-values): ./MaAsLin2TSS_Log_visit/significant_results.tsv
+2021-12-17 19:54:40 INFO::Writing heatmap of significant results to file: ./MaAsLin2TSS_Log_visit/heatmap.pdf
+2021-12-17 19:54:40 INFO::Writing association plots (one for each significant association) to output folder: ./MaAsLin2TSS_Log_visit
+2021-12-17 19:54:40 INFO::Plotting associations from most to least significant, grouped by metadata
+2021-12-17 19:54:40 INFO::Plotting data for metadata number 1, visit
+2021-12-17 19:54:40 INFO::Creating boxplot for categorical data, visit vs Aggregatibacter
+2021-12-17 19:54:40 INFO::Creating boxplot for categorical data, visit vs ASV_209
+2021-12-17 19:54:41 INFO::Creating boxplot for categorical data, visit vs Moraxella
+2021-12-17 19:54:41 INFO::Creating boxplot for categorical data, visit vs ASV_205
+2021-12-17 19:54:42 INFO::Creating boxplot for categorical data, visit vs Lautropia
+2021-12-17 19:54:42 INFO::Creating boxplot for categorical data, visit vs Treponema
+2021-12-17 19:54:43 INFO::Creating boxplot for categorical data, visit vs ASV_62
+2021-12-17 19:54:43 INFO::Creating boxplot for categorical data, visit vs Oribacterium
+2021-12-17 19:54:43 INFO::Creating boxplot for categorical data, visit vs Streptobacillus
+2021-12-17 19:54:44 INFO::Creating boxplot for categorical data, visit vs ASV_540
+2021-12-17 19:54:44 INFO::Creating boxplot for categorical data, visit vs Rothia
+2021-12-17 19:54:45 INFO::Creating boxplot for categorical data, visit vs ASV_461
