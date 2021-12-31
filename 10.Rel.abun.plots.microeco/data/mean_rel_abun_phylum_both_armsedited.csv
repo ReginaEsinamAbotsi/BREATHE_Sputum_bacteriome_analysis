@@ -1,0 +1,37 @@
+,Phylum,Sample,Abundance,Trial_arm,Upper,Lower
+1,Proteobacteria,Week 48,54.63129748,Placebo,58.71,50.56
+2,Proteobacteria,Week 72,53.56896416,Placebo,58.23,48.89
+3,Proteobacteria,Baseline,51.19964644,Placebo,54.88,47.5
+4,Firmicutes,Baseline,23.84218405,Placebo,26.02,21.68
+5,Firmicutes,Week 48,22.243737,Placebo,24.61,19.87
+6,Firmicutes,Week 72,21.99503738,Placebo,25.12,18.87
+7,Bacteroidota,Baseline,15.87889343,Placebo,17.93,13.83
+8,Bacteroidota,Week 72,15.34756541,Placebo,17.83,12.88
+9,Bacteroidota,Week 48,13.42262941,Placebo,15.39,11.51
+10,Fusobacteriota,Week 72,6.092592629,Placebo,7.14,5.04
+11,Fusobacteriota,Week 48,5.815203759,Placebo,6.95,4.66
+12,Fusobacteriota,Baseline,5.5691532,Placebo,6.47,4.66
+13,Actinobacteriota,Baseline,2.68773182,Placebo,3.12,2.26
+14,Actinobacteriota,Week 48,2.539304606,Placebo,3.01,2.06
+15,Actinobacteriota,Week 72,2.272270342,Placebo,2.75,1.8
+16,Others,Week 48,1.347827751,Placebo,,
+17,Others,Baseline,0.822391055,Placebo,,
+18,Others,Week 72,0.723570076,Placebo,,
+19,Proteobacteria,Week 72,53.11482063,AZM,56.93,49.3
+20,Proteobacteria,Baseline,51.77733359,AZM,55.24,48.24
+21,Proteobacteria,Week 48,44.9846797,AZM,48.3,41.7
+22,Firmicutes,Week 48,29.35009435,AZM,31.37,27.3
+23,Firmicutes,Week 72,23.31026787,AZM,25.74,20.89
+24,Firmicutes,Baseline,23.26001461,AZM,25.06,21.31
+25,Bacteroidota,Baseline,16.08178132,AZM,18.05,14.11
+26,Bacteroidota,Week 48,15.96000905,AZM,17.79,14.11
+27,Bacteroidota,Week 72,14.13186555,AZM,16.13,12.12
+28,Fusobacteriota,Baseline,5.953398,AZM,7,4.88
+29,Fusobacteriota,Week 72,5.512985109,AZM,6.53,4.49
+30,Fusobacteriota,Week 48,4.513104548,AZM,5.43,3.59
+31,Actinobacteriota,Week 48,4.470366946,AZM,5.13,3.8
+32,Actinobacteriota,Week 72,3.150504669,AZM,4.09,2.21
+33,Actinobacteriota,Baseline,2.222873538,AZM,2.8,1.86
+34,Others,Week 72,0.718164702,AZM,,
+35,Others,Week 48,0.717360085,AZM,,
+36,Others,Baseline,0.704598946,AZM,,

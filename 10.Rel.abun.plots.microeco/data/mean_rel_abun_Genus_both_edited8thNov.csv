@@ -1,0 +1,61 @@
+﻿Genus,Sample,Abundance,Trial_arm,Upper,Lower
+Alloprevotella,Baseline,3.205548305,AZM,3.73,2.68
+Alloprevotella,Week 48,2.277304158,AZM,2.72,1.83
+Alloprevotella,Week 72,2.571238696,AZM,3.11,2.03
+Fusobacterium,Baseline,3.388329581,AZM,4.19,2.59
+Fusobacterium,Week 48,2.161324324,AZM,2.56,1.76
+Fusobacterium,Week 72,3.236679074,AZM,3.97,2.51
+Haemophilus,Baseline,25.45795559,AZM,29.52,21.41
+Haemophilus,Week 48,17.49423329,AZM,20.9,14.1
+Haemophilus,Week 72,22.97986938,AZM,27.18,18.79
+Leptotrichia,Baseline,2.409454891,AZM,3.11,1.71
+Leptotrichia,Week 48,2.161242212,AZM,2.92,1.4
+Leptotrichia,Week 72,2.182632583,AZM,2.84,1.52
+Moraxella,Week 48,0.932903495,AZM,2.07,-0.2
+Moraxella,Baseline,2.171613404,AZM,3.42,0.93
+Moraxella,Week 72,1.019067536,AZM,1.72,0.31
+Neisseria,Baseline,19.55066573,AZM,21.96,17.16
+Neisseria,Week 48,20.46031315,AZM,22.78,18.16
+Neisseria,Week 72,23.23703785,AZM,26.16,20.33
+Porphyromonas,Baseline,2.974404941,AZM,3.65,2.3
+Porphyromonas,Week 48,2.980787129,AZM,3.48,2.48
+Porphyromonas,Week 72,2.647135847,AZM,3.23,2.07
+Prevotella,Baseline,9.268470061,AZM,10.73,7.87
+Prevotella,Week 48,9.995825927,AZM,11.5,8.51
+Prevotella,Week 72,8.180663277,AZM,9.81,6.55
+Streptococcus,Baseline,15.53419455,AZM,17.12,13.99
+Streptococcus,Week 48,19.65011765,AZM,21.31,18.02
+Streptococcus,Week 72,15.64557723,AZM,17.73,13.57
+Veillonella,Baseline,3.723413011,AZM,4.24,3.21
+Veillonella,Week 48,5.370971915,AZM,6.05,4.71
+Veillonella,Week 72,3.682074156,AZM,4.26,3.11
+Alloprevotella,Baseline,2.821683237,Placebo,3.3,2.35
+Alloprevotella,Week 48,1.967287058,Placebo,2.35,1.58
+Alloprevotella,Week 72,2.72232854,Placebo,3.39,2.05
+Fusobacterium,Baseline,3.134213217,Placebo,3.84,2.43
+Fusobacterium,Week 48,3.52721127,Placebo,4.37,2.69
+Fusobacterium,Week 72,3.844694193,Placebo,4.7,2.99
+Haemophilus,Baseline,25.55515857,Placebo,29.76,21.46
+Haemophilus,Week 48,28.43910519,Placebo,33.26,23.61
+Haemophilus,Week 72,27.18726905,Placebo,32.47,21.91
+Leptotrichia,Baseline,2.196536513,Placebo,2.73,1.67
+Leptotrichia,Week 48,1.999233681,Placebo,2.6,1.4
+Leptotrichia,Week 72,1.961943112,Placebo,2.57,1.36
+Moraxella,Baseline,2.839321493,Placebo,4.21,1.47
+Moraxella,Week 48,4.059902184,Placebo,6.46,1.65
+Moraxella,Week 72,0.890405944,Placebo,1.39,0.39
+Neisseria,Baseline,18.04329163,Placebo,20.34,15.76
+Neisseria,Week 48,17.72928141,Placebo,20.16,15.29
+Neisseria,Week 72,20.78905043,Placebo,24.2,17.38
+Porphyromonas,Baseline,2.389226197,Placebo,3.29,1.49
+Porphyromonas,Week 48,2.886840259,Placebo,3.82,1.95
+Porphyromonas,Week 72,3.506108296,Placebo,4.96,2.05
+Prevotella,Baseline,9.757893136,Placebo,11.39,8.17
+Prevotella,Week 48,8.087683548,Placebo,9.57,6.61
+Prevotella,Week 72,8.626099167,Placebo,10.46,6.79
+Streptococcus,Baseline,15.95018391,Placebo,17.69,14.26
+Streptococcus,Week 48,15.331405,Placebo,17.13,13.53
+Streptococcus,Week 72,15.04951914,Placebo,17.86,12.24
+Veillonella,Baseline,4.083544911,Placebo,4.75,3.44
+Veillonella,Week 48,3.376255232,Placebo,4,2.75
+Veillonella,Week 72,3.523228285,Placebo,4.33,2.72

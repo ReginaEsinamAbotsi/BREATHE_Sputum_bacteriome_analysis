@@ -1,0 +1,1465 @@
+---
+title: "Genus and Phylum barplots and mean abundances line plot"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+```{r}
+library(microeco)
+library(file2meco)
+library(phyloseq)
+library(ggplot2)
+library(tidyverse)
+library(GUniFrac)
+library(magrittr)
+#install.packages("Rmisc")
+library(Rmisc)
+set.seed(123)
+```
+
+```{r}
+#Themes
+my16stheme <- theme_bw()+ 
+  theme(plot.title = element_text(family ="Helvetica", face = "bold", size = (25)), 
+        panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        strip.text= element_text(size=20, family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",family ="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (18) ), 
+        axis.title = element_text(family = "Helvetica", face = "bold", size = (20), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)))
+```
+
+```{r}
+ mytheme<-theme_classic()+
+  theme(panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        strip.text= element_text(size=20,family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",
+                                    family="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",
+                                   family = "Helvetica",size = (18) ), 
+        axis.text= element_text(size=18,family ="Helvetica", face="bold",color="black"),
+        axis.title= element_text(size=20,family ="Helvetica", face="bold",color="black"))
+```
+
+
+
+```{r}
+ mythemeq<-theme_bw()+
+  theme(panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        #axis.text.x=element_blank(),
+        #axis.ticks.x=element_blank(),
+        strip.text= element_text(size=20,family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",
+                                    family="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",
+                                   family = "Helvetica",size = (18) ), 
+        axis.text= element_text(size=18,family ="Helvetica", face="bold",color="black"),
+        axis.title= element_text(size=20,family ="Helvetica", face="bold",color="black"))
+```
+
+```{r, Data import, subsetting, merging and 0.5% prevalence filtering}
+# Read in phyloseq object
+ps <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+ps
+
+
+#Subset the data to trial only
+trial <- subset_samples(ps, group=="main") 
+
+
+
+#Subsets of AZM and Placebo at each visit
+t0 <-subset_samples(trial, visit=="Baseline")#304
+t0
+t12 <-subset_samples(trial, visit=="Week 48")#304
+t12
+t18 <-subset_samples(trial, visit=="Week 72")#304
+t18
+
+#Subsets of only AZM
+
+AZM <-subset_samples(trial, trial_arm=="AZM")#441
+AZM#441
+
+#---AZM at Baseline and Week 48----
+azm012<-subset_samples(AZM, visit!="Week 72")#318
+azm012
+
+#Selecting subset with samples at both Baseline and Week 48
+azm012p<-subset_samples(azm012, visit012=="yes")#292
+azm012p
+
+
+#---AZM at 12 and Week 72---
+azm1218<-subset_samples(AZM, visit!="Baseline")#318
+azm1218
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm1218p<-subset_samples(azm1218, visit1218=="yes")#292
+azm1218p
+
+
+
+#---AZM at Baseline and Week 72---
+azm018<-subset_samples(AZM, visit!="Week 48")#318
+azm018
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm018p<-subset_samples(azm018, visit018=="yes")#292
+azm018p
+
+#Subsets of only Placebo
+
+Placebo <-subset_samples(trial, trial_arm=="Placebo")#441
+Placebo#441
+
+#---Placebo at Baseline and Week 48----
+Placebo012<-subset_samples(Placebo, visit!="Week 72")#318
+Placebo012
+
+#Selecting subset with samples at both Baseline and Week 48s
+Placebo012p<-subset_samples(Placebo012, visit012=="yes")#292
+Placebo012p
+
+
+#---Placebo at 12 and Week 72---
+Placebo1218<-subset_samples(Placebo, visit!="Baseline")#318
+Placebo1218
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo1218p<-subset_samples(Placebo1218, visit1218=="yes")#292
+Placebo1218p
+
+
+#---Placebo at Baseline and Week 72---
+Placebo018<-subset_samples(Placebo, visit!="Week 48")#318
+Placebo018
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo018p<-subset_samples(Placebo018, visit018=="yes")#292
+Placebo018p
+
+
+```
+
+
+
+
+
+
+```{r}
+# merge taxa to the Genus rank level
+
+t0g<-tax_glom(t0, taxrank = rank_names(t0)[6])
+taxa_names(t0g)<-as.character(tax_table(t0g)[,6])
+OTU.t0g<-otu_table(t0g)
+mean(OTU.t0g==0)
+t0g
+
+
+t12g<-tax_glom(t12, taxrank = rank_names(t12)[6])
+taxa_names(t12g)<-as.character(tax_table(t12g)[,6])
+OTU.t12g<-otu_table(t12g)
+mean(OTU.t12g==0)
+t12g
+
+
+t18g<-tax_glom(t18, taxrank = rank_names(t18)[6])
+taxa_names(t18g)<-as.character(tax_table(t18g)[,6])
+OTU.t18g<-otu_table(t18g)
+mean(OTU.t18g==0)
+t18g
+
+azm012pg<-tax_glom(azm012p, taxrank = rank_names(azm012p)[6])
+taxa_names(azm012pg)<-as.character(tax_table(azm012pg)[,6])
+OTU.azm012pg<-otu_table(azm012pg)
+mean(OTU.azm012pg==0)
+azm012pg
+
+
+azm018pg<-tax_glom(azm018p, taxrank = rank_names(azm018p)[6])
+taxa_names(azm018pg)<-as.character(tax_table(azm018pg)[,6])
+OTU.azm018pg<-otu_table(azm018pg)
+mean(OTU.azm018pg==0)
+azm018pg
+
+
+azm1218pg<-tax_glom(azm1218p, taxrank = rank_names(azm1218p)[6])
+taxa_names(azm1218pg)<-as.character(tax_table(azm1218pg)[,6])
+OTU.azm1218pg<-otu_table(azm1218pg)
+mean(OTU.azm1218pg==0)
+azm1218pg
+
+
+Placebo012pg<-tax_glom(Placebo012p, taxrank = rank_names(Placebo012p)[6])
+taxa_names(Placebo012pg)<-as.character(tax_table(Placebo012pg)[,6])
+OTU.Placebo012pg<-otu_table(Placebo012pg)
+mean(OTU.Placebo012pg==0)
+Placebo012pg
+
+
+Placebo1218pg<-tax_glom(Placebo1218p, taxrank = rank_names(Placebo1218p)[6])
+taxa_names(Placebo1218pg)<-as.character(tax_table(Placebo1218pg)[,6])
+OTU.Placebo1218pg<-otu_table(Placebo1218pg)
+mean(OTU.Placebo1218pg==0)
+Placebo1218pg
+
+
+Placebo018pg<-tax_glom(Placebo018p, taxrank = rank_names(Placebo018p)[6])
+taxa_names(Placebo018pg)<-as.character(tax_table(Placebo018pg)[,6])
+OTU.Placebo018pg<-otu_table(Placebo018pg)
+mean(OTU.Placebo018pg==0)
+Placebo018pg
+
+
+trialg<-tax_glom(trial, taxrank = rank_names(trial)[6])
+taxa_names(trialg)<-as.character(tax_table(trialg)[,6])
+trialg
+
+
+AZMg<-tax_glom(AZM, taxrank = rank_names(AZM)[6])
+taxa_names(AZMg)<-as.character(tax_table(AZMg)[,6])
+AZMg
+
+
+
+Placebog<-tax_glom(Placebo, taxrank = rank_names(Placebo)[6])
+taxa_names(Placebog)<-as.character(tax_table(Placebog)[,6])
+Placebog
+
+
+
+```
+
+
+
+```{r, prevalence filtering}
+#Filtering
+t0
+t0g
+t0fg <- filter_taxa(t0g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t0fg
+
+
+t12
+t12g
+t12fg <- filter_taxa(t12g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fg
+
+t18
+t18g
+t18fg <- filter_taxa(t18g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t18fg
+
+
+
+azm012p
+azm012pg
+azm012pfg <- filter_taxa(azm012pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm012pfg
+
+
+azm018p
+azm018pg
+azm018pfg <- filter_taxa(azm018pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm018pfg
+
+
+azm1218p
+azm1218pg
+azm1218pfg <- filter_taxa(azm1218pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm1218pfg
+
+
+Placebo012p
+Placebo012pg
+Placebo012pfg <- filter_taxa(Placebo012pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo012pfg
+
+
+Placebo018p
+Placebo018pg
+Placebo018pfg <- filter_taxa(Placebo018pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo018pfg
+
+
+Placebo1218p
+Placebo1218pg
+Placebo1218pfg <- filter_taxa(Placebo1218pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo1218pfg
+
+
+trial
+trialg
+trialfg <- filter_taxa(trialg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+trialfg
+
+AZM
+AZMg
+AZMfg <- filter_taxa(AZMg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+AZMfg
+
+Placebo
+Placebog
+Placebofg <- filter_taxa(Placebog, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebofg
+```
+
+
+```{r}
+# merge taxa to the Phylum rank level
+
+
+trialphy<-tax_glom(trial, taxrank = rank_names(trial)[2])
+taxa_names(trialphy)<-as.character(tax_table(trialphy)[,2])
+OTU.trialphy<-otu_table(trialphy)
+mean(OTU.trialphy==0)
+trialphy
+
+AZMphy<-tax_glom(AZM, taxrank = rank_names(AZM)[2])
+taxa_names(AZMphy)<-as.character(tax_table(AZMphy)[,2])
+OTU.AZMphy<-otu_table(AZMphy)
+mean(OTU.AZMphy==0)
+AZMphy
+
+
+Placebophy<-tax_glom(Placebo, taxrank = rank_names(Placebo)[2])
+taxa_names(Placebophy)<-as.character(tax_table(Placebophy)[,2])
+OTU.Placebophy<-otu_table(Placebophy)
+mean(OTU.Placebophy==0)
+Placebophy
+
+t0phy<-tax_glom(t0, taxrank = rank_names(t0)[2])
+taxa_names(t0phy)<-as.character(tax_table(t0phy)[,2])
+OTU.t0phy<-otu_table(t0phy)
+mean(OTU.t0phy==0)
+t0phy
+
+
+t12phy<-tax_glom(t12, taxrank = rank_names(t12)[2])
+taxa_names(t12phy)<-as.character(tax_table(t12phy)[,2])
+OTU.t12phy<-otu_table(t12phy)
+mean(OTU.t12phy==0)
+t12phy
+
+
+t18phy<-tax_glom(t18, taxrank = rank_names(t18)[2])
+taxa_names(t18phy)<-as.character(tax_table(t18phy)[,2])
+OTU.t18phy<-otu_table(t18phy)
+mean(OTU.t18phy==0)
+t18phy
+
+azm012pphy<-tax_glom(azm012p, taxrank = rank_names(azm012p)[2])
+taxa_names(azm012pphy)<-as.character(tax_table(azm012pphy)[,2])
+OTU.azm012pphy<-otu_table(azm012pphy)
+mean(OTU.azm012pphy==0)
+azm012pphy
+
+
+azm018pphy<-tax_glom(azm018p, taxrank = rank_names(azm018p)[2])
+taxa_names(azm018pphy)<-as.character(tax_table(azm018pphy)[,2])
+OTU.azm018pphy<-otu_table(azm018pphy)
+mean(OTU.azm018pphy==0)
+azm018pphy
+
+
+azm1218pphy<-tax_glom(azm1218p, taxrank = rank_names(azm1218p)[2])
+taxa_names(azm1218pphy)<-as.character(tax_table(azm1218pphy)[,2])
+OTU.azm1218pphy<-otu_table(azm1218pphy)
+mean(OTU.azm1218pphy==0)
+azm1218pphy
+
+
+Placebo012pphy<-tax_glom(Placebo012p, taxrank = rank_names(Placebo012p)[2])
+taxa_names(Placebo012pphy)<-as.character(tax_table(Placebo012pphy)[,2])
+OTU.Placebo012pphy<-otu_table(Placebo012pphy)
+mean(OTU.Placebo012pphy==0)
+Placebo012pphy
+
+
+Placebo1218pphy<-tax_glom(Placebo1218p, taxrank = rank_names(Placebo1218p)[2])
+taxa_names(Placebo1218pphy)<-as.character(tax_table(Placebo1218pphy)[,2])
+OTU.Placebo1218pphy<-otu_table(Placebo1218pphy)
+mean(OTU.Placebo1218pphy==0)
+Placebo1218pphy
+
+
+Placebo018pphy<-tax_glom(Placebo018p, taxrank = rank_names(Placebo018p)[2])
+taxa_names(Placebo018pphy)<-as.character(tax_table(Placebo018pphy)[,2])
+OTU.Placebo018pphy<-otu_table(Placebo018pphy)
+mean(OTU.Placebo018pphy==0)
+Placebo018pphy
+
+
+
+
+
+#Filtering
+t0
+t0phy
+t0fphy <- filter_taxa(t0phy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t0fphy
+
+
+t12
+t12phy
+t12fphy <- filter_taxa(t12phy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fphy
+
+t18
+t18phy
+t18fphy <- filter_taxa(t18phy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t18fphy
+
+
+
+azm012p
+azm012pphy
+azm012pfphy <- filter_taxa(azm012pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm012pfphy
+
+
+azm018p
+azm018pphy
+azm018pfphy <- filter_taxa(azm018pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm018pfphy
+
+
+azm1218p
+azm1218pphy
+azm1218pfphy <- filter_taxa(azm1218pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm1218pfphy
+
+
+Placebo012p
+Placebo012pphy
+Placebo012pfphy <- filter_taxa(Placebo012pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo012pfphy
+
+
+Placebo018p
+Placebo018pphy
+Placebo018pfphy <- filter_taxa(Placebo018pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo018pfphy
+
+
+Placebo1218p
+Placebo1218pphy
+Placebo1218pfphy <- filter_taxa(Placebo1218pphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo1218pfphy
+
+#Filtering
+trial
+trialphy
+trialfphy <- filter_taxa(trialphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+trialfphy
+
+
+#Filtering
+AZM
+AZMphy
+AZMfphy <- filter_taxa(AZMphy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+AZMfphy
+
+
+#Filtering
+Placebo
+Placebophy
+Placebofphy <- filter_taxa(Placebophy, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebofphy
+
+```
+
+
+
+```{r}
+# from phyloseq to microtable object_trial
+dat_trial <- phyloseq2meco(trialfg)
+dat_trial
+
+# from phyloseq to microtable object
+dat_t0 <- phyloseq2meco(t0fg)
+dat_t0
+
+# # from phyloseq to microtable object
+# dat_t0az <- phyloseq2meco(t0azfg)
+# dat_t0az
+# 
+# 
+# # from phyloseq to microtable object
+# dat_t0pl <- phyloseq2meco(t0plfg)
+# dat_t0pl
+
+
+
+# from phyloseq to microtable object
+dat_t12 <- phyloseq2meco(t12fg)
+dat_t12
+
+# from phyloseq to microtable object
+dat_t18 <- phyloseq2meco(t18fg)
+dat_t18
+
+# from phyloseq to microtable object
+dat_AZM<- phyloseq2meco(AZMfg)
+dat_AZM
+
+# from phyloseq to microtable object
+dat_Pla<- phyloseq2meco(Placebofg)
+dat_Pla
+```
+
+```{r}
+dat_AZM$cal_abund()
+dat_Pla$cal_abund()
+dat_trial$cal_abund()
+dat_t12$cal_abund()
+```
+
+
+
+```{r}
+tt <- trans_abund$new(dataset = dat_trial, taxrank = "Phylum", ntaxa = 10)
+# t1 object now include the transformed abundance data t1$abund_data and other elements for the following plotting
+tt<-tt$plot_bar(others_color = "grey70", facet = "visit", xtext_keep = FALSE, legend_text_italic = FALSE)+ facet_wrap(~ trial_arm+visit, scales = "free") +mytheme
+
+tt
+
+ggsave("figure/Trial_all_visits_phylum_level13thDec2021.pdf", tt, width = 40, height = 35, units = "cm")
+```
+
+
+
+
+```{r}
+# create trans_abund object
+# use 10 Phyla with the highest abundance in the dataset.
+ttg <- trans_abund$new(dataset = dat_trial, taxrank = "Genus", ntaxa = 12)
+# t1 object now include the transformed abundance data t1$abund_data and other elements for the following plotting
+ttg<-ttg$plot_bar(others_color = "grey70", facet = "visit", xtext_keep = FALSE, legend_text_italic = FALSE)+facet_wrap(~ trial_arm+visit, scales = "free") +mytheme
+
+ttg
+ggsave("figure/Trial_all_visits_Genus_level_13thDec2021.pdf", ttg, width = 40, height = 35, units = "cm")
+```
+
+
+
+
+#Line Plots
+
+```{r}
+#Rel abundance for line plots-Phylum
+trialfphy_rel = phyloseq::transform_sample_counts(trialfphy,function(x){x / sum(x)})
+```
+
+
+
+```{r}
+#Subsetting relevant taxa-Phylum
+pdtrialphy = subset_taxa(trialfphy_rel, Phylum=="Proteobacteria" | Phylum=="Firmicutes"| Phylum=="Bacteroidota"| Phylum=="Fusobacteriota"| Phylum=="Actinobacteriota")
+
+```
+
+
+
+```{r}
+
+pdmelt <-psmelt(pdtrialphy)
+```
+
+
+
+
+
+#---Phylum----
+#Generating confidence intervals for each phylum
+
+```{r}
+
+pdtrial1_melt<-pdmelt
+hm1<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Baseline" & trial_arm=="AZM")
+Proteo_azm0<-CI(hm1$Abundance, ci=0.95)
+Proteo_azm0
+write.table( data.frame(Proteo_azm0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Week 48" & trial_arm=="AZM")
+Proteo_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Proteo_azm12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Week 72" & trial_arm=="AZM")
+Proteo_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Proteo_azm18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Baseline" & trial_arm=="Placebo")
+Proteo_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Proteo_pla0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Week 48" & trial_arm=="Placebo")
+Proteo_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Proteo_pla12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm18<-pdtrial1_melt%>%
+  filter(OTU=="Proteobacteria" & visit=="Week 72" & trial_arm=="Placebo")
+Proteo_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Proteo_pla18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+hm1<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Baseline" & trial_arm=="AZM")
+Firmi_azm0<-CI(hm1$Abundance, ci=0.95)
+
+write.table( data.frame(Firmi_azm0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Week 48" & trial_arm=="AZM")
+Firmi_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Firmi_azm12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Week 72" & trial_arm=="AZM")
+Firmi_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Firmi_azm18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Baseline" & trial_arm=="Placebo")
+Firmi_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Firmi_pla0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Week 48" & trial_arm=="Placebo")
+Firmi_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Firmi_pla12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm18<-pdtrial1_melt%>%
+  filter(OTU=="Firmicutes" & visit=="Week 72" & trial_arm=="Placebo")
+Firmi_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Firmi_pla18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+hm1<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Baseline" & trial_arm=="AZM")
+Bacteroi_azm0<-CI(hm1$Abundance, ci=0.95)
+
+write.table( data.frame(Bacteroi_azm0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Week 48" & trial_arm=="AZM")
+Bacteroi_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Bacteroi_azm12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Week 72" & trial_arm=="AZM")
+Bacteroi_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Bacteroi_azm18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Baseline" & trial_arm=="Placebo")
+Bacteroi_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Bacteroi_pla0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Week 48" & trial_arm=="Placebo")
+Bacteroi_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Bacteroi_pla12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm18<-pdtrial1_melt%>%
+  filter(OTU=="Bacteroidota" & visit=="Week 72" & trial_arm=="Placebo")
+Bacteroi_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Bacteroi_pla18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+hm1<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Baseline" & trial_arm=="AZM")
+Fusoba_azm0<-CI(hm1$Abundance, ci=0.95)
+
+write.table( data.frame(Fusoba_azm0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Week 48" & trial_arm=="AZM")
+Fusoba_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Fusoba_azm12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Week 72" & trial_arm=="AZM")
+Fusoba_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Fusoba_azm18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Baseline" & trial_arm=="Placebo")
+Fusoba_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Fusoba_pla0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Week 48" & trial_arm=="Placebo")
+Fusoba_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Fusoba_pla12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm18<-pdtrial1_melt%>%
+  filter(OTU=="Fusobacteriota" & visit=="Week 72" & trial_arm=="Placebo")
+Fusoba_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Fusoba_pla18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+hm1<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Baseline" & trial_arm=="AZM")
+Actinoba_azm0<-CI(hm1$Abundance, ci=0.95)
+
+write.table( data.frame(Actinoba_azm0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Week 48" & trial_arm=="AZM")
+Actinoba_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Actinoba_azm12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Week 72" & trial_arm=="AZM")
+Actinoba_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Actinoba_azm18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Baseline" & trial_arm=="Placebo")
+Actinoba_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Actinoba_pla0), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Week 48" & trial_arm=="Placebo")
+Actinoba_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Actinoba_pla12), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm18<-pdtrial1_melt%>%
+  filter(OTU=="Actinobacteriota" & visit=="Week 72" & trial_arm=="Placebo")
+Actinoba_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Actinoba_pla18), 'data/CIresults0811020_phylum.csv'  , append= T, sep=',' )
+
+```
+
+
+#Phylum plot
+The mean relative abundance with confidence intervals of phylum and genus collated in excel as "mean_rel_abun_phylum_both_armsedited.csv"
+
+```{r}
+tb<-read.csv("data/mean_rel_abun_phylum_both_armsedited.csv", stringsAsFactors = TRUE)
+
+levels(tb$Phylum)
+
+tb$Phylum <- factor(tb$Phylum, levels = c("Proteobacteria", "Firmicutes", "Bacteroidota", "Fusobacteriota", "Actinobacteriota","Others" ))
+
+tphy1<-ggplot(data=tb, aes(x=Sample, y=Abundance,color=Phylum, group=Phylum)) +
+  geom_errorbar(aes(ymax=Upper, ymin=Lower), width=0.5,size=0.5, position = position_dodge(0))+
+  geom_line()+
+  geom_point(aes(shape=Phylum), size=3)+
+  facet_grid(~Trial_arm)+
+   coord_cartesian(ylim = c(0, 60))+
+  labs(x="Visit", y="Mean % relative abundance")+
+  scale_shape_manual(values=c(19, 17, 15,21,25,8))+
+scale_y_continuous(breaks = c(0,3,5,10, 15, 20, 30,40,50, 60))+mythemeq
+tphy1
+
+
+```
+
+
+#------------------------Genus-------------------------------
+
+```{r}
+#Rel abundance for line plots
+trialfg_rel = phyloseq::transform_sample_counts(trialfg,function(x){x / sum(x)})
+```
+
+
+
+```{r}
+#Subsetting relevant taxa
+pdtrial1 = subset_taxa(trialfg_rel, Genus=="Moraxella" | Genus=="Haemophilus"| Genus=="Streptococcus"| Genus=="Prevotella"| Genus=="Veillonella"| Genus=="Fusobacterium"| Genus=="Alloprevotella"| Genus=="Porphyromonas"| Genus=="Neisseria"| Genus=="Leptotrichia"| Genus=="Staphylococcus"| Genus=="Pseudomonas")
+
+```
+
+
+
+```{r}
+
+geni <-psmelt(pdtrial1)
+
+```
+
+
+
+#Neisseria
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Baseline" & trial_arm=="AZM")
+Neiss_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Neiss_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Week 48" & trial_arm=="AZM")
+Neiss_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Neiss_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Week 72" & trial_arm=="AZM")
+Neiss_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Neiss_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Baseline" & trial_arm=="Placebo")
+Neiss_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Neiss_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Week 48" & trial_arm=="Placebo")
+Neiss_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Neiss_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Neisseria" & visit=="Week 72" & trial_arm=="Placebo")
+Neiss_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Neiss_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+#Veillonella
+
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Baseline" & trial_arm=="AZM")
+Veillo_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Veillo_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Week 48" & trial_arm=="AZM")
+Veillo_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Veillo_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Week 72" & trial_arm=="AZM")
+Veillo_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Veillo_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Baseline" & trial_arm=="Placebo")
+Veillo_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Veillo_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Week 48" & trial_arm=="Placebo")
+Veillo_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Veillo_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Veillonella" & visit=="Week 72" & trial_arm=="Placebo")
+Veillo_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Veillo_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+#Haemophilus
+
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Baseline" & trial_arm=="AZM")
+Haem_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Haem_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Week 48" & trial_arm=="AZM")
+Haem_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Haem_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Week 72" & trial_arm=="AZM")
+Haem_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Haem_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Baseline" & trial_arm=="Placebo")
+Haem_pla0 <- CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Haem_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Week 48" & trial_arm=="Placebo")
+Haem_pla12 <- CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Haem_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Haemophilus" & visit=="Week 72" & trial_arm=="Placebo")
+Haem_pla18 <- CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Haem_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+
+#Alloprevotella
+
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Baseline" & trial_arm=="AZM")
+Allo_azm0 <- CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Allo_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Week 48" & trial_arm=="AZM")
+Allo_azm12 <- CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Allo_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Week 72" & trial_arm=="AZM")
+Allo_azm18 <- CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Allo_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Baseline" & trial_arm=="Placebo")
+Allo_pla0 <- CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Allo_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Week 48" & trial_arm=="Placebo")
+Allo_pla12 <- CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Allo_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Alloprevotella" & visit=="Week 72" & trial_arm=="Placebo")
+Allo_pla18 <- CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Allo_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Fusobacterium
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Baseline" & trial_arm=="AZM")
+Fuso_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Fuso_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Week 48" & trial_arm=="AZM")
+Fuso_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Fuso_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Week 72" & trial_arm=="AZM")
+Fuso_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Fuso_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Baseline" & trial_arm=="Placebo")
+Fuso_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Fuso_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Week 48" & trial_arm=="Placebo")
+Fuso_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Fuso_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Fusobacterium" & visit=="Week 72" & trial_arm=="Placebo")
+Fuso_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Fuso_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Leptotrichia
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Baseline" & trial_arm=="AZM")
+Lepto_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Lepto_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Week 48" & trial_arm=="AZM")
+Lepto_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Lepto_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Week 72" & trial_arm=="AZM")
+Lepto_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Lepto_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Baseline" & trial_arm=="Placebo")
+Lepto_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Lepto_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Week 48" & trial_arm=="Placebo")
+Lepto_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Lepto_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Leptotrichia" & visit=="Week 72" & trial_arm=="Placebo")
+Lepto_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Lepto_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Moraxella
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Baseline" & trial_arm=="AZM")
+Morax_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Morax_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Week 48" & trial_arm=="AZM")
+Morax_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Morax_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Week 72" & trial_arm=="AZM")
+Morax_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Morax_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Baseline" & trial_arm=="Placebo")
+Morax_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Morax_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Week 48" & trial_arm=="Placebo")
+Morax_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Morax_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Moraxella" & visit=="Week 72" & trial_arm=="Placebo")
+Morax_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Morax_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+
+#Porphyromonas
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Baseline" & trial_arm=="AZM")
+Porph_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Porph_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Week 48" & trial_arm=="AZM")
+Porph_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Porph_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Week 72" & trial_arm=="AZM")
+Porph_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Porph_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Baseline" & trial_arm=="Placebo")
+Porph_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Porph_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Week 48" & trial_arm=="Placebo")
+Porph_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Porph_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Porphyromonas" & visit=="Week 72" & trial_arm=="Placebo")
+Porph_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Porph_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Prevotella
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Baseline" & trial_arm=="AZM")
+Prev_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Prev_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Week 48" & trial_arm=="AZM")
+Prev_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Prev_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Week 72" & trial_arm=="AZM")
+Prev_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Prev_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Baseline" & trial_arm=="Placebo")
+Prev_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Prev_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Week 48" & trial_arm=="Placebo")
+Prev_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Prev_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Prevotella" & visit=="Week 72" & trial_arm=="Placebo")
+Prev_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Prev_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Streptococcus
+```{r}
+hm1<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Baseline" & trial_arm=="AZM")
+Strep_azm0<-CI(hm1$Abundance, ci=0.95)
+write.table( data.frame(Strep_azm0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm12<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Week 48" & trial_arm=="AZM")
+Strep_azm12<-CI(hm12$Abundance, ci=0.95)
+write.table( data.frame(Strep_azm12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+hm18<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Week 72" & trial_arm=="AZM")
+Strep_azm18<-CI(hm18$Abundance, ci=0.95)
+write.table( data.frame(Strep_azm18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm1<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Baseline" & trial_arm=="Placebo")
+Strep_pla0<-CI(Phm1$Abundance, ci=0.95)
+write.table( data.frame(Strep_pla0), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm12<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Week 48" & trial_arm=="Placebo")
+Strep_pla12<-CI(Phm12$Abundance, ci=0.95)
+write.table( data.frame(Strep_pla12), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+```{r}
+Phm18<-geni%>%
+  filter(OTU=="Streptococcus" & visit=="Week 72" & trial_arm=="Placebo")
+Strep_pla18<-CI(Phm18$Abundance, ci=0.95)
+write.table( data.frame(Strep_pla18), 'data/CIresults0811020_Genus.csv'  , append= T, sep=',' )
+```
+
+
+#Genus plot
+```{r}
+
+tbg<-read.csv("data/mean_rel_abun_Genus_both_edited8thNov.csv", stringsAsFactors = TRUE)
+str(tbg)
+levels(tbg$Genus)
+
+tbg$Genus <- factor(tbg$Genus, levels = c( "Haemophilus","Neisseria","Streptococcus","Prevotella" ,
+                                           "Veillonella","Fusobacterium","Moraxella","Alloprevotella",
+                                           "Porphyromonas","Leptotrichia"))
+```
+
+
+```{r}
+#Assignig shapes to correspond to Phylum to which the genus belong to
+
+#Shape
+#Haemophilus","Neisseria","Moraxella" = Proteobacteria = 19
+#"Streptococcus","Veillonella", = Firmicutes = 17
+#"Prevotella","Alloprevotella","Porphyromonas = Bacteriodetes =15
+#"Fusobacterium","Leptotrichia" = Fusobacterium =21
+
+tgen2<-ggplot(data=tbg, aes(x=Sample, y=Abundance,color=Genus, group=Genus)) +
+  geom_errorbar(aes(ymax=Upper, ymin=Lower), width=0.5,size=0.5, position = position_dodge(0))+
+  geom_line()+
+  geom_point(aes(shape=Genus), size=3)+
+  facet_grid(~Trial_arm)+
+  coord_cartesian(ylim = c(1, 35))+
+  labs(x="Visit", y="Mean % relative abundance")+
+  scale_shape_manual(values=c(19, 19, 17,15,17,21,19,15,15,21))+
+  scale_y_continuous(breaks = c(1,3, 5,10, 15, 20,25, 30))+
+  #scale_color_manual(values=c("red", "orange", "green", "blue", "purple", "black", "pink", "grey","yellow", "salmon" ))+
+mythemeq
+tgen2
+
+```
+
+
+#Summary of both plots
+```{r}
+#Phylum plot
+tb<-read.csv("data/mean_rel_abun_phylum_both_armsedited.csv", stringsAsFactors = TRUE)
+
+levels(tb$Phylum)
+
+tb$Phylum <- factor(tb$Phylum, levels = c("Proteobacteria", "Firmicutes", "Bacteroidota", "Fusobacteriota", "Actinobacteriota","Others" ))
+
+tphy1<-ggplot(data=tb, aes(x=Sample, y=Abundance,color=Phylum, group=Phylum)) +
+  geom_errorbar(aes(ymax=Upper, ymin=Lower), width=0.5,size=0.5, position = position_dodge(0))+
+  geom_line()+
+  geom_point(aes(shape=Phylum), size=3)+
+  facet_grid(~Trial_arm)+
+   coord_cartesian(ylim = c(0, 60))+
+  labs(x="Visit", y="Mean % relative abundance")+
+  scale_shape_manual(values=c(19, 17, 15,21,25,8))+
+scale_y_continuous(breaks = c(0,3,5,10, 15, 20, 30,40,50, 60))+mythemeq
+tphy1
+
+
+#Genus plot
+tbg<-read.csv("data/mean_rel_abun_Genus_both_edited8thNov.csv", stringsAsFactors = TRUE)
+str(tbg)
+levels(tbg$Genus)
+
+tbg$Genus <- factor(tbg$Genus, levels = c( "Haemophilus","Neisseria","Streptococcus","Prevotella" ,
+                                           "Veillonella","Fusobacterium","Moraxella","Alloprevotella",
+                                           "Porphyromonas","Leptotrichia"))
+
+tgen2<-ggplot(data=tbg, aes(x=Sample, y=Abundance,color=Genus, group=Genus)) +
+  geom_errorbar(aes(ymax=Upper, ymin=Lower), width=0.5,size=0.5, position = position_dodge(0))+
+  geom_line()+
+  geom_point(aes(shape=Genus), size=3)+
+  facet_grid(~Trial_arm)+
+  coord_cartesian(ylim = c(1, 35))+
+  labs(x="Visit", y="Mean % relative abundance")+
+  scale_shape_manual(values=c(19, 19, 17,15,17,21,19,15,15,21))+
+  scale_y_continuous(breaks = c(1,3, 5,10, 15, 20,25, 35))+
+  #scale_color_manual(values=c("red", "orange", "green", "blue", "purple", "black", "pink", "grey","yellow", "salmon" ))+
+mythemeq
+tgen2
+
+```
+
+
+```{r}
+library(cowplot)
+
+#Combine NP and Sputum figures
+
+all_mean<-cowplot::plot_grid(tphy1, tgen2, nrow = 2, ncol = 1, scale = .9, labels = c("A) Phyla", "B) Genera"), label_size = 23,
+                                label_fontfamily = "Helvetica", label_colour = "dark blue",  align = "hv")
+all_mean
+
+ggsave("figure/all_mean_13thDec2021.pdf", all_mean,  width = 35, height = 45, units = "cm")
+
+```
+
+
+
+
