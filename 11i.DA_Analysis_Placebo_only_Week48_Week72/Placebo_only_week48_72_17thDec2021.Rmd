@@ -1,0 +1,650 @@
+---
+title: "Differential abundance analysis of Placebo samples at Week 48 and week 72 using
+  nine tools"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  author: Regina Esinam Abotsi, Department of Moclecular and Cell Biology, University of Cape Town, South Africa
+---
+
+
+```{r, Packages, echo=FALSE}
+library(tidyverse)
+library(phyloseq); packageVersion("phyloseq") 
+library(DESeq2); packageVersion("DESeq2")  
+library(microbiome); packageVersion("microbiome") 
+library(vegan); packageVersion("vegan") 
+library(picante); packageVersion("picante")
+library(ALDEx2); packageVersion("ALDEx2") 
+library(metagenomeSeq); packageVersion("metagenomeSeq")  
+library(dendextend); packageVersion("dendextend")
+library(selbal); packageVersion("selbal") 
+library(rms); packageVersion("rms")
+library(breakaway); packageVersion("breakaway")  
+library(VennDiagram); packageVersion("VennDiagram")  
+library(DEFormats); packageVersion("DEFormats") 
+library(apeglm); packageVersion("apeglm")   
+library(corncob); packageVersion("corncob")  
+library(ANCOMBC); packageVersion("ANCOMBC")  
+library(Maaslin2); packageVersion("Maaslin2") 
+library(edgeR); packageVersion("edgeR") 
+library("cowplot")
+library("devtools")
+library(DESeq2)
+library(apeglm)
+library(ANCOMBC)
+library(knitr)
+library(eulerr)
+library(ggplot2)
+library(nlme)
+library(compositions)
+source("ancom_v2.1.R")
+
+```
+
+
+INTRODUCTION
+
+In this analysis, I will conducted DA taxa analysis on Placebo Week 72 and Week 72 samples per the following plan
+
+Differential abundance testing plan
+
+1. Subsample to subset of interest
+
+2. Merge taxa at Genus level
+
+3. 0.5% prevalence filtering
+
+4. Independently conduct the following analysis using the merged and filtered data and the tools listed  below 
+
+#Tools
+
+1. Wilcoxon test (TSS) for unpaired samples
+2. Wilcoxon test (CLR) for unpaired samples
+3. Wilcoxon test (VST) for unpaired samples
+4. DESeq2, 
+5. ANCOM-BC, 
+6. ALDEx2
+7. Corncob
+8. MaslinA
+9. ANCOM-II
+
+
+
+
+```{r}
+
+#Create subsets for clr files
+trial_CLR <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021CLR.RDS") #created using the clr transformed data sent by Yao labelled "clr_trans_yx.csv
+
+#Subsets of only Placebo
+
+Placebo_CLR <-subset_samples(trial_CLR, trial_arm=="Placebo")#441
+Placebo_CLR#441
+
+#---Placebo at Week 48 and Week 72----
+Placebo1218_CLR<-subset_samples(Placebo_CLR, visit!="Baseline")#318
+Placebo1218_CLR
+
+#Selecting subset with samples at both Week 48 and Week 72
+Placebo1218p_CLR<-subset_samples(Placebo1218_CLR, visit1218=="yes")#292
+Placebo1218p_CLR
+
+# merge taxa to the Genus rank level
+
+Placebo1218pg_CLR<-tax_glom(Placebo1218p_CLR, taxrank = rank_names(Placebo1218p_CLR)[6])
+taxa_names(Placebo1218pg_CLR)<-as.character(tax_table(Placebo1218pg_CLR)[,6])
+OTU.Placebo1218pg_CLR<-otu_table(Placebo1218pg_CLR)
+mean(OTU.Placebo1218pg_CLR==0)
+Placebo1218pg_CLR
+
+
+
+#Filtering
+Placebo1218p_CLR
+Placebo1218pg_CLR
+Placebo1218pfg_CLR <- filter_taxa(Placebo1218pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo1218pfg_CLR
+
+
+
+```
+
+
+
+
+
+```{r, Data import and subsetting}
+# Read in phyloseq object
+trial <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+
+#Subsets of only Placebo
+
+Placebo <-subset_samples(trial, trial_arm=="Placebo")#441
+Placebo#441
+
+#---Placebo at Week 48 and Week 72----
+Placebo1218<-subset_samples(Placebo, visit!="Baseline")#318
+Placebo1218
+
+#Selecting subset with samples at both Week 48 and Week 72
+Placebo1218p<-subset_samples(Placebo1218, visit1218=="yes")#292
+Placebo1218p
+
+# merge taxa to the Genus rank level
+
+Placebo1218pg<-tax_glom(Placebo1218p, taxrank = rank_names(Placebo1218p)[6])
+taxa_names(Placebo1218pg)<-as.character(tax_table(Placebo1218pg)[,6])
+OTU.Placebo1218pg<-otu_table(Placebo1218pg)
+mean(OTU.Placebo1218pg==0)
+Placebo1218pg
+
+
+
+#Filtering
+Placebo1218p
+Placebo1218pg
+Placebo1218pfg <- filter_taxa(Placebo1218pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+Placebo1218pfg
+
+```
+
+
+
+### TSS Normalisation + WMW tests + BH FDR adjustment
+
+```{r, TSS Normalisation + WMW tests + BH FDR adjustment}
+Placebo1218pfg.TSS<-transform_sample_counts(Placebo1218pfg, function(x) { x/sum(x)})
+OTU.TSSfg<-otu_table(Placebo1218pfg.TSS)
+group<-meta(Placebo1218pfg)$visit
+
+results.TSSfg.WMW<-data.frame(taxon=rownames(OTU.TSSfg),stat=NA,p=NA)
+
+for(i in 1:nrow(OTU.TSSfg)) {
+  tmp<-wilcox.test(x=as.numeric(OTU.TSSfg[i,group=="Week 48"]),
+                   y=as.numeric(OTU.TSSfg[i,group=="Week 72"]))
+  results.TSSfg.WMW$stat[i]<-tmp$statistic
+  results.TSSfg.WMW$p[i]<-tmp$p.value
+}
+
+#correction for multiple testing using BH
+results.TSSfg.WMW$p.adj<-p.adjust(results.TSSfg.WMW$p, method="BH")
+
+#How many taxa are DA after correcting for multiple testing
+sum(results.TSSfg.WMW$p.adj<0.05, na.rm = TRUE)
+
+#write all results to a csv file
+write.csv(results.TSSfg.WMW, "res/results.TSSfg.WMW.csv")
+
+#subset only significantly DA taxa and write to file
+results.TSSfg.WMWsig<-results.TSSfg.WMW[which(results.TSSfg.WMW$p.adj<0.05),]
+write.csv(results.TSSfg.WMWsig, "res/results.TSSfg.WMWsig.csv")
+results.TSSfg.WMWsig
+```
+0 DA taxa were identified by this method
+
+
+### VST Normalisation + WMW tests + BH FDR adjustment
+
+```{r}
+#covert the phyloseq object into Deseq so that VST normalisation can be conducted using the function in the Deseq package. 
+
+Placebo1218pfg.addcte<-transform_sample_counts(Placebo1218pfg, function(x) {x+1})#this is important else you will get the error "Error in estimateSizeFactorsForMatrix(counts(object), locfunc = locfunc,  : every gene contains at least one zero, cannot compute log geometric means""
+
+df<-phyloseq_to_deseq2(Placebo1218pfg.addcte, ~ visit)
+df2<-estimateSizeFactors(df)
+df2<-estimateDispersions(df2)
+df2<-getVarianceStabilizedData(df2)
+OTU.vstfg<-otu_table(df2, taxa_are_rows = TRUE)
+
+group<-meta(Placebo1218pfg)$visit
+
+results.vstfg.WMW<-data.frame(taxon=rownames(OTU.vstfg),stat=NA,p=NA)
+
+for(i in 1:nrow(OTU.vstfg)) {
+  tmp<-wilcox.test(x=as.numeric(OTU.vstfg[i,group=="Week 48"]),
+                   y=as.numeric(OTU.vstfg[i,group=="Week 72"]))
+  results.vstfg.WMW$stat[i]<-tmp$statistic
+  results.vstfg.WMW$p[i]<-tmp$p.value
+}
+
+#correction for multiple testing using BH
+results.vstfg.WMW$p.adj<-p.adjust(results.vstfg.WMW$p, method="BH")
+
+#How many taxa are DA after correcting for multiple testing
+sum(results.vstfg.WMW$p.adj<0.05, na.rm = TRUE)
+
+
+
+#write all results to a csv file
+write.csv(results.vstfg.WMW, "res/results.vstfg.WMW.csv")
+
+#subset only significantly DA taxa and write to file
+results.vstfg.WMWsig<-results.vstfg.WMW[which(results.vstfg.WMW$p.adj<0.05),]
+write.csv(results.vstfg.WMWsig, "res/results.vstfg.WMWsig.csv")
+results.vstfg.WMWsig
+```
+
+0 DA taxa were identified by this method
+
+
+
+### CLR Transformation + WMW tests + BH FDR adjustment
+data already clr transformed
+
+```{r}
+
+OTU.clrfg<-otu_table(Placebo1218pfg_CLR)
+
+group<-meta(Placebo1218pfg_CLR)$visit
+
+results.clrfg.WMW<-data.frame(taxon=rownames(OTU.clrfg),stat=NA,p=NA)
+
+for(i in 1:nrow(OTU.clrfg)) {
+  tmp<-wilcox.test(x=as.numeric(OTU.clrfg[i,group=="Week 48"]),
+                   y=as.numeric(OTU.clrfg[i,group=="Week 72"]))
+  results.clrfg.WMW$stat[i]<-tmp$statistic
+  results.clrfg.WMW$p[i]<-tmp$p.value
+}
+
+#correction for multiple testing using BH
+results.clrfg.WMW$p.adj<-p.adjust(results.clrfg.WMW$p, method="BH")
+
+#How many taxa are DA after correcting for multiple testing
+sum(results.clrfg.WMW$p.adj<0.05, na.rm = TRUE)
+
+
+#write all results to a csv file
+write.csv(results.clrfg.WMW, "res/results.clrfgYao.WMW.csv")
+
+#subset only significantly DA taxa and write to file
+results.clrfg.WMWsig<-results.clrfg.WMW[which(results.clrfg.WMW$p.adj<0.05),]
+write.csv(results.clrfg.WMWsig, "res/results.clrfg.WMWsigYao.csv")
+results.clrfg.WMWsig
+```
+0 DA taxa were identified by this method.
+
+
+
+
+## DESeq2
+
+- DESeq2 is an R package originally developed for RNASeq data analysis
+
+- is based on the NB distribution
+
+- is very popular (easy to use) and implicitly makes use of the VST normalisation
+
+
+
+#DESeq2 with apeglm
+
+
+```{r}
+dds <- phyloseq_to_deseq2(Placebo1218pfg, ~ visit)      #convert to DESeq2 and DGEList objects
+dds
+dds1 <- DESeq(dds, test = "Wald", fitType = "local", sfType = "poscounts")
+dds1
+```
+
+```{r}
+plotDispEsts(dds1)
+```
+
+```{r}
+res <- lfcShrink(dds1, coef=2, type="apeglm") 
+```
+
+```{r}
+#plotMA(dds1)
+```
+
+```{r}
+deseq_res_df <- data.frame(res) %>%
+  rownames_to_column(var = "ASVs") %>%
+  dplyr::arrange(padj)                                 
+
+fdr_deseq <- deseq_res_df %>%
+    dplyr::filter(padj < 0.05)
+
+dim(fdr_deseq)
+```
+Deseq2 here detected 1 DA taxa 
+```{r}
+fdr_deseq
+```
+
+
+```{r}
+ggplot(fdr_deseq, aes(x = ASVs, y = log2FoldChange, color = ASVs)) +
+    geom_point(size = 4) +
+    labs(y = "\nLog2 Fold-Change for Week 48 vs. Week 72", x = "") +
+    theme(axis.text.x = element_text(color = "black", size = 12),
+          axis.text.y = element_text(color = "black", size = 12),
+          axis.title.y = element_text(size = 14),
+          axis.title.x = element_text(size = 14),
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12),
+          legend.position = "none") +theme_bw()+
+    coord_flip() +
+    geom_hline(yintercept = 0, linetype="dotted")
+```
+```{r}
+deseq3_res_df <- data.frame(res) %>%
+  rownames_to_column(var = "ASVs")
+```
+
+
+```{r}
+write.csv(fdr_deseq, "res/fdr_deseq.csv")
+write.csv(deseq3_res_df, "res/deseq3_Placebo048_results.csv")
+```
+
+
+## Methods specifically developed for compositional microbiome data
+
+- ANCOM and ANCOM-BC 
+
+- Aldex2 (very slow)
+
+
+##ANCOM-BC
+
+
+```{r}
+ancom_da1 <- ancombc(phyloseq = Placebo1218pfg, formula = "visit", 
+              p_adj_method = "BH", zero_cut = 0.90, lib_cut = 1000, 
+              group = "visit", struc_zero = TRUE, neg_lb = TRUE, tol = 1e-5, 
+              max_iter = 100, conserve = TRUE, alpha = 0.05, global = FALSE)
+
+ancom_res_df1 <- data.frame(
+  Species = row.names(ancom_da1$res$beta),
+  beta = unlist(ancom_da1$res$beta),
+  se = unlist(ancom_da1$res$se),
+  W = unlist(ancom_da1$res$W),
+  p_val = unlist(ancom_da1$res$p_val),
+  q_val = unlist(ancom_da1$res$q_val),
+  diff_abn = unlist(ancom_da1$res$diff_abn))
+dim(ancom_res_df1)
+fdr_ancom1 <- ancom_res_df1 %>%
+  dplyr::filter(q_val < 0.05)
+
+dim(fdr_ancom1)
+```
+
+
+This detected 0 DA taxa
+```{r}
+head(fdr_ancom1)
+fdr_ancom1
+write.csv(fdr_ancom1, "res/fdr_ancombc.csv")
+write.csv(ancom_res_df1, "res/ancombc_resultsPlacebo1218m.csv")
+```
+
+
+
+### Aldex2
+
+```{r}
+#Run ALDEx2
+aldex2_da <- ALDEx2::aldex(data.frame(phyloseq::otu_table(Placebo1218pfg)), phyloseq::sample_data(Placebo1218pfg)$visit, test="t", effect = TRUE, denom="iqlr")
+```
+
+
+```{r}
+#Plot effect sizes
+ALDEx2::aldex.plot(aldex2_da, type="MW", test="wilcox", called.cex = 1, cutoff = 0.05)
+```
+
+```{r}
+#Adding taxonomic labels
+taxa_info <- data.frame(tax_table(Placebo1218pfg))
+taxa_info <- taxa_info %>% rownames_to_column(var = "OTU")
+```
+
+
+
+```{r}
+#Clean up presentation
+sig_aldex2 <- aldex2_da %>%
+  rownames_to_column(var = "OTU") %>%
+  filter(wi.eBH < 0.05) %>%
+  arrange(effect, wi.eBH) %>%
+  dplyr::select(OTU, diff.btw, diff.win, effect, wi.ep, wi.eBH)
+sig_aldex2 <- left_join(sig_aldex2, taxa_info)
+```
+
+```{r}
+#Clean up presentation
+aldex2_results1 <- aldex2_da %>%
+  rownames_to_column(var = "OTU")
+  #filter(wi.eBH < 0.05) %>%
+  #arrange(effect, wi.eBH) %>%
+  #dplyr::select(OTU, diff.btw, diff.win, effect, wi.ep, wi.eBH)
+aldex2_result2b <- left_join(aldex2_results1, taxa_info)
+```
+
+
+```{r}
+sig_aldex2
+write.csv(sig_aldex2, "res/sig_aldex2.csv")
+write.csv(aldex2_result2b, "res/aldex2resultsPlacebo1218m.csv")
+```
+
+0 taxa detected by Aldex2
+
+
+###Corncob
+
+```{r}
+corn_da1 <- differentialTest(formula = ~ visit,
+                            phi.formula = ~ 1,
+                            formula_null = ~ 1,
+                            phi.formula_null = ~ 1,
+                            data = Placebo1218pfg,
+                            test = "Wald", boot = FALSE,fdr="BH",
+                            fdr_cutoff = 0.05)
+
+fdr_corncob <- corn_da1$significant_taxa
+corn <- corn_da1$p_fdr
+dim(data.frame(fdr_corncob))
+ddd<-data.frame(corn_da1$p)
+dim(ddd)
+```
+
+Corncob  detected 0 DA taxa 
+
+```{r}
+fdr_corncob
+write.csv(corn, "res/corncob_p_fdr.csv")
+write.csv(fdr_corncob, "res/fdr_corncob.csv")
+write.csv(corn_da1$p_fdr, "res/corncob-resultsPlacebo1218m.csv")
+```
+
+
+###MaAsLin 2
+
+Normalisation = TSS, transformation= LOG, fixed effects= visit
+```{r}
+mas1 <- Maaslin2(
+  input_data = data.frame(otu_table(Placebo1218pfg)),
+  input_metadata = data.frame(sample_data(Placebo1218pfg)),
+  output = "./MaAsLin2TSS_Log_visit",
+  min_abundance = 0.0,
+  min_prevalence = 0.0,
+  normalization = "TSS",
+  transform = "LOG",
+  analysis_method = "LM",
+  max_significance = 0.05,
+  fixed_effects = "visit",
+  correction = "BH",
+  standardize = FALSE,
+  cores = 1)
+```
+
+```{r}
+mas1_res_df <- mas1$results
+
+fdr_mas1 <- mas1_res_df %>%
+    dplyr::filter(qval < 0.05)
+
+dim(fdr_mas1)
+```
+
+0 DA found 
+```{r}
+fdr_mas1
+write.csv(fdr_mas1, "./MaAsLin2TSS_Log_visit/fdr_mas1No_random_effects.csv")
+write.csv(mas1_res_df, "./MaAsLin2TSS_Log_visit/mas1TSSNo_random_effectsPlacebo1218.csv")
+```
+
+Normalisation = CLR, transformation= NONE, fixed effects= visit
+data already clr-transformed hence normalisation option selected was "NONE"
+```{r}
+mas3 <- Maaslin2(
+  input_data = data.frame(otu_table(Placebo1218pfg_CLR)),
+  input_metadata = data.frame(sample_data(Placebo1218pfg_CLR)),
+  output = "./MaAsLin2YAO_None_visit",
+  min_abundance = 0.0,
+  min_prevalence = 0.0,
+  normalization = "NONE",
+  transform = "NONE",
+  analysis_method = "LM",
+  max_significance = 0.05,
+  fixed_effects = "visit",
+  correction = "BH",
+  standardize = FALSE,
+  cores = 1)
+```
+
+```{r}
+mas3_res_df <- mas3$results
+
+fdr_mas3 <- mas3_res_df %>%
+    dplyr::filter(qval < 0.05)
+
+dim(fdr_mas3)
+
+fdr_mas3
+write.csv(fdr_mas3, "./MaAsLin2YAO_None_visit/fdr_mas3_NONE_None_No_random_effectsYAOCLR.csv")
+write.csv(mas3_res_df, "./MaAsLin2YAO_None_visit/mas3CLR_YAO_No_random_effectsPlacebo1218.csv")
+```
+0 DA detected
+
+
+
+ANCOM-II
+Link https://github.com/FrederickHuangLin/ANCOM
+
+```{r}
+source("ancom_v2.1_reg.R")
+
+```
+
+
+```{r, preparing for Data preprocessing for ANCOM-II}
+#Preparing otu_data for feature_table for Data preprocessing step
+otu_data = as.matrix(Placebo1218pfg@otu_table)
+otu_data<-as.data.frame(otu_data)
+
+#Preparing meta_data  for Data preprocessing step
+meta_data<-as.matrix(sample_data(Placebo1218pfg))
+meta_data<-as.data.frame(meta_data)
+write.csv(meta_data, "res/meta_data_paired_Placebo4872.csv")
+#edit im excel so the sample ids have a column heading "SampleID). I have to find a way to do this in R
+meta_data_new<-read.csv("res/meta_data_paired_Placebo4872.csv")
+```
+
+
+```{r, Data preprocessing for ANCOM-II}
+# Step 1: Data preprocessing
+
+feature_table = otu_data; sample_var = "X"; group_var = "visit"
+out_cut = 0.05; zero_cut = 0.90; lib_cut = 0; neg_lb = TRUE
+
+prepro = feature_table_pre_process(feature_table, meta_data_new, sample_var, group_var, 
+                                   out_cut, zero_cut, lib_cut, neg_lb)
+
+feature_table = prepro$feature_table # Preprocessed feature table
+meta_data = prepro$meta_data # Preprocessed metadata
+struc_zero = prepro$structure_zeros # Structural zero info
+```
+
+
+
+```{r, ANCOM-II}
+# Step 2: ANCOM
+
+main_var = "visit"; p_adj_method = "BH"; alpha = 0.05
+adj_formula = NULL; rand_formula = NULL
+control = lmeControl(maxIter = 100, msMaxIter = 100, opt = "optim")
+t_start = Sys.time()
+res = ANCOM(feature_table, meta_data, struc_zero, main_var, p_adj_method, 
+            alpha, adj_formula, rand_formula, control = control)
+t_end = Sys.time()
+t_run = t_end - t_start # around 2mins
+
+res
+write_csv(res$out, "res/res_PlaceboPlacebo4872_paired.csv")
+
+write_csv(res$dat, "res/res_PlaceboPlacebo4872paired_clr.csv")
+```
+
+
+
+```{r}
+ancom_res<-data.frame(res$out)
+ancom_da<-ancom_res %>% 
+  filter(detected_0.6==TRUE)
+ancom_da$taxa_id #0
+write.csv(ancom_da, "res/daPlacebo4872.csv")
+
+```
+
+
+
+```{r, Plotting taxa}
+# Step 3: Volcano Plot
+
+# Number of taxa except structural zeros
+n_taxa = ifelse(is.null(struc_zero), nrow(feature_table), sum(apply(struc_zero, 1, sum) == 0))
+# Cutoff values for declaring differentially abundant taxa
+cut_off = c(0.9 * (n_taxa -1), 0.8 * (n_taxa -1), 0.7 * (n_taxa -1), 0.6 * (n_taxa -1))
+names(cut_off) = c("detected_0.9", "detected_0.8", "detected_0.7", "detected_0.6")
+
+# Annotation data
+dat_ann = data.frame(x = min(res$fig$data$x), y = cut_off["detected_0.7"], label = "W[0.7]")
+```
+
+
+
+
+```{r}
+fig = res$fig + 
+  geom_hline(yintercept = cut_off["detected_0.7"], linetype = "dashed") + 
+  geom_text(data = dat_ann, aes(x = x, y = y, label = label), 
+            size = 4, vjust = -0.5, hjust = 0, color = "orange", parse = TRUE)
+fig 
+```
+
+
+
+```{r, Differentially abundant taxa detected by ANCOM-II}
+ancom_res<-data.frame(res$out)
+ancom_da<-ancom_res %>% 
+  filter(detected_0.6==TRUE)
+ancom_da$taxa_id #0
+write.csv(ancom_da, "res/daPlacebo4872_allvisitspaired.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
