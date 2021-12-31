@@ -1,0 +1,27 @@
+"","beta","2.5 %","97.5 %","pvalue"
+"(Intercept)",4.74,4.3,5.17,0
+"trial_armPlacebo",0.07,-0.09,0.24,0.398
+"visitWeek 48",-0.31,-0.45,-0.17,0
+"visitWeek 72",-0.07,-0.23,0.08,0.37
+"adherenceNot Adherent",-0.1,-0.26,0.06,0.225
+"siteZimbabwe",0.3,0.11,0.49,0.003
+"agegpenrl_baselinea6-9y",0,-0.25,0.24,0.98
+"agegpenrl_baselineb10-12y",-0.13,-0.33,0.07,0.21
+"agegpenrl_baselinec13-16y",0,-0.16,0.15,0.995
+"sexmale",-0.08,-0.21,0.05,0.244
+"colmonthgp_mal2Nov-Apr-Rainy",0.04,-0.06,0.14,0.402
+"f24mrcscore_baseline2",-0.06,-0.22,0.09,0.425
+"f24mrcscore_baseline3",-0.04,-0.35,0.29,0.831
+"f24mrcscore_baseline4",-0.17,-0.61,0.28,0.472
+"f24mrcscore_baseline5",-0.82,-2.32,0.68,0.296
+"fev1z",-0.09,-0.16,-0.02,0.015
+"normalhaz_regstunted",0.02,-0.12,0.15,0.81
+"f11cotri_baselineyes",-0.14,-0.35,0.07,0.218
+"duryartgp_baselineb2-<4y",-0.03,-0.3,0.23,0.81
+"duryartgp_baselinec4y-<6y",-0.05,-0.3,0.21,0.734
+"duryartgp_baselined6y+",-0.11,-0.34,0.13,0.376
+"f14adm_baselineyes",-0.33,-0.97,0.3,0.328
+"vlsup_regUnsuppresed",0.1,-0.04,0.23,0.174
+"f16tbtreat_baselineyes",0.18,0.04,0.33,0.019
+"trial_armPlacebo:visitWeek 48",0.41,0.21,0.61,0
+"trial_armPlacebo:visitWeek 72",0.14,-0.08,0.36,0.216

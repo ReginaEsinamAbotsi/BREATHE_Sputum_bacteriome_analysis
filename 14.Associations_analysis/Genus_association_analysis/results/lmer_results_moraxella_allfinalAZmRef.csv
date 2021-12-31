@@ -1,0 +1,342 @@
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.17,0.82,3.52,0
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"trial_armPlacebo:visitWeek 48",2.45,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.17,0.82,3.52,0
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"trial_armPlacebo:visitWeek 48",2.45,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.24,0.84,3.63,0
+"trial_armPlacebo",0.69,-1.21,2.59,0.48
+"visitWeek 48",-1.24,-3.16,0.67,0.2
+"visitWeek 72",-1.17,-3.21,0.87,0.26
+"adherenceNot Adherent",-0.25,-1.64,1.14,0.72
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.15,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.73,2.07,0.57
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.96,0.31,3.61,0.02
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.16,-3.2,0.88,0.27
+"siteZimbabwe",0.29,-1.06,1.64,0.67
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.73,2.07,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.48,-0.57,5.53,0.11
+"trial_armPlacebo",0.69,-1.21,2.59,0.48
+"visitWeek 48",-1.21,-3.14,0.71,0.22
+"visitWeek 72",-1.12,-3.18,0.93,0.29
+"agey",-0.02,-0.21,0.17,0.82
+"trial_armPlacebo:visitWeek 48",2.45,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.04,0.56,3.53,0.01
+"trial_armPlacebo",0.68,-1.22,2.58,0.48
+"visitWeek 48",-1.24,-3.16,0.68,0.21
+"visitWeek 72",-1.16,-3.2,0.88,0.27
+"sexmale",0.24,-0.96,1.43,0.69
+"trial_armPlacebo:visitWeek 48",2.45,-0.26,5.17,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.73,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.99,0.54,3.44,0.01
+"trial_armPlacebo",0.68,-1.21,2.58,0.48
+"visitWeek 48",-1.22,-3.13,0.7,0.22
+"visitWeek 72",-1.21,-3.25,0.84,0.25
+"colmonthgp_mal2Nov-Apr-Rainy",0.4,-0.78,1.58,0.5
+"trial_armPlacebo:visitWeek 48",2.43,-0.29,5.15,0.08
+"trial_armPlacebo:visitWeek 72",-0.84,-3.74,2.07,0.57
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.46,0.99,3.92,0
+"trial_armPlacebo",0.63,-1.27,2.53,0.52
+"visitWeek 48",-1.23,-3.14,0.69,0.21
+"visitWeek 72",-1.16,-3.2,0.88,0.27
+"f24mrcscore_baseline2",-0.54,-1.82,0.74,0.41
+"f24mrcscore_baseline3",-0.3,-2.85,2.25,0.82
+"f24mrcscore_baseline4",-1.54,-5.29,2.21,0.42
+"f24mrcscore_baseline5",-1.73,-10.56,7.1,0.7
+"trial_armPlacebo:visitWeek 48",2.43,-0.28,5.15,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.44,-0.54,3.42,0.16
+"trial_armPlacebo",0.68,-1.23,2.59,0.49
+"visitWeek 48",-1.17,-3.11,0.76,0.24
+"visitWeek 72",-1.16,-3.24,0.91,0.27
+"fev1z",-0.36,-1.08,0.35,0.32
+"trial_armPlacebo:visitWeek 48",2.51,-0.24,5.26,0.08
+"trial_armPlacebo:visitWeek 72",-0.79,-3.73,2.15,0.6
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.94,0.63,5.25,0.01
+"trial_armPlacebo",0.65,-1.3,2.6,0.51
+"visitWeek 48",-1.19,-3.14,0.77,0.24
+"visitWeek 72",-1.11,-3.21,1,0.3
+"FVC",-0.39,-1.37,0.59,0.44
+"trial_armPlacebo:visitWeek 48",2.63,-0.14,5.41,0.06
+"trial_armPlacebo:visitWeek 72",-0.7,-3.67,2.28,0.65
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.8,0.01,3.58,0.05
+"trial_armPlacebo",0.6,-1.34,2.54,0.55
+"visitWeek 48",-1.23,-3.18,0.71,0.22
+"visitWeek 72",-1.2,-3.29,0.88,0.26
+"FVCZ",-0.23,-0.88,0.41,0.48
+"trial_armPlacebo:visitWeek 48",2.62,-0.15,5.4,0.06
+"trial_armPlacebo:visitWeek 72",-0.69,-3.66,2.29,0.65
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.08,0.66,3.5,0
+"trial_armPlacebo",0.58,-1.36,2.52,0.56
+"visitWeek 48",-1.25,-3.2,0.69,0.21
+"visitWeek 72",-1.22,-3.31,0.86,0.25
+"FEV1FVCZ",-0.19,-0.74,0.36,0.51
+"trial_armPlacebo:visitWeek 48",2.62,-0.16,5.39,0.07
+"trial_armPlacebo:visitWeek 72",-0.65,-3.62,2.32,0.67
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",3.67,-0.61,7.94,0.09
+"trial_armPlacebo",0.6,-1.34,2.54,0.55
+"visitWeek 48",-1.23,-3.18,0.71,0.22
+"visitWeek 72",-1.2,-3.29,0.88,0.26
+"FVCpcpred",-0.02,-0.07,0.03,0.48
+"trial_armPlacebo:visitWeek 48",2.62,-0.15,5.4,0.06
+"trial_armPlacebo:visitWeek 72",-0.68,-3.66,2.29,0.65
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",4.19,0.11,8.28,0.05
+"trial_armPlacebo",0.68,-1.23,2.59,0.49
+"visitWeek 48",-1.17,-3.11,0.76,0.24
+"visitWeek 72",-1.17,-3.24,0.91,0.27
+"FEVpcpred",-0.03,-0.08,0.02,0.3
+"trial_armPlacebo:visitWeek 48",2.5,-0.25,5.26,0.08
+"trial_armPlacebo:visitWeek 72",-0.79,-3.73,2.16,0.6
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.03,0.55,3.51,0.01
+"trial_armPlacebo",0.7,-1.21,2.6,0.47
+"visitWeek 48",-1.22,-3.15,0.71,0.22
+"visitWeek 72",-1.15,-3.2,0.9,0.27
+"zbmiuk",-0.12,-0.64,0.39,0.64
+"trial_armPlacebo:visitWeek 48",2.51,-0.23,5.25,0.07
+"trial_armPlacebo:visitWeek 72",-0.84,-3.76,2.09,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.46,-0.18,3.11,0.08
+"trial_armPlacebo",0.72,-1.18,2.63,0.46
+"visitWeek 48",-1.2,-3.13,0.73,0.23
+"visitWeek 72",-1.12,-3.18,0.93,0.28
+"zwauk",-0.32,-0.74,0.11,0.14
+"trial_armPlacebo:visitWeek 48",2.53,-0.21,5.27,0.07
+"trial_armPlacebo:visitWeek 72",-0.86,-3.78,2.06,0.57
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.06,-0.71,2.82,0.24
+"trial_armPlacebo",0.73,-1.18,2.63,0.46
+"visitWeek 48",-1.16,-3.09,0.77,0.24
+"visitWeek 72",-1.04,-3.1,1.01,0.32
+"zhauk",-0.52,-1.05,0.01,0.06
+"trial_armPlacebo:visitWeek 48",2.55,-0.18,5.29,0.07
+"trial_armPlacebo:visitWeek 72",-0.82,-3.74,2.1,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.91,-0.23,4.05,0.08
+"trial_armPlacebo",0.7,-1.49,2.9,0.53
+"visitWeek 48",-1.22,-3.41,0.97,0.28
+"cd4",0,0,0,0.73
+"trial_armPlacebo:visitWeek 48",2.48,-0.62,5.6,0.12
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.17,0.64,3.71,0.01
+"trial_armPlacebo",0.66,-1.48,2.79,0.55
+"visitWeek 48",-1.23,-3.38,0.93,0.27
+"visitWeek 72",-0.72,-4.73,3.29,0.73
+"vload",0,0,0,0.82
+"trial_armPlacebo:visitWeek 48",2.52,-0.52,5.58,0.11
+"trial_armPlacebo:visitWeek 72",-0.96,-6.83,4.89,0.75
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.14,0.78,3.5,0
+"trial_armPlacebo",0.65,-1.25,2.55,0.5
+"visitWeek 48",-1.23,-3.15,0.69,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"acut_exac12myes",0.3,-1.43,2.03,0.74
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.15,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.73,2.07,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.15,0.8,3.5,0
+"trial_armPlacebo",0.61,-1.29,2.51,0.53
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.14,-3.18,0.89,0.27
+"hospitalised12myes",1.71,-2.02,5.46,0.37
+"trial_armPlacebo:visitWeek 48",2.47,-0.24,5.19,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.17,0.82,3.52,0
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.23,-3.15,0.69,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"antibiotic12myes",0.08,-3.1,3.27,0.96
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.16,0.8,3.52,0
+"trial_armPlacebo",0.66,-1.24,2.57,0.5
+"visitWeek 48",-1.23,-3.15,0.69,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"any3_reasons.1yes",0.08,-1.52,1.68,0.92
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",3.15,0.88,5.42,0.01
+"trial_armPlacebo",0.67,-1.24,2.58,0.49
+"visitWeek 48",-1.2,-3.13,0.72,0.22
+"visitWeek 72",-1.13,-3.18,0.92,0.28
+"f11cotri_baselineyes",-1.09,-3.09,0.9,0.28
+"trial_armPlacebo:visitWeek 48",2.42,-0.3,5.14,0.08
+"trial_armPlacebo:visitWeek 72",-0.88,-3.78,2.04,0.56
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.27,0.59,3.96,0.01
+"trial_armPlacebo",0.66,-1.25,2.56,0.5
+"visitWeek 48",-1.24,-3.15,0.68,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"agegpenrl_baselinea6-9y",0.78,-1.51,3.06,0.51
+"agegpenrl_baselineb10-12y",-0.54,-2.31,1.22,0.55
+"agegpenrl_baselinec13-16y",-0.16,-1.6,1.29,0.83
+"trial_armPlacebo:visitWeek 48",2.46,-0.25,5.17,0.08
+"trial_armPlacebo:visitWeek 72",-0.81,-3.71,2.09,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.49,0.15,4.83,0.04
+"trial_armPlacebo",0.69,-1.26,2.64,0.49
+"visitWeek 48",-1.25,-3.21,0.72,0.22
+"visitWeek 72",-1.2,-3.29,0.9,0.27
+"duryartgp_baselineb2-<4y",0.25,-2.24,2.74,0.85
+"duryartgp_baselinec4y-<6y",-1.28,-3.65,1.1,0.3
+"duryartgp_baselined6y+",-0.05,-2.22,2.11,0.96
+"trial_armPlacebo:visitWeek 48",2.52,-0.27,5.31,0.08
+"trial_armPlacebo:visitWeek 72",-0.81,-3.79,2.18,0.6
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.94,0.51,3.38,0.01
+"trial_armPlacebo",0.61,-1.3,2.52,0.53
+"visitWeek 48",-1.23,-3.16,0.7,0.21
+"visitWeek 72",-1.17,-3.22,0.89,0.27
+"abnrrAbnormal RR",0.57,-0.63,1.77,0.36
+"trial_armPlacebo:visitWeek 48",2.56,-0.18,5.31,0.07
+"trial_armPlacebo:visitWeek 72",-0.8,-3.72,2.13,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2,0.65,3.35,0
+"trial_armPlacebo",0.62,-1.28,2.52,0.52
+"visitWeek 48",-1.18,-3.1,0.74,0.23
+"visitWeek 72",-1.1,-3.14,0.95,0.3
+"abnsatAbnormal Sat",4.64,1.19,8.08,0.01
+"trial_armPlacebo:visitWeek 48",2.68,-0.05,5.41,0.06
+"trial_armPlacebo:visitWeek 72",-0.81,-3.72,2.1,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.85,0.35,3.35,0.02
+"trial_armPlacebo",0.72,-1.18,2.62,0.46
+"visitWeek 48",-1.24,-3.15,0.68,0.21
+"visitWeek 72",-1.14,-3.18,0.9,0.27
+"normalhaz_baseline<-2",0.58,-0.62,1.78,0.34
+"trial_armPlacebo:visitWeek 48",2.46,-0.26,5.17,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.73,2.07,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.11,0.75,3.46,0
+"trial_armPlacebo",0.65,-1.25,2.56,0.5
+"visitWeek 48",-1.23,-3.16,0.7,0.21
+"visitWeek 72",-1.2,-3.25,0.86,0.25
+"abnhrAbnormal HR",1.71,-0.72,4.13,0.17
+"trial_armPlacebo:visitWeek 48",2.46,-0.28,5.2,0.08
+"trial_armPlacebo:visitWeek 72",-0.89,-3.82,2.04,0.55
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2,0.3,3.7,0.02
+"trial_armPlacebo",0.69,-1.21,2.59,0.48
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"cd4enrl_baseline",0,0,0,0.75
+"trial_armPlacebo:visitWeek 48",2.45,-0.26,5.17,0.08
+"trial_armPlacebo:visitWeek 72",-0.83,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.9,0.53,3.26,0.01
+"trial_armPlacebo",0.76,-1.14,2.66,0.43
+"visitWeek 48",-1.23,-3.16,0.7,0.21
+"visitWeek 72",-1.17,-3.22,0.88,0.26
+"vlenrl_baseline",0,0,0,0
+"trial_armPlacebo:visitWeek 48",2.45,-0.28,5.18,0.08
+"trial_armPlacebo:visitWeek 72",-0.71,-3.62,2.21,0.63
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.53,0.85,4.2,0
+"trial_armPlacebo",0.68,-1.22,2.57,0.49
+"visitWeek 48",-1.22,-3.14,0.69,0.21
+"visitWeek 72",-1.18,-3.22,0.86,0.26
+"artdrug1stline_baselineyes",-0.49,-1.84,0.86,0.48
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.81,-3.7,2.1,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.02,0.63,3.42,0
+"trial_armPlacebo",0.68,-1.21,2.58,0.48
+"visitWeek 48",-1.22,-3.14,0.69,0.21
+"visitWeek 72",-1.18,-3.23,0.86,0.26
+"artdrug2ndline_baselineyes",0.55,-0.81,1.92,0.43
+"trial_armPlacebo:visitWeek 48",2.44,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.81,-3.7,2.1,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.54,0.86,4.22,0
+"trial_armPlacebo",0.68,-1.23,2.58,0.49
+"visitWeek 48",-1.22,-3.14,0.69,0.21
+"visitWeek 72",-1.18,-3.22,0.86,0.26
+"artreg_baselineEFV/NVP",-0.5,-1.86,0.86,0.47
+"trial_armPlacebo:visitWeek 48",2.47,-0.25,5.19,0.08
+"trial_armPlacebo:visitWeek 72",-0.8,-3.71,2.11,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.23,0.78,3.68,0
+"trial_armPlacebo",0.65,-1.26,2.56,0.51
+"visitWeek 48",-1.25,-3.18,0.67,0.2
+"visitWeek 72",-1.17,-3.22,0.87,0.26
+"vlenrlsup_baseline>=1000 copies",-0.09,-1.3,1.12,0.89
+"trial_armPlacebo:visitWeek 48",2.47,-0.26,5.19,0.08
+"trial_armPlacebo:visitWeek 72",-0.8,-3.71,2.11,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.18,0.83,3.53,0
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.24,-3.16,0.68,0.21
+"visitWeek 72",-1.16,-3.21,0.88,0.27
+"f14adm_baselineyes",-0.76,-5.87,4.36,0.77
+"trial_armPlacebo:visitWeek 48",2.46,-0.25,5.18,0.08
+"trial_armPlacebo:visitWeek 72",-0.8,-3.7,2.11,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",1.97,0.54,3.4,0.01
+"trial_armPlacebo",0.74,-1.17,2.64,0.45
+"visitWeek 48",-1.23,-3.15,0.7,0.21
+"visitWeek 72",-1.18,-3.23,0.87,0.26
+"f16tbtreat_baselineyes",0.59,-0.73,1.9,0.38
+"trial_armPlacebo:visitWeek 48",2.44,-0.29,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.81,-3.72,2.1,0.59
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.33,0.43,4.23,0.02
+"trial_armPlacebo",0.72,-1.23,2.68,0.47
+"visitWeek 48",-1.25,-3.21,0.71,0.21
+"visitWeek 72",-1.18,-3.27,0.91,0.27
+"ageyart_baseline",-0.01,-0.17,0.14,0.85
+"trial_armPlacebo:visitWeek 48",2.52,-0.26,5.31,0.08
+"trial_armPlacebo:visitWeek 72",-0.86,-3.83,2.12,0.57
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.23,0.37,4.09,0.02
+"trial_armPlacebo",0.7,-1.26,2.65,0.49
+"visitWeek 48",-1.26,-3.23,0.7,0.21
+"visitWeek 72",-1.18,-3.28,0.92,0.27
+"duryart_baseline",0,-0.2,0.19,0.99
+"trial_armPlacebo:visitWeek 48",2.53,-0.26,5.33,0.08
+"trial_armPlacebo:visitWeek 72",-0.85,-3.84,2.14,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.01,-0.25,4.27,0.08
+"trial_armPlacebo",0.67,-1.23,2.57,0.49
+"visitWeek 48",-1.23,-3.15,0.68,0.21
+"visitWeek 72",-1.15,-3.19,0.89,0.27
+"cd4gp_baseline200+",0.17,-1.84,2.19,0.87
+"trial_armPlacebo:visitWeek 48",2.45,-0.27,5.16,0.08
+"trial_armPlacebo:visitWeek 72",-0.82,-3.72,2.08,0.58
+"beta","X2.5..","X97.5..","pvalue"
+"(Intercept)",2.32,0.68,3.96,0.01
+"trial_armPlacebo",0.7,-1.21,2.61,0.47
+"visitWeek 48",-1.22,-3.13,0.7,0.22
+"visitWeek 72",-1.14,-3.18,0.9,0.27
+"agegpsym_baselinea6-<8",-1.1,-5.21,3.02,0.6
+"agegpsym_baselineb8-<12",-0.1,-1.93,1.73,0.92
+"agegpsym_baselined15-<16",-0.62,-2.7,1.46,0.56
+"agegpsym_baselinee16+",-0.12,-1.62,1.39,0.88
+"trial_armPlacebo:visitWeek 48",2.42,-0.29,5.14,0.08
+"trial_armPlacebo:visitWeek 72",-0.85,-3.74,2.06,0.57

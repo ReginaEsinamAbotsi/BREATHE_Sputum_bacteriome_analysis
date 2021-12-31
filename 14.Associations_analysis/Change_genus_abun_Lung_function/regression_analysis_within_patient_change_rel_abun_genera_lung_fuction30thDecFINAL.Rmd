@@ -1,0 +1,379 @@
+---
+title: "Regression analysis for within-patient change in relative abundance of selected taxa and lung fuction "
+output: html_notebook
+date: "30th December 2021"
+Authour: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+#PART 1
+
+#ASSOCIATION BETWEEN CHANGE IN  RELATIVE ABUNDANCE OF SELECTED TAXA  AND CHANGE IN LUNG FUNCTION METRICS FVCZ, FEV1/FVCZ, FEV1z, FVC, FEV1/FVC
+```{r}
+betaFVC<-read.csv("data/all_within_patient_change_data2ndDec2021.csv", stringsAsFactors = TRUE)
+
+str(betaFVC)
+```
+
+
+
+
+
+
+Stratify data into AZM and Placebo
+
+```{r}
+#------Stratify data into AZM and Placebo-------------------------
+t_plac<-betaFVC%>%
+  filter(trial_arm=="Placebo")
+t_azm<-betaFVC%>%
+  filter(trial_arm=="AZM")
+```
+
+```{r}
+#number of participants in each group
+#all
+length(unique(betaFVC$Studyno))
+
+#trial arms
+length(unique(t_plac$Studyno))
+length(unique(t_azm$Studyno))
+
+```
+
+
+
+#Conduct univariate regression to detect association between change in FEV1z and FVCZ and change in RELATIVE ABUNDANCE OF selected  GENUS
+
+#---------------------------------------------FEVZ--------------------------------------------------
+
+#Andrea's suggestion to use the entire data
+
+```{r}
+#AZM as reference
+   reg <- lm(diff_FEV1z ~dif_strep*trial_arm, data = betaFVC)
+                   summary(reg)
+                   confint(reg, level = 0.95)
+              
+```
+
+```{r}
+#Placebo as reference
+betaFVC2<-betaFVC
+betaFVC2 <- within(betaFVC2, trial_arm <- relevel(trial_arm, ref = "Placebo"))
+ reg <- lm(diff_FEV1z ~dif_strep*trial_arm, data = betaFVC2)
+                   summary(reg)
+                   confint(reg, level = 0.95)
+```
+
+
+#All arms and all visits
+```{r}
+#Lung functions and bacterial - Both arms at all visits
+reg <-lapply(c("dif_strep","diff_prev","diff_haem","dif_morax", "diff_neis" ) ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("diff_FEV1z ~trial_arm* ", var))
+                   reg <- lm(formula, data = betaFVC)
+                   summary(reg)
+                   bet <- round(coef(reg), 2)# Prepare the columns
+                   CI <- round(confint(reg, level = 0.95),2)
+                   pvalue<-round(coef(summary(reg))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(bet, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(reg, function(x) write.table( data.frame(x), 'results/change_genus_lung_function30122021refAZ.csv'  , append= T, sep=',' ))
+
+```
+
+#Placebo as reference to obtain the co-efficients for Placebo
+```{r}
+#Lung functions and bacterial - Both arms at all visits
+reg <-lapply(c("dif_strep","diff_prev","diff_haem","dif_morax", "diff_neis" ) ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("diff_FEV1z ~trial_arm* ", var))
+                   reg <- lm(formula, data = betaFVC2)
+                   summary(reg)
+                   bet <- round(coef(reg), 2)# Prepare the columns
+                   CI <- round(confint(reg, level = 0.95),2)
+                   pvalue<-round(coef(summary(reg))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(bet, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(reg, function(x) write.table( data.frame(x), 'results/change_genus_lung_function30122021refPlac.csv'  , append= T, sep=',' ))
+
+```
+
+
+#----------------------FVCz------------------------------------------
+
+#All arms and all visits
+```{r}
+#Lung functions and bacterial - Both arms at all visits
+reg <-lapply(c("dif_strep","diff_prev","diff_haem","dif_morax", "diff_neis" ) ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("dif_FVCZ ~trial_arm* ", var))
+                   reg <- lm(formula, data = betaFVC)
+                   summary(reg)
+                   bet <- round(coef(reg), 2)# Prepare the columns
+                   CI <- round(confint(reg, level = 0.95),2)
+                   pvalue<-round(coef(summary(reg))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(bet, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(reg, function(x) write.table( data.frame(x), 'results/change_genus_lung_function30122021refAZ_FVCZ.csv'  , append= T, sep=',' ))
+
+```
+
+#Placebo as reference to obtain the co-efficients for Placebo
+```{r}
+#Lung functions and bacterial - Both arms at all visits
+reg <-lapply(c("dif_strep","diff_prev","diff_haem","dif_morax", "diff_neis" ) ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("dif_FVCZ ~trial_arm* ", var))
+                   reg <- lm(formula, data = betaFVC2)
+                   summary(reg)
+                   bet <- round(coef(reg), 2)# Prepare the columns
+                   CI <- round(confint(reg, level = 0.95),2)
+                   pvalue<-round(coef(summary(reg))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(bet, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(reg, function(x) write.table( data.frame(x), 'results/change_genus_lung_function30122021refPlac_FVCZ.csv'  , append= T, sep=',' ))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Scatterplot of Significant associations
+
+
+
+#------Stratify data into each time interval within the AZM and Placebo-------
+```{r}
+#Placebo
+T1T2pl<-betaFVC%>%
+  filter(interval =="T1 vs T2",
+         trial_arm=="Placebo")
+
+T2T3pl<-betaFVC%>%
+  filter(interval =="T2 vs T3",
+         trial_arm=="Placebo")
+
+T1T3pl<-betaFVC%>%
+  filter(interval =="T1 vs T3",
+         trial_arm=="Placebo")
+
+#AZM
+
+T1T2az<-betaFVC%>%
+  filter(interval =="T1 vs T2",
+         trial_arm=="AZM")
+
+T2T3az<-betaFVC%>%
+  filter(interval =="T2 vs T3",
+         trial_arm=="AZM")
+
+T1T3az<-betaFVC%>%
+  filter(interval =="T1 vs T3",
+         trial_arm=="AZM")
+```
+
+```{r}
+print("morax")
+reg1<-lm (diff_FEV1z~dif_morax, data=betaFVC)
+
+a<-ggplot(betaFVC, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  stat_smooth()+theme_bw()
+
+par(mfrow = c(2, 2))
+plot(reg1)
+
+print("morax")
+reg2<-lm (diff_FEV1z~dif_morax, data=T1T2az)
+summary(reg2)
+
+b<-ggplot(T1T2az, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  stat_smooth()+theme_bw()
+
+print("morax")
+reg3<-lm (diff_FEV1z~dif_morax, data=T1T3az)
+summary(reg3)
+
+
+c <- ggplot(T1T3az, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  stat_smooth() +theme_bw()
+
+
+par(mfrow = c(3, 3))
+plot(reg1)
+plot(reg2)
+plot(reg3)
+
+par(mfrow = c(3, 3))
+a
+b
+c
+
+```
+
+```{r}
+print("morax")
+reg1<-lm (diff_FEV1z~dif_morax, data=betaFVC)
+
+d<-ggplot(betaFVC, aes(x = dif_morax, y =diff_FEV1z )) +
+  geom_point() +
+  stat_smooth()+theme_bw()
+
+par(mfrow = c(2, 2))
+plot(reg1)
+
+print("morax")
+reg2<-lm (diff_FEV1z~dif_morax, data=T1T2az)
+summary(reg2)
+
+e<-ggplot(T1T2az, aes(x = dif_morax, y =diff_FEV1z)) +
+  geom_point() +
+  stat_smooth()+theme_bw()
+
+print("morax")
+reg3<-lm (diff_FEV1z~dif_morax, data=T1T3az)
+summary(reg3)
+
+
+f <- ggplot(T1T3az, aes(x = dif_morax, y =diff_FEV1z)) +
+  geom_point() +
+  stat_smooth() +theme_bw()
+
+
+par(mfrow = c(3, 3))
+plot(reg1)
+plot(reg2)
+plot(reg3)
+
+par(mfrow = c(3, 3))
+d
+e
+f
+
+
+```
+
+```{r}
+a1<-ggplot(betaFVC, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (all visits and both trial arms)",
+             x = "Within participant change in FEV1-z-score",
+             y = "Within participant change in relative abundance of Moraxella")
+a1
+
+a2<-ggplot(betaFVC, aes(x = dif_morax, y =diff_FEV1z )) +
+  geom_point() +
+    geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (all visits and both trial arms)",
+             x =  "Within participant change in relative abundance of Moraxella",
+             y = "Within participant change in FEV1-z-score" )
+
+a2
+
+```
+
+```{r}
+a1b<-ggplot(T1T2az, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (AZM only Week 48 and baseline)",
+             x = "Within participant change in FEV1-z-score",
+             y = "Within participant change in relative abundance of Moraxella")
+a1b
+
+a2b<-ggplot(T1T2az, aes(x = dif_morax, y =diff_FEV1z )) +
+  geom_point() +
+    geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (AZM only Week 48 and baseline)",
+             x =  "Within participant change in relative abundance of Moraxella",
+             y = "Within participant change in FEV1-z-score" )
+
+a2b
+
+```
+
+```{r}
+a1c<-ggplot(T1T3az, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (AZM only Week 72 and 48)",
+             x = "Within participant change in FEV1-z-score",
+             y = "Within participant change in relative abundance of Moraxella")
+a1c
+
+a2c<-ggplot(T1T3az, aes(x = dif_morax, y =diff_FEV1z )) +
+  geom_point() +
+    geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (AZM only Week 72 and 48)",
+             x =  "Within participant change in relative abundance of Moraxella",
+             y = "Within participant change in FEV1-z-score" )
+
+a2c
+
+```
+
+```{r}
+#library(cowplot)
+
+asd<-cowplot::plot_grid(a1, a2, a1b,a2b, a1c,a2c, nrow = 3, ncol = 2, scale = .9, vjust=1)
+asd
+
+ggsave("regressionscatter3rdDec.pdf", asd,  width = 40, height = 50, units = "cm")
+```
+
+
+```{r}
+b1c<-ggplot(T1T3pl, aes(x = diff_FEV1z, y = dif_morax)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (Placebo only Week 72 and 48)",
+             x = "Within participant change in FEV1-z-score",
+             y = "Within participant change in relative abundance of Moraxella")
+b1c
+
+b2c<-ggplot(T1T3pl, aes(x = dif_morax, y =diff_FEV1z )) +
+  geom_point() +
+    geom_smooth(method = "lm", se=FALSE)+theme_bw()+
+  labs(title = "Linear Regression scatterplot (Placebo only Week 72 and 48)",
+             x =  "Within participant change in relative abundance of Moraxella",
+             y = "Within participant change in FEV1-z-score" )
+
+b2c
+
+par(mfrow = c(2, 2))
+b1c
+b2c
+```
+
+

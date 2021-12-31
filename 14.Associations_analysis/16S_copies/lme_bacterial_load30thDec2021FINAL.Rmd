@@ -1,0 +1,680 @@
+---
+title: "LME analysis of 16S load"
+output: html_notebook
+Date: 30th December 2021
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+
+```{r}
+library(tidyverse)
+library(lme4)
+library(lmerTest) # for p values
+library(gplots)
+library(dplyr)
+
+```
+
+#Using data where baseline data has been repeated respectively throughout all visits- "data_for_regression20thDec2021" use this for those variables not working above becuase only available for baseline
+
+
+
+```{r}
+Trial<-read.csv("data/data_for_regression20thDec2021NAs.csv", row.names = 1, stringsAsFactors = TRUE)
+str(Trial)
+```
+
+
+```{r}
+#----------Log10 transformation of 16S rRNA copies-----------------
+summary(Trial$templatedna_16sqpcr_copies)
+Trial$templatedna_16sqpcr_copies <- log10(Trial$templatedna_16sqpcr_copies)
+summary(Trial$templatedna_16sqpcr_copies)
+colnames(Trial)
+
+# converting relevant variables to factors
+names <- c( 'f24mrcscore','f24mrcscore_baseline','f14adm_baseline', "f15nadm_baseline", 'f16tbtreat_baseline')
+Trial[ , names] <- lapply(Trial[ , names], factor)
+str(Trial)
+```
+
+ˆ
+```{r}
+#Releveling
+Trial <- within(Trial, agegpenrl_baseline <- relevel(agegpenrl_baseline, ref = "d17-19y"))
+#Output with Placebo as reference
+Trial1 <- within(Trial, trial_arm <- relevel(trial_arm, ref = "Placebo"))
+```
+
+
+#Univariate analysis- 30th Dec 2021
+```{r}
+#AZM as reference
+lmer_16s <-lapply(c("trial_arm","visit","adherence","site", "agey", "sex","colmonthgp_mal2" ,"f24mrcscore_baseline ","fev1z","fvc", "fvcz", "fev1fvcz","fvcpcpred", "fevpcpred","zbmiuk","zwauk", "zhauk", "cd4enrl_baseline","cd4", "vload", "normalwaz_reg","normalhaz_reg","acut_exac12m", "hospitalised12m" , " antibiotic12m" , "any3_reasons1",   "f11cotri_baseline","agegpenrl_baseline","duryartgp_baseline", "abnrr", "abnsat", "abnhr","vlenrl_baseline","vlsup_reg","artdrug1stline_baseline","f14adm_baseline",  "f16tbtreat_baseline", "ageyart_baseline", "duryart_baseline", " cd4gp_baseline", "agegpsym_baseline", "mrcgr1_baseline") ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("templatedna_16sqpcr_copies ~ trial_arm*visit + (1|studyno)+", var))
+                   md1 <- lmer(formula, data = Trial)
+                   
+                   summary(md1)
+                   beta <- round(fixef(md1),2)
+                   CI <- round(confint(md1, level = 0.95),2)
+                   CI <- CI[-(1:2),]
+                   pvalue<-round(coef(summary(md1))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(beta, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(lmer_16s, function(x) write.table( data.frame(x), 'results/lmer_results_16Scopies_21stDec2021AZM_as_reference1.csv'  , append= T, sep=',' ))
+```
+
+```{r}
+#Placebo as reference
+lmer_16s <-lapply(c("trial_arm","visit","adherence","site", "agey", "sex","colmonthgp_mal2" ,"f24mrcscore_baseline ","fev1z","fvc", "fvcz", "fev1fvcz","fvcpcpred", "fevpcpred","zbmiuk","zwauk", "zhauk", "cd4enrl_baseline","cd4", "vload", "normalwaz_reg","normalhaz_reg","acut_exac12m", "hospitalised12m" , " antibiotic12m" , "any3_reasons1",   "f11cotri_baseline","agegpenrl_baseline","duryartgp_baseline", "abnrr", "abnsat", "abnhr","vlenrl_baseline","vlsup_reg","artdrug1stline_baseline","f14adm_baseline",  "f16tbtreat_baseline", "ageyart_baseline", "duryart_baseline", " cd4gp_baseline", "agegpsym_baseline", "mrcgr1_baseline") ,
+                 
+                 function(var) {
+                   
+                   formula    <- as.formula(paste("templatedna_16sqpcr_copies ~ trial_arm*visit + (1|studyno)+", var))
+                   md1 <- lmer(formula, data = Trial1)
+                   
+                   summary(md1)
+                   beta <- round(fixef(md1),2)
+                   CI <- round(confint(md1, level = 0.95),2)
+                   CI <- CI[-(1:2),]
+                   pvalue<-round(coef(summary(md1))[,'Pr(>|t|)'],3)
+                   table2 <- as.data.frame(cbind(beta, CI, pvalue))# Bind columns together as dataset
+                   table2
+                 })
+lapply(lmer_16s, function(x) write.table( data.frame(x), 'results/lmer_results_16Scopies_21stDec2021placebo_as_reference1.csv'  , append= T, sep=',' ))
+```
+
+
+#Obtaining p values for multi-level variables
+#f24mrcscore_baseline
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit+
+                                             +f24mrcscore_baseline+  (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+
+#agegpenrl_baseline
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit
+                                             +agegpenrl_baseline+  (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+#duryartgp_baseline
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit
+                                             +duryartgp_baseline+  (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+#Adherence and trial arm and visit interaction term to decipher the effect on AZM arm at week 48
+
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit*adherence+
+                                           (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+#Acute exacerbation during intervention  and trial arm and visit interaction term to decipher the effect on AZM arm at week 48
+
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit*acut_exac12m+
+                                           (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+
+#Hospitalised during intervention  and trial arm and visit interaction term to decipher the effect on AZM arm at week 48
+
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit*hospitalised12m+
+                                           (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+#Additional antibiotics during intervention  and trial arm and visit interaction term to decipher the effect on AZM arm at week 48
+
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit*antibiotic12m+
+                                           (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+
+
+
+#Any events during intervention  and trial arm and visit interaction term to decipher the effect on AZM arm at week 48
+
+```{r}
+rm3.templatedna_16sqpcr_copies.all = lmer(templatedna_16sqpcr_copies ~ trial_arm*visit*any3_reasons1+
+                                           (1|studyno), data=Trial1)
+
+summary(rm3.templatedna_16sqpcr_copies.all)
+anova(rm3.templatedna_16sqpcr_copies.all)
+print("Results for table")
+fixef(rm3.templatedna_16sqpcr_copies.all)
+confint(rm3.templatedna_16sqpcr_copies.all, level = 0.95)
+```
+
+None of the following added as interaction term to visit and trial arm was significant
+"adherence", acut_exac12m", "hospitalised12m" , " antibiotic12m" , "any3_reasons1",
+
+
+
+
+
+#Multivariate Analysis
+
+```{r}
+#AZM as reference
+ md2 <- lmer(templatedna_16sqpcr_copies ~ trial_arm+trial_arm*visit+ 
+             +adherence+site +agegpenrl_baseline +sex +colmonthgp_mal2 +f24mrcscore_baseline+fev1z+ normalhaz_reg+
+               f11cotri_baseline+duryartgp_baseline+f14adm_baseline+vlsup_reg+
+               f16tbtreat_baseline+ (1|studyno),
+              data = Trial)
+                   summary(md2)
+                   confint(md2, level = 0.95)
+                   anova(md2)#obtain p values for multi-level factors/variables
+                   beta <- round(fixef(md2),2)
+                   CI <- round(confint(md2, level = 0.95),2)
+                   CI <- CI[-(1:2),]
+                   pvalue<-round(coef(summary(md2))[,'Pr(>|t|)'],3)
+                   table3 <- as.data.frame(cbind(beta, CI, pvalue))# Bind columns together as dataset
+                   table3  
+  write.csv(table3, "results/16Scopies_multivariate21122021AZM_as_ref.csv")  
+```
+
+```{r}
+#Placebo as reference
+ md2 <- lmer(templatedna_16sqpcr_copies ~ trial_arm+trial_arm*visit+ 
+             +adherence+site +agegpenrl_baseline +sex +colmonthgp_mal2 +f24mrcscore_baseline+fev1z+ normalhaz_reg+
+               f11cotri_baseline+duryartgp_baseline+f14adm_baseline+vlsup_reg+
+               f16tbtreat_baseline+ (1|studyno),
+              data = Trial1)
+                   summary(md2)
+                   confint(md2, level = 0.95)
+                   anova(md2)#obtain p values for multi-level factors/variables
+                    beta <- round(fixef(md2),2)
+                   CI <- round(confint(md2, level = 0.95),2)
+                   CI <- CI[-(1:2),]
+                   pvalue<-round(coef(summary(md2))[,'Pr(>|t|)'],3)
+                   table3 <- as.data.frame(cbind(beta, CI, pvalue))# Bind columns together as dataset
+                   table3      
+write.csv(table3, "results/16Scopies_multivariate21122021Placebo_as_ref.csv")  
+```
+
+
+#Number of observations and participants
+```{r}
+#------Trial arms- How many samples were collected from site-at each timepoint------------
+
+#use trial arms data and split into timepoints to compute data collected at each for each arm
+tmpt_1 <-Trial[which(Trial$visit=="Baseline"),]#331
+tmpt_12<-Trial[which(Trial$visit=="Week 48"),]#304
+tmpt_18<-Trial[which(Trial$visit=="Week 72"),]#240
+
+#---Prevalence Totals in main trial data-------------
+#Subsetting data into AZM and placebo
+AZM<-Trial[which(Trial$trial_arm=="AZM"),]#441
+Placebo<-Trial[which(Trial$trial_arm=="Placebo"),]#434
+
+AZM1<-tmpt_1[which(tmpt_1$trial_arm=="AZM"),]#164
+AZM12<-tmpt_12[which(tmpt_12$trial_arm=="AZM"),]#154
+AZM18<-tmpt_18[which(tmpt_18$trial_arm=="AZM"),]#123
+
+AZM012<-AZM[which(AZM$visit!="Week 72"),]
+AZM012p<-AZM[which(AZM$visit!="Week 72" & AZM$visit012=="yes"),]
+AZM1218p<-AZM[which(AZM$visit!="Baseline" & AZM$visit1218=="yes"),]
+AZM018p<-AZM[which(AZM$visit!="Week 48" & AZM$visit018=="yes"),]
+AZM3p<-AZM[which(AZM$all_3=="yes"),]
+
+
+
+Plac1<-tmpt_1[which(tmpt_1$trial_arm=="Placebo"),]#167
+Plac12<-tmpt_12[which(tmpt_12$trial_arm=="Placebo"),]#150
+Plac18<-tmpt_18[which(tmpt_18$trial_arm=="Placebo"),]#117
+
+Placebo012p<-Placebo[which(Placebo$visit!="Week 72" & Placebo$visit012=="yes"),]
+Placebo1218p<-Placebo[which(Placebo$visit!="Baseline" & Placebo$visit1218=="yes"),]
+Placebo018p<-Placebo[which(Placebo$visit!="Week 48" & Placebo$visit018=="yes"),]
+Placebo3p<-Placebo[which(Placebo$all_3=="yes"),]
+
+
+length(unique(AZM$studyno))
+length(unique(AZM$names))
+
+length(unique(Placebo$studyno))
+length(unique(Placebo$names))
+
+length(unique(tmpt_1$studyno))
+length(unique(tmpt_1$names))
+
+length(unique(tmpt_12$studyno))
+length(unique(tmpt_12$names))
+
+length(unique(tmpt_18$studyno))
+length(unique(tmpt_18$names))
+
+
+length(unique(Plac1$studyno))
+length(unique(Plac1$names))
+
+length(unique(Plac12$studyno))
+length(unique(Plac12$names))
+
+length(unique(Plac18$studyno))
+length(unique(Plac18$names))
+
+xtabs(~adherence, data=Trial)
+
+
+a<-Trial[which(Trial$adherence=="Adherent"),]#441
+b<-Trial[which(Trial$adherence=="Not Adherent"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+#site
+xtabs(~site, data=Trial)
+
+a<-Trial[which(Trial$site=="Malawi"),]#441
+b<-Trial[which(Trial$site=="Zimbabwe"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+xtabs(~agey, data=Trial)
+
+
+
+#sex
+xtabs(~sex, data=Trial)
+
+a<-Trial[which(Trial$sex=="female"),]#441
+b<-Trial[which(Trial$sex=="male"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+
+#duryartgp_baseline
+xtabs(~duryartgp_baseline, data=Trial)
+
+a<-Trial[which(Trial$duryartgp_baseline=="a6m-<2y"),]
+b<-Trial[which(Trial$duryartgp_baseline=="b2-<4y"),]
+
+c<-Trial[which(Trial$duryartgp_baseline=="c4y-<6y"),]
+d<-Trial[which(Trial$duryartgp_baseline=="d6y+"),]
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+length(unique(c$studyno))
+length(unique(c$names))
+
+
+length(unique(d$studyno))
+length(unique(d$names))
+
+
+#agegpenrl_baseline
+xtabs(~agegpenrl_baseline, data=Trial)
+
+a<-Trial[which(Trial$agegpenrl_baseline=="a6-9y"),]
+b<-Trial[which(Trial$agegpenrl_baseline=="b10-12y"),]
+
+c<-Trial[which(Trial$agegpenrl_baseline=="c13-16y"),]
+d<-Trial[which(Trial$agegpenrl_baseline=="d17-19y"),]
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+length(unique(c$studyno))
+length(unique(c$names))
+
+
+length(unique(d$studyno))
+length(unique(d$names))
+
+
+
+
+
+#aMRC dyspnoea score
+xtabs(~f24mrcscore_baseline, data=Trial)
+
+a<-Trial[which(Trial$f24mrcscore_baseline=="1"),]
+b<-Trial[which(Trial$f24mrcscore_baseline=="2"),]
+
+c<-Trial[which(Trial$f24mrcscore_baseline=="3"),]
+d<-Trial[which(Trial$f24mrcscore_baseline=="4"),]
+
+e<-Trial[which(Trial$f24mrcscore_baseline=="5"),]
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+length(unique(c$studyno))
+length(unique(c$names))
+
+
+length(unique(d$studyno))
+length(unique(d$names))
+
+length(unique(e$studyno))
+length(unique(e$names))
+
+
+
+
+
+#f11cotri_baseline
+xtabs(~f11cotri_baseline, data=Trial)
+
+a<-Trial[which(Trial$f11cotri_baseline=="no"),]#441
+b<-Trial[which(Trial$f11cotri_baseline=="yes"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+#any3_reasons.1
+xtabs(~any3_reasons.1, data=Trial)
+
+a<-Trial[which(Trial$any3_reasons.1=="no"),]#441
+b<-Trial[which(Trial$any3_reasons.1=="yes"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+
+
+#sex
+xtabs(~antibiotic12m, data=Trial)
+
+a<-Trial[which(Trial$antibiotic12m=="no"),]#441
+b<-Trial[which(Trial$antibiotic12m=="yes"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+
+#hospitalised12m
+xtabs(~hospitalised12m, data=Trial)
+
+a<-Trial[which(Trial$hospitalised12m=="no"),]#441
+b<-Trial[which(Trial$hospitalised12m=="yes"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+#acut_exac12m
+xtabs(~acut_exac12m, data=Trial)
+
+a<-Trial[which(Trial$acut_exac12m=="no"),]#441
+b<-Trial[which(Trial$acut_exac12m=="yes"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+
+#season of sample
+xtabs(~colmonthgp_mal2, data=Trial)
+
+a<-Trial[which(Trial$colmonthgp_mal2=="May-Oct-Dry"),]#441
+b<-Trial[which(Trial$colmonthgp_mal2=="Nov-Apr-Rainy"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+length(unique(Trial$fev1z))
+
+length(unique(Trial$FEV1FVCZ))
+
+length(unique(Trial$FVC))
+length(unique(Trial$FVCZ))
+
+length(unique(Trial$FVCpcpred))
+length(unique(Trial$FEVpcpred))
+length(unique(Trial$zbmiuk))
+length(unique(Trial$zwauk))
+length(unique(Trial$zhauk))
+length(unique(Trial$agey))
+
+length(unique(Trial$cd4))
+
+#Ever admitted for chest problems in the past year before enrolment
+xtabs(~f14adm_baseline, data=Trial)
+
+Trial$f14adm
+a<-Trial[which(Trial$f14adm_baseline=="yes"),]#441
+b<-Trial[which(Trial$f14adm_baseline=="no"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+863+12
+863/875
+12/875
+340/346
+6/346
+
+
+#Ever treated for tuberculosis before enrolment
+xtabs(~f16tbtreat_baseline, data=Trial)
+
+
+609+263
+609/872
+
+263/872
+
+Trial$f14adm
+a<-Trial[which(Trial$f16tbtreat_baseline=="yes"),]#441
+b<-Trial[which(Trial$f16tbtreat_baseline=="no"),]#434
+
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+248+97
+248/345
+97/345
+
+
+
+#vload suppression
+xtabs(~vlsup_reg, data=Trial)
+
+a<-Trial[which(Trial$vlsup_reg=="Suppresed"),]#
+b<-Trial[which(Trial$vlsup_reg=="Unsuppresed"),]#
+
+
+495+ 377
+495/875
+377/875
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+193/346
+151/346
+193+151
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+underweight
+
+#normalwaz_reg
+xtabs(~normalwaz_reg, data=Trial)
+
+a<-Trial[which(Trial$normalwaz_reg=="Not underweight"),]#
+b<-Trial[which(Trial$normalwaz_reg=="underweight"),]#
+
+
+
+495+ 377
+495/875
+377/875
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+166/346
+180/346
+166+180
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+#normalhaz_reg
+xtabs(~normalhaz_reg, data=Trial)
+
+a<-Trial[which(Trial$normalhaz_reg=="Not stunted"),]#
+b<-Trial[which(Trial$normalhaz_reg=="stunted"),]#
+
+
+434+ 441
+434/875
+441/875
+
+length(unique(a$studyno))
+length(unique(a$names))
+
+171/346
+175/346
+171+175
+
+
+length(unique(b$studyno))
+length(unique(b$names))
+
+
+
+```
+
+
+
+
+
+
+
+
+
+

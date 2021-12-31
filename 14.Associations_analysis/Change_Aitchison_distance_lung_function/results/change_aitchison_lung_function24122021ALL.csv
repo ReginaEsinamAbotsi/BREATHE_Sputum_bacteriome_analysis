@@ -1,0 +1,28 @@
+"x"
+"1","AZM as reference - FEV1z"
+"bet","2.5 %","97.5 %","pvalue"
+"(Intercept)",30.43,29.82,31.05,0
+"diff_FEV1z",1.05,0.15,1.96,0.023
+"trial_armPlacebo",-1.01,-1.89,-0.13,0.025
+"diff_FEV1z:trial_armPlacebo",-0.75,-2.17,0.67,0.3
+"x"
+"1","Placebo  as reference - FEV1z"
+"bet","2.5 %","97.5 %","pvalue"
+"(Intercept)",29.42,28.79,30.06,0
+"diff_FEV1z",0.3,-0.8,1.4,0.591
+"trial_armAZM",1.01,0.13,1.89,0.025
+"diff_FEV1z:trial_armAZM",0.75,-0.67,2.17,0.3
+"x"
+"1","AZM as reference - FVCz"
+"bet","2.5 %","97.5 %","pvalue"
+"(Intercept)",30.42,29.8,31.04,0
+"dif_FVCZ",0.95,0.11,1.79,0.027
+"trial_armPlacebo",-0.95,-1.84,-0.06,0.036
+"dif_FVCZ:trial_armPlacebo",-1.65,-2.87,-0.43,0.008
+"x"
+"1","Placebo  as reference - FVCz"
+"bet","2.5 %","97.5 %","pvalue"
+"(Intercept)",29.47,28.83,30.11,0
+"dif_FVCZ",-0.71,-1.59,0.18,0.118
+"trial_armAZM",0.95,0.06,1.84,0.036
+"dif_FVCZ:trial_armAZM",1.65,0.43,2.87,0.008
