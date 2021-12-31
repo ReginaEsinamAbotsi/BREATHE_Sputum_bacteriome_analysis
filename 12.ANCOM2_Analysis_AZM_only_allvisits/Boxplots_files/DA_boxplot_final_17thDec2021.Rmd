@@ -1,0 +1,125 @@
+---
+title: "R Notebook"
+output: html_notebook
+author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(phyloseq); packageVersion("phyloseq") 
+library(microbiome)
+library(forcats)
+library(cowplot)
+```
+
+
+```{r}
+#Data import and preprocessing
+trial <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+
+#Subsets of AZM and Placebo at Week 48
+
+t12 <-subset_samples(trial, visit=="Week 48")#304
+t12
+
+# merge taxa to the Genus rank level
+t12g<-tax_glom(t12, taxrank = rank_names(t12)[6])
+taxa_names(t12g)<-as.character(tax_table(t12g)[,6])
+OTU.t12g<-otu_table(t12g)
+mean(OTU.t12g==0)
+t12g
+
+#Filtering
+t12
+t12g
+t12fg <- filter_taxa(t12g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fg
+
+
+t12fg_rel = phyloseq::transform_sample_counts(t12fg,function(x){x / sum(x)})
+
+
+
+
+AZM <-subset_samples(trial, trial_arm=="AZM")#441
+AZM#441
+
+#Merging at genus level
+AZMg<-tax_glom(AZM, taxrank = rank_names(AZM)[6])
+taxa_names(AZMg)<-as.character(tax_table(AZMg)[,6])
+AZMg
+
+#Filtering
+AZM
+AZMg
+AZMfg <- filter_taxa(AZMg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+AZMfg
+
+AZMfg_rel = phyloseq::transform_sample_counts(AZMfg,function(x){x / sum(x)})
+```
+
+
+#Actual plots
+```{r}
+#Subsetting data for AZM and Placebo at 48 weeks plot
+pd12r = subset_taxa(t12fg_rel, Genus=="Moraxella" | Genus=="Haemophilus"| Genus=="Veillonella"| Genus=="Aggregatibacter"| Genus=="ASV_62"| Genus=="Streptobacillus"| Genus=="ASV_205"| Genus=="Lautropia"| Genus=="Peptococcus"| Genus=="Oribacterium"| Genus=="Rothia"| Genus=="Treponema"| Genus=="Actinomyces" )
+
+
+#Boxplot
+fig1b<-pd12r %>% 
+  psmelt() %>% 
+  ggplot(aes(x=forcats::fct_relevel(Genus, "Haemophilus","Moraxella","Veillonella","Rothia", "Lautropia"), y=log10(Abundance), fill=trial_arm)) + 
+    geom_boxplot(notch = TRUE)+ scale_fill_manual(values=c("#A087BC", "#FFF468"))+
+  theme_classic()+
+  scale_x_discrete(labels = c("Haemophilus","Moraxella", "Aggregatibacter","Treponema", "Peptococcus", "Veillonella","Rothia", "Lautropia","Actinomyces","ASV_62 (Lachnospiracea)","Streptobacillus", "ASV_205 (Clostridia)", "Oribacterium"))+
+  labs(y="Log10 (Relative Abundance)", x=NULL)+
+  theme(axis.text.x=element_text(size=14, face="bold",color="black", angle = 45,hjust = 1),
+        strip.text= element_text(size=14, face="bold"),
+        axis.text= element_text(size=16, face="bold",color="black"),
+        axis.title= element_text(size=18, face="bold",color="black"),
+        legend.title = element_text(size = 20, face = "bold", color = "black"),
+        legend.text =element_text(size = 18, face = "bold", color = "black"))
+fig1b
+#ggsave("Top_Genera_DAtrial12b.pdf", fig1b, width = 35, height = 35, units = "cm")
+
+
+#Subsetting data for AZM all visit plot
+hd = subset_taxa(AZMfg_rel, Genus=="Moraxella" | Genus=="Haemophilus"| Genus=="Veillonella"| Genus=="Aggregatibacter"| Genus=="ASV_62"| Genus=="Streptobacillus"| Genus=="ASV_205"| Genus=="Lautropia"| Genus=="Peptococcus"| Genus=="Oribacterium"| Genus=="Rothia"| Genus=="ASV_157"| Genus=="Treponema" | Genus=="ASV_209"| Genus=="F0058")
+
+
+fig2b<-hd %>% 
+  psmelt() %>% 
+  ggplot(aes(x=forcats::fct_relevel(Genus, "Haemophilus","Moraxella", "Aggregatibacter","Treponema", "Peptococcus","F0058", "Oribacterium","Veillonella","Lautropia","Rothia","ASV_62","Streptobacillus", "ASV_205","ASV_157","ASV_209"), y=log10(Abundance), fill=visit)) + 
+    geom_boxplot(notch = TRUE)+ 
+  theme_classic()+
+  labs(y="Log10 (Relative Abundance)", x=NULL)+
+  scale_fill_manual(values=c("#E1D0FF","#8662BD", "#32224A"))+
+  #scale_fill_brewer(palette= c("#b3cde3", "#EE82EE", "#46019B"))+
+  scale_x_discrete(labels = c("Haemophilus","Moraxella", "Aggregatibacter","Treponema", "ASV_157 (Absconditabacteria)",  "ASV_209 (Clostridia)","Peptococcus", "Veillonella","Rothia", "Lautropia","Actinomyces","ASV_62 (Lachnospiracea)","Streptobacillus", "ASV_205 (Clostridia)", "Oribacterium", "F0058 (Paludibacteria)"))+
+  theme(axis.text.x=element_text(size=14, face="bold",color="black", angle = 45, hjust = 1),
+        strip.text= element_text(size=14, face="bold"),
+        axis.text= element_text(size=16, face="bold",color="black"),
+        axis.title= element_text(size=18, face="bold",color="black"),
+        legend.title = element_text(size = 20, face = "bold", color = "black"),
+        legend.text =element_text(size = 18, face = "bold", color = "black"))
+
+fig2b
+#ggsave("DAAZM2.pdf", fig2b, width = 50, height = 35, units = "cm")
+
+#ASV_62 belongs to Lachnospiracea, ASV_205 belongs to Clostridia_UCG-014, ASV_209 belongs to Clostridia_UCG-014 and ASV-157 belongs to Absconditabacteriales_(SR1). 
+
+
+#Combine
+boxplot_all<-cowplot::plot_grid(fig1b, fig2b, nrow = 2, ncol = 1, scale = .9, labels = c("B)", "C)"), label_size = 35,
+  label_fontfamily = "Helvetica", label_colour = "dark blue")
+boxplot_all
+
+
+ggsave("figure/boxplot_all17thDec2021.pdf", boxplot_all,  width = 70, height = 40, units = "cm")
+```
+
+
+
+
+
