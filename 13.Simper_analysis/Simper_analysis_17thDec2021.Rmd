@@ -1,0 +1,162 @@
+---
+title: "Simper_analysis"
+output: html_notebook
+author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+
+---
+
+```{r}
+library(phyloseq)
+library(tidyverse)
+library(vegan)
+```
+
+
+```{r, Data import, subsetting, merging and 0.5% prevalence filtering}
+# Read in phyloseq object
+trial <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+
+#Subsets of AZM and Placebo at each visit
+
+t12 <-subset_samples(trial, visit=="Week 48")#304
+
+#Subsets of only AZM
+
+AZM <-subset_samples(trial, trial_arm=="AZM")#441
+AZM#441
+
+#---AZM at Baseline and Week 48----
+azm012<-subset_samples(AZM, visit!="Week 72")#318
+azm012
+
+#Selecting subset with samples at both Baseline and Week 48
+azm012p<-subset_samples(azm012, visit012=="yes")#292
+azm012p
+
+# merge taxa to the Genus rank level
+
+
+t12g<-tax_glom(t12, taxrank = rank_names(t12)[6])
+taxa_names(t12g)<-as.character(tax_table(t12g)[,6])
+OTU.t12g<-otu_table(t12g)
+mean(OTU.t12g==0)
+t12g
+
+
+azm012p
+azm012pg<-tax_glom(azm012p, taxrank = rank_names(azm012p)[6])
+taxa_names(azm012pg)<-as.character(tax_table(azm012pg)[,6])
+OTU.azm012pg<-otu_table(azm012pg)
+azm012pg
+
+t12
+t12g
+t12fg <- filter_taxa(t12g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fg
+
+
+azm012p
+azm012pg
+azm012pfg <- filter_taxa(azm012pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+azm012pfg
+
+```
+
+
+
+#AZM and Placebo at week 48
+```{r}
+###---- AZM and Placebo at 12 months genus level ###---------
+
+
+#Converting to relative abundances
+t12fg.TSS<-transform_sample_counts(t12fg, function(x) { x/sum(x)})
+
+#Extract the metadata file and otu table for each- AZM and Placebo at 12 months genus level and convert to dataframe
+meta12fga<-data.frame(meta12fg<-sample_data(t12fg.TSS))
+otu12fga<-data.frame(otu_table(t12fg.TSS))
+otu12fga<-t(otu12fga)
+
+#Run simper analysis
+set.seed(123)
+sim12fg<-simper(otu12fga, meta12fga$trial_arm, permutations=100)
+sim12fg
+sim12fg_s<-summary(sim12fg)
+sim12fg_s
+write.csv(sim12fg_s[["Placebo_AZM"]], "res/sim12fg.TSS.csv")#results but not adjusted for multiple testing
+
+#Wilcoxon test with adjustment for multiple testing using BH
+
+OTU.TSS<-otu12fga
+group<-meta12fga$trial_arm
+
+results.TSS.WMW<-data.frame(taxon=colnames(OTU.TSS),stat=NA,p=NA)
+
+for(i in 1:ncol(OTU.TSS)) {
+  tmp<-wilcox.test(x=as.numeric(OTU.TSS[group=="AZM",i]),
+                   y=as.numeric(OTU.TSS[group=="Placebo",i]))
+  results.TSS.WMW$stat[i]<-tmp$statistic
+  results.TSS.WMW$p[i]<-tmp$p.value
+}
+
+results.TSS.WMW$p.adj<-p.adjust(results.TSS.WMW$p, method="BH")
+
+sum(results.TSS.WMW$p.adj<0.05, na.rm = TRUE)
+
+write.csv(results.TSS.WMW, "res/resultsAZM_Placebo12g.TSS.WMW.csv")
+#Use the adjusted p avlues from  "resultsAZM_Placebo12g.TSS.WMW.csv" for these results "sim12fg.TSS.csv" 
+
+```
+
+
+
+#AZM at Baseline and week 48
+```{r}
+#_________________________________________________AZM ONLY______________________________________
+
+###---- AZM at baseline and week 48 genus level ###---------
+
+#Converting to relative abundances
+azm012pfg.TSS<-transform_sample_counts(azm012pfg, function(x) { x/sum(x)})
+
+#Extract the metadata file and otu table for each- AZM baseline and week 48 genus level and convert to dataframe
+metaAZMfga<-data.frame(sample_data(azm012pfg.TSS))
+otuAZMfga<-data.frame(otu_table(azm012pfg.TSS))
+otuAZMfga<-t(otuAZMfga)
+
+#Run simper analysis
+set.seed(123)
+simAZM<-simper(otuAZMfga, metaAZMfga$visit, permutations=100)
+simAZM
+simAZM_s<-summary(simAZM)
+simAZM_s
+write.csv(simAZM_s[["Baseline_Week 48"]], "res/simAZM048.TSS.csv")
+
+
+
+#Wilcoxon test-AZM at Week 0 and 48- genus level
+
+OTU.TSS<-otuAZMfga
+group<-metaAZMfga$visit
+
+results3.TSS.WMW<-data.frame(taxon=colnames(OTU.TSS),stat=NA,p=NA)
+
+for(i in 1:ncol(OTU.TSS)) {
+  tmp<-wilcox.test(x=as.numeric(OTU.TSS[group=="Baseline",i]),
+                   y=as.numeric(OTU.TSS[group=="Week 48",i]), paired = TRUE)
+  results3.TSS.WMW$stat[i]<-tmp$statistic
+  results3.TSS.WMW$p[i]<-tmp$p.value
+}
+
+results3.TSS.WMW$p.adj<-p.adjust(results3.TSS.WMW$p, method="BH")
+
+sum(results3.TSS.WMW$p.adj<0.1, na.rm = TRUE)
+
+write.csv(results3.TSS.WMW, "res/resultsAZM048pfg.TSS.WMW.csv")
+#Use the adjusted p avlues from  "resultsAZM048pfg.TSS.WMW.csv" for these results "simAZM048.TSS.csv" 
+
+
+```
+
+
+
