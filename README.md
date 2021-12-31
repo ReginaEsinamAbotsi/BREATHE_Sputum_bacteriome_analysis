@@ -59,34 +59,23 @@ BREATHE_Sputum_bacteriome_published_2021
       14.Associations-- houses R scripts used to determine associations between clinical and socio-demographic factors and alpha diversity
 
       
-          |-- AZM_Placebo -- contains scripts used to run differentially abundant taxa analysis on AZM and Placebo samples 
+          |-- 16S_copies -- contains scripts used to run linear mixed effect models on 16S rRNA copies and clinical and socio-demographic factors  
 
-                |-- Baseline -- contains scripts used to run differentially abundant taxa analysis on AZM and Placebo samples at baseline
+          |-- Change_Aitchison_distance_lung_function -- contains scripts used to run linear regression on within-participant change in beta                       diversity (Aitchison's distance) and within-participant change in lung function metrics- FEV1z and FVCZ 
+          
+          |-- Change_genus_abun_Lung_function -- contains scripts used to run linear regression on within-participant change in the relative                      abundances of selected genera and within-participant change in lung function metrics- FEV1z and FVCZ 
 
-                |-- 12m -- contains scripts used to run differentially abundant taxa analysis on AZM and Placebo samples at 48 weeks
+          |--  Genus_association_analysis -- contains scripts used to run linear mixed effect models on the relative abundances of selected                       genera and clinical and socio-demographic factors
+          
+          |-- Shannon_diversity_lme -- contains scripts used to run linear mixed effect models on Shannon diversity indices and clinical and                      socio-demographic factors
+          
+          |-- stata_analysis_16S_paper -- contains scripts used to manually generate trial arm and visit interaction terms for used in the linear                 mixed effect models 
 
-                |-- 18m -- contains scripts used to run differentially abundant taxa analysis on AZM and Placebo samples at 72 weeks
-
-         |-- AZM_only -- contains scripts used to run differentially abundant taxa analysis on only AZM samples 
-
-               |-- AZM012 -- contains scripts used to run differentially abundant taxa analysis on AZM baseline and 48 weeks 
-
-               |-- AZM1218 -- contains scripts used to run differentially abundant taxa analysis on AZM 48 and 72 weeks samples
-
-               |-- AZM018 -- contains scripts used to run differentially abundant taxa analysis on AZM baseline and 72 weeks samples
-
-        |-- Placebo_only -- contains scripts used to run differentially abundant taxa analysis on only Placebo samples 
-
-               |-- Placebo012 -- contains scripts used to run differentially abundant taxa analysis on Placebo baseline and 48 weeks 
-
-               |-- Placebo1218 -- contains scripts used to run differentially abundant taxa analysis on Placebo 48 and 72 weeks samples
-
-               |-- Placebo018 -- contains scripts used to run differentially abundant taxa analysis on Placebo baseline and 72 weeks samples
                
-       15.Final_DA_heatmaps-- houses R scripts used to determine the differentially abundant taxa using the other 9 methods and generating heatmap from the results 
+       15.Final_DA_heatmaps-- houses R scripts used to determine the differentially abundant taxa using the other 9 methods and generating                        heatmap from the results 
        
        Data dictionary -- houses excel files of variables and their interpretation 
       
-Figures_made_inppt-- houses differentially abundant taxa analysis results summary in figures on a Microsoft Powerpoint file. Also contains figure on number of samples collected and analysed
+       Figures_made_inppt-- houses differentially abundant taxa analysis results summary in figures on a Microsoft Powerpoint file. Also contains                 figure on number of samples collected and analysed
 
 
