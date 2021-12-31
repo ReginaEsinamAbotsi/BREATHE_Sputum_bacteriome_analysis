@@ -1,0 +1,258 @@
+---
+title: "PCoA plots_ trial arms only"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+
+```{r}
+library(tidyverse)
+library(phyloseq)
+library(cowplot)
+```
+
+
+```{r, Data import and subsetting}
+# Read in phyloseq object
+trial <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+trial
+
+#Subsets of AZM and Placebo at each visit
+t0 <-subset_samples(trial, visit=="Baseline")#304
+t0
+t12 <-subset_samples(trial, visit=="Week 48")#304
+t12
+t18 <-subset_samples(trial, visit=="Week 72")#304
+t18
+
+
+```
+
+
+```{r, merging at Genus level}
+# merge taxa to the Genus rank level
+
+t0g<-tax_glom(t0, taxrank = rank_names(t0)[6])
+taxa_names(t0g)<-as.character(tax_table(t0g)[,6])
+OTU.t0g<-otu_table(t0g)
+mean(OTU.t0g==0)
+t0g
+
+
+t12g<-tax_glom(t12, taxrank = rank_names(t12)[6])
+taxa_names(t12g)<-as.character(tax_table(t12g)[,6])
+OTU.t12g<-otu_table(t12g)
+mean(OTU.t12g==0)
+t12g
+
+
+t18g<-tax_glom(t18, taxrank = rank_names(t18)[6])
+taxa_names(t18g)<-as.character(tax_table(t18g)[,6])
+OTU.t18g<-otu_table(t18g)
+mean(OTU.t18g==0)
+t18g
+
+```
+
+
+
+```{r, Prevalence filtering}
+#Filtering
+t0
+t0g
+t0fg <- filter_taxa(t0g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t0fg
+
+
+t12
+t12g
+t12fg <- filter_taxa(t12g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fg
+
+t18
+t18g
+t18fg <- filter_taxa(t18g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t18fg
+
+```
+
+
+
+
+```{r}
+#Create subsets for clr files
+trial_CLR <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021CLR.RDS") #created using the clr transformed data sent by Yao labelled "clr_trans_yx.csv
+trial_CLR
+
+#Subsets of AZM and Placebo at each visit
+t0_CLR <-subset_samples(trial_CLR, visit=="Baseline")#304
+t0_CLR
+t12_CLR <-subset_samples(trial_CLR, visit=="Week 48")#304
+t12_CLR
+t18_CLR <-subset_samples(trial_CLR, visit=="Week 72")#304
+t18_CLR
+
+
+```
+
+```{r}
+
+# merge taxa to the Genus rank level
+
+t0g_CLR<-tax_glom(t0_CLR, taxrank = rank_names(t0)[6])
+taxa_names(t0g_CLR)<-as.character(tax_table(t0g_CLR)[,6])
+OTU.t0g_CLR<-otu_table(t0g_CLR)
+mean(OTU.t0g_CLR==0)
+t0g_CLR
+
+
+t12g_CLR<-tax_glom(t12_CLR, taxrank = rank_names(t12_CLR)[6])
+taxa_names(t12g_CLR)<-as.character(tax_table(t12g_CLR)[,6])
+OTU.t12g_CLR<-otu_table(t12g_CLR)
+mean(OTU.t12g_CLR==0)
+t12g_CLR
+
+
+t18g_CLR<-tax_glom(t18_CLR, taxrank = rank_names(t18_CLR)[6])
+taxa_names(t18g_CLR)<-as.character(tax_table(t18g_CLR)[,6])
+OTU.t18g_CLR<-otu_table(t18g_CLR)
+mean(OTU.t18g_CLR==0)
+t18g_CLR
+
+
+```
+
+
+
+```{r, prevalence filtering}
+#Filtering
+t0_CLR
+t0g_CLR
+t0fg_CLR <- filter_taxa(t0g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t0fg_CLR
+
+
+t12_CLR
+t12g_CLR
+t12fg_CLR <- filter_taxa(t12g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t12fg_CLR
+
+t18_CLR
+t18g_CLR
+t18fg_CLR <- filter_taxa(t18g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+t18fg_CLR
+
+```
+
+
+#Themes
+
+```{r}
+mythemet <- theme_classic()+ 
+  theme( legend.title = element_text(colour = "black",  face = "bold", family = "Helvetica",size = (19)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (17) ),
+        axis.title = element_text(family = "Helvetica", face = "bold",size = (19), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (17))) 
+```
+
+
+```{r}
+mythemet2 <- theme_classic()+ 
+  theme( legend.title = element_text(colour = "black",  face = "bold", family = "Helvetica",size = (19)), 
+        legend.position = "none",
+        axis.title = element_text(family = "Helvetica", face = "bold",size = (19), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (17))) 
+```
+
+
+
+
+#PCoA plots
+
+```{r, PCA Plots for AZM vs. Placebo at all visits}
+#PCo plots on non-rarefied counts on Aitchison distance
+
+#Trial_Baseline
+
+#Generate distances using clr
+ord_aitch <- ordinate(t0fg_CLR, method = "PCoA", distance = "euclidean") 
+ord_bray <- ordinate(t0fg, method = "PCoA", distance = "bray") 
+
+  
+
+#Plot ordinations
+a <- plot_ordination(t0fg_CLR, ord_aitch, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+a
+b <- plot_ordination(t0fg, ord_bray, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+
+```
+
+```{r}
+#Trial_Week 48s
+
+#Generate distances using clr
+ord_aitch <- ordinate(t12fg_CLR, method = "PCoA", distance = "euclidean") 
+ord_bray <- ordinate(t12fg, method = "PCoA", distance = "bray") 
+
+  
+
+#Plot ordinations
+d <- plot_ordination(t12fg_CLR, ord_aitch, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+d
+e <- plot_ordination(t12fg, ord_bray, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+
+
+```
+
+```{r}
+#Trial_Week 72s
+#Generate distances using clr
+ord_aitch <- ordinate(t18fg_CLR, method = "PCoA", distance = "euclidean") 
+ord_bray <- ordinate(t18fg, method = "PCoA", distance = "bray") 
+
+#Plot ordinations
+g <- plot_ordination(t18fg_CLR, ord_aitch, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+h <- plot_ordination(t18fg, ord_bray, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet2+scale_color_manual(values=c("#450b70", "#957f07"))
+
+```
+
+
+
+```{r}
+#PCo plots on non-rarefied counts on Aitchison distance
+
+#Trial_Baseline
+
+#Generate distances using clr
+ord_aitch <- ordinate(t0fg_CLR, method = "PCoA", distance = "euclidean") 
+ord_bray <- ordinate(t0fg, method = "PCoA", distance = "bray") 
+
+  
+#Extracting legened
+#Plot ordinations
+a1 <- plot_ordination(t0fg_CLR, ord_aitch, color = "trial_arm") + geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), linetype = 2)+mythemet +scale_color_manual(values=c("#450b70", "#957f07"))
+a1
+leg<-get_legend(a1)
+leg<-as_ggplot(leg)
+leg
+```
+
+
+#New plot
+
+```{r}
+all_visit_trial_ait1<-cowplot::plot_grid(a,d,g,leg, nrow = 1, ncol = 4, scale = .9, vjust=1, labels = c("Baseline", "Week 48", "Week 72"),label_size = 20, label_fontfamily = "Helvetica", rel_widths = c(2,2,2,1), rel_heights = c(2,2,2,1))
+all_visit_trial_ait1
+```
+
+```{r}
+all_visit_trial_bc1<-cowplot::plot_grid(b,e,h,leg, nrow = 1, ncol = 4, scale = .9, vjust=1, labels = c("Baseline", "Week 48", "Week 72"),label_size = 20, label_fontfamily = "Helvetica",rel_widths = c(2,2,2,1), rel_heights = c(2,2,2,1))
+all_visit_trial_bc1
+```
+
+```{r}
+all_visit_trial<-cowplot::plot_grid(all_visit_trial_ait1, all_visit_trial_bc1, nrow = 2, ncol = 1, scale = .85, vjust=c(1.5,0.5), labels = c("A) Aitchison distance", "B) Bray-Curtis distance"),label_size = 25, label_fontfamily = "Helvetica", label_colour = "dark blue")
+all_visit_trial
+
+ggsave("PCoA_all_visit_trial13thDec2021.pdf", all_visit_trial,  width = 60, height = 50, units = "cm")
+```
