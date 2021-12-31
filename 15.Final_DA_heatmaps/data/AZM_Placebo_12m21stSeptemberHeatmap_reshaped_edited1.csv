@@ -1,0 +1,441 @@
+﻿,Genus,position,variable,q.value
+1,Abiotrophia,Position 1,TSS_WMW,0.047867002
+2,Acinetobacter,Position 2,TSS_WMW,0.047867002
+3,Actinomyces,Position 3,TSS_WMW,0.006141925
+4,Aggregatibacter,Position 4,TSS_WMW,0.000109204
+5,Alloprevotella,Position 5,TSS_WMW,NA
+6,Amnipila,Position 6,TSS_WMW,0.047867002
+7,Atopobium,Position 7,TSS_WMW,0.0064286
+8,Candidatus_Saccharimonas,Position 8,TSS_WMW,0.002690305
+9,Capnocytophaga,Position 9,TSS_WMW,0.003534633
+10,Comamonas,Position 10,TSS_WMW,NA
+11,Corynebacterium,Position 11,TSS_WMW,NA
+12,Defluviitaleaceae_UCG-011,Position 12,TSS_WMW,0.003534633
+13,F0058 (Paludibacteraceae),Position 13,TSS_WMW,1.11E-05
+14,Filifactor,Position 14,TSS_WMW,0.029599378
+15,Fretibacterium,Position 15,TSS_WMW,NA
+16,Fusobacterium,Position 16,TSS_WMW,NA
+17,Gemella,Position 17,TSS_WMW,0.008296338
+18,Granulicatella,Position 18,TSS_WMW,0.000765103
+19,Haemophilus,Position 19,TSS_WMW,0.003187089
+20,Lachnoanaerobaculum,Position 20,TSS_WMW,NA
+21,Lautropia,Position 21,TSS_WMW,6.16E-07
+22,Lentimicrobium,Position 22,TSS_WMW,0.047867002
+23,Moraxella,Position 23,TSS_WMW,8.31E-07
+24,Neisseria,Position 24,TSS_WMW,NA
+25,Oceanivirga,Position 25,TSS_WMW,0.002690305
+26,Oribacterium,Position 26,TSS_WMW,0.001402086
+27,Peptoanaerobacter,Position 27,TSS_WMW,0.012335608
+28,Peptococcus,Position 28,TSS_WMW,0.021494276
+29,Prevotella,Position 29,TSS_WMW,NA
+30,Rikenellaceae_RC9_gut_group,Position 30,TSS_WMW,NA
+31,Rothia,Position 31,TSS_WMW,0.000167013
+32,Shuttleworthia,Position 32,TSS_WMW,0.025892619
+33,Streptobacillus,Position 33,TSS_WMW,0.000326342
+34,Streptococcus,Position 34,TSS_WMW,0.002267473
+35,Treponema,Position 35,TSS_WMW,1.28E-09
+36,Veillonella,Position 36,TSS_WMW,2.06E-05
+37,ASV_62 (Lachnospiraceae),Position 37,TSS_WMW,0.017781321
+38,ASV_187 (Absconditabacteriales_(SR1)),Position 38,TSS_WMW,NA
+39,ASV_205 (Clostridia_UCG-014),Position 39,TSS_WMW,0.001159759
+40,ASV_209 (Clostridia_UCG-014),Position 40,TSS_WMW,0.027603065
+41,ASV_280 (Absconditabacteriales_(SR1)),Position 41,TSS_WMW,0.041472049
+42,ASV_307 (Veillonellaceae),Position 42,TSS_WMW,0.021494276
+43,ASV_422 (Acholeplasmataceae),Position 43,TSS_WMW,NA
+44,ASV_540 (Saccharimonadales),Position 44,TSS_WMW,NA
+45,Abiotrophia,Position 1,VST_WMW,NA
+46,Acinetobacter,Position 2,VST_WMW,NA
+47,Actinomyces,Position 3,VST_WMW,0.010124529
+48,Aggregatibacter,Position 4,VST_WMW,4.90E-07
+49,Alloprevotella,Position 5,VST_WMW,NA
+50,Amnipila,Position 6,VST_WMW,NA
+51,Atopobium,Position 7,VST_WMW,NA
+52,Candidatus_Saccharimonas,Position 8,VST_WMW,NA
+53,Capnocytophaga,Position 9,VST_WMW,0.038756923
+54,Comamonas,Position 10,VST_WMW,NA
+55,Corynebacterium,Position 11,VST_WMW,NA
+56,Defluviitaleaceae_UCG-011,Position 12,VST_WMW,0.041571484
+57,F0058 (Paludibacteraceae),Position 13,VST_WMW,0.008782308
+58,Filifactor,Position 14,VST_WMW,NA
+59,Fretibacterium,Position 15,VST_WMW,NA
+60,Fusobacterium,Position 16,VST_WMW,NA
+61,Gemella,Position 17,VST_WMW,0.002309344
+62,Granulicatella,Position 18,VST_WMW,0.000128922
+63,Haemophilus,Position 19,VST_WMW,0.047664517
+64,Lachnoanaerobaculum,Position 20,VST_WMW,NA
+65,Lautropia,Position 21,VST_WMW,4.90E-07
+66,Lentimicrobium,Position 22,VST_WMW,NA
+67,Moraxella,Position 23,VST_WMW,2.10E-05
+68,Neisseria,Position 24,VST_WMW,NA
+69,Oceanivirga,Position 25,VST_WMW,0.011925794
+70,Oribacterium,Position 26,VST_WMW,0.002424636
+71,Peptoanaerobacter,Position 27,VST_WMW,0.038250014
+72,Peptococcus,Position 28,VST_WMW,0.012484903
+73,Prevotella,Position 29,VST_WMW,NA
+74,Rikenellaceae_RC9_gut_group,Position 30,VST_WMW,NA
+75,Rothia,Position 31,VST_WMW,0.000124718
+76,Shuttleworthia,Position 32,VST_WMW,NA
+77,Streptobacillus,Position 33,VST_WMW,0.000124718
+78,Streptococcus,Position 34,VST_WMW,0.000390973
+79,Treponema,Position 35,VST_WMW,3.69E-11
+80,Veillonella,Position 36,VST_WMW,4.22E-06
+81,ASV_62 (Lachnospiraceae),Position 37,VST_WMW,0.000390973
+82,ASV_187 (Absconditabacteriales_(SR1)),Position 38,VST_WMW,NA
+83,ASV_205 (Clostridia_UCG-014),Position 39,VST_WMW,0.000254065
+84,ASV_209 (Clostridia_UCG-014),Position 40,VST_WMW,0.018694773
+85,ASV_280 (Absconditabacteriales_(SR1)),Position 41,VST_WMW,NA
+86,ASV_307 (Veillonellaceae),Position 42,VST_WMW,NA
+87,ASV_422 (Acholeplasmataceae),Position 43,VST_WMW,NA
+88,ASV_540 (Saccharimonadales),Position 44,VST_WMW,NA
+89,Abiotrophia,Position 1,CLR_WMW,NA
+90,Acinetobacter,Position 2,CLR_WMW,NA
+91,Actinomyces,Position 3,CLR_WMW,0.006985269
+92,Aggregatibacter,Position 4,CLR_WMW,1.79E-06
+93,Alloprevotella,Position 5,CLR_WMW,0.042968131
+94,Amnipila,Position 6,CLR_WMW,NA
+95,Atopobium,Position 7,CLR_WMW,NA
+96,Candidatus_Saccharimonas,Position 8,CLR_WMW,NA
+97,Capnocytophaga,Position 9,CLR_WMW,NA
+98,Comamonas,Position 10,CLR_WMW,NA
+99,Corynebacterium,Position 11,CLR_WMW,NA
+100,Defluviitaleaceae_UCG-011,Position 12,CLR_WMW,0.028564928
+101,F0058 (Paludibacteraceae),Position 13,CLR_WMW,0.020433903
+102,Filifactor,Position 14,CLR_WMW,NA
+103,Fretibacterium,Position 15,CLR_WMW,NA
+104,Fusobacterium,Position 16,CLR_WMW,NA
+105,Gemella,Position 17,CLR_WMW,0.00241126
+106,Granulicatella,Position 18,CLR_WMW,0.008020704
+107,Haemophilus,Position 19,CLR_WMW,0.007213935
+108,Lachnoanaerobaculum,Position 20,CLR_WMW,NA
+109,Lautropia,Position 21,CLR_WMW,9.40E-07
+110,Lentimicrobium,Position 22,CLR_WMW,NA
+111,Moraxella,Position 23,CLR_WMW,1.37E-05
+112,Neisseria,Position 24,CLR_WMW,NA
+113,Oceanivirga,Position 25,CLR_WMW,0.008020704
+114,Oribacterium,Position 26,CLR_WMW,0.003093501
+115,Peptoanaerobacter,Position 27,CLR_WMW,0.028564928
+116,Peptococcus,Position 28,CLR_WMW,0.01671854
+117,Prevotella,Position 29,CLR_WMW,NA
+118,Rikenellaceae_RC9_gut_group,Position 30,CLR_WMW,NA
+119,Rothia,Position 31,CLR_WMW,0.006985269
+120,Shuttleworthia,Position 32,CLR_WMW,NA
+121,Streptobacillus,Position 33,CLR_WMW,0.000117629
+122,Streptococcus,Position 34,CLR_WMW,0.000201396
+123,Treponema,Position 35,CLR_WMW,1.79E-06
+124,Veillonella,Position 36,CLR_WMW,8.00E-06
+125,ASV_62 (Lachnospiraceae),Position 37,CLR_WMW,0.000151959
+126,ASV_187 (Absconditabacteriales_(SR1)),Position 38,CLR_WMW,NA
+127,ASV_205 (Clostridia_UCG-014),Position 39,CLR_WMW,0.000587751
+128,ASV_209 (Clostridia_UCG-014),Position 40,CLR_WMW,0.008020704
+129,ASV_280 (Absconditabacteriales_(SR1)),Position 41,CLR_WMW,NA
+130,ASV_307 (Veillonellaceae),Position 42,CLR_WMW,NA
+131,ASV_422 (Acholeplasmataceae),Position 43,CLR_WMW,NA
+132,ASV_540 (Saccharimonadales),Position 44,CLR_WMW,NA
+133,Abiotrophia,Position 1,Deseq2,NA
+134,Acinetobacter,Position 2,Deseq2,NA
+135,Actinomyces,Position 3,Deseq2,NA
+136,Aggregatibacter,Position 4,Deseq2,NA
+137,Alloprevotella,Position 5,Deseq2,NA
+138,Amnipila,Position 6,Deseq2,NA
+139,Atopobium,Position 7,Deseq2,NA
+140,Candidatus_Saccharimonas,Position 8,Deseq2,0.007477893
+141,Capnocytophaga,Position 9,Deseq2,0.00282313
+142,Comamonas,Position 10,Deseq2,NA
+143,Corynebacterium,Position 11,Deseq2,0.019642139
+144,Defluviitaleaceae_UCG-011,Position 12,Deseq2,NA
+145,F0058 (Paludibacteraceae),Position 13,Deseq2,5.19E-05
+146,Filifactor,Position 14,Deseq2,NA
+147,Fretibacterium,Position 15,Deseq2,NA
+148,Fusobacterium,Position 16,Deseq2,0.019642139
+149,Gemella,Position 17,Deseq2,NA
+150,Granulicatella,Position 18,Deseq2,NA
+151,Haemophilus,Position 19,Deseq2,NA
+152,Lachnoanaerobaculum,Position 20,Deseq2,NA
+153,Lautropia,Position 21,Deseq2,1.45E-10
+154,Lentimicrobium,Position 22,Deseq2,NA
+155,Moraxella,Position 23,Deseq2,1.70E-11
+156,Neisseria,Position 24,Deseq2,NA
+157,Oceanivirga,Position 25,Deseq2,0.031410901
+158,Oribacterium,Position 26,Deseq2,NA
+159,Peptoanaerobacter,Position 27,Deseq2,NA
+160,Peptococcus,Position 28,Deseq2,NA
+161,Prevotella,Position 29,Deseq2,NA
+162,Rikenellaceae_RC9_gut_group,Position 30,Deseq2,NA
+163,Rothia,Position 31,Deseq2,0.048216037
+164,Shuttleworthia,Position 32,Deseq2,NA
+165,Streptobacillus,Position 33,Deseq2,NA
+166,Streptococcus,Position 34,Deseq2,NA
+167,Treponema,Position 35,Deseq2,9.28E-11
+168,Veillonella,Position 36,Deseq2,0.000843589
+169,ASV_62 (Lachnospiraceae),Position 37,Deseq2,NA
+170,ASV_187 (Absconditabacteriales_(SR1)),Position 38,Deseq2,NA
+171,ASV_205 (Clostridia_UCG-014),Position 39,Deseq2,NA
+172,ASV_209 (Clostridia_UCG-014),Position 40,Deseq2,NA
+173,ASV_280 (Absconditabacteriales_(SR1)),Position 41,Deseq2,NA
+174,ASV_307 (Veillonellaceae),Position 42,Deseq2,NA
+175,ASV_422 (Acholeplasmataceae),Position 43,Deseq2,NA
+176,ASV_540 (Saccharimonadales),Position 44,Deseq2,NA
+177,Abiotrophia,Position 1,Ancombc,NA
+178,Acinetobacter,Position 2,Ancombc,NA
+179,Actinomyces,Position 3,Ancombc,NA
+180,Aggregatibacter,Position 4,Ancombc,9.30E-06
+181,Alloprevotella,Position 5,Ancombc,NA
+182,Amnipila,Position 6,Ancombc,NA
+183,Atopobium,Position 7,Ancombc,NA
+184,Candidatus_Saccharimonas,Position 8,Ancombc,NA
+185,Capnocytophaga,Position 9,Ancombc,NA
+186,Comamonas,Position 10,Ancombc,NA
+187,Corynebacterium,Position 11,Ancombc,NA
+188,Defluviitaleaceae_UCG-011,Position 12,Ancombc,NA
+189,F0058 (Paludibacteraceae),Position 13,Ancombc,NA
+190,Filifactor,Position 14,Ancombc,NA
+191,Fretibacterium,Position 15,Ancombc,NA
+192,Fusobacterium,Position 16,Ancombc,NA
+193,Gemella,Position 17,Ancombc,NA
+194,Granulicatella,Position 18,Ancombc,NA
+195,Haemophilus,Position 19,Ancombc,0.01591795
+196,Lachnoanaerobaculum,Position 20,Ancombc,NA
+197,Lautropia,Position 21,Ancombc,4.33E-05
+198,Lentimicrobium,Position 22,Ancombc,NA
+199,Moraxella,Position 23,Ancombc,1.77E-06
+200,Neisseria,Position 24,Ancombc,NA
+201,Oceanivirga,Position 25,Ancombc,NA
+202,Oribacterium,Position 26,Ancombc,0.033167395
+203,Peptoanaerobacter,Position 27,Ancombc,NA
+204,Peptococcus,Position 28,Ancombc,0.002831944
+205,Prevotella,Position 29,Ancombc,NA
+206,Rikenellaceae_RC9_gut_group,Position 30,Ancombc,NA
+207,Rothia,Position 31,Ancombc,0.005914358
+208,Shuttleworthia,Position 32,Ancombc,NA
+209,Streptobacillus,Position 33,Ancombc,0.000442032
+210,Streptococcus,Position 34,Ancombc,NA
+211,Treponema,Position 35,Ancombc,3.14E-09
+212,Veillonella,Position 36,Ancombc,0.001142536
+213,ASV_62 (Lachnospiraceae),Position 37,Ancombc,0.002831944
+214,ASV_187 (Absconditabacteriales_(SR1)),Position 38,Ancombc,NA
+215,ASV_205 (Clostridia_UCG-014),Position 39,Ancombc,0.000375341
+216,ASV_209 (Clostridia_UCG-014),Position 40,Ancombc,NA
+217,ASV_280 (Absconditabacteriales_(SR1)),Position 41,Ancombc,NA
+218,ASV_307 (Veillonellaceae),Position 42,Ancombc,NA
+219,ASV_422 (Acholeplasmataceae),Position 43,Ancombc,NA
+220,ASV_540 (Saccharimonadales),Position 44,Ancombc,NA
+221,Abiotrophia,Position 1,Aldex2,NA
+222,Acinetobacter,Position 2,Aldex2,NA
+223,Actinomyces,Position 3,Aldex2,0.003650564
+224,Aggregatibacter,Position 4,Aldex2,0.003446302
+225,Alloprevotella,Position 5,Aldex2,NA
+226,Amnipila,Position 6,Aldex2,NA
+227,Atopobium,Position 7,Aldex2,NA
+228,Candidatus_Saccharimonas,Position 8,Aldex2,NA
+229,Capnocytophaga,Position 9,Aldex2,0.048169234
+230,Comamonas,Position 10,Aldex2,NA
+231,Corynebacterium,Position 11,Aldex2,NA
+232,Defluviitaleaceae_UCG-011,Position 12,Aldex2,NA
+233,F0058 (Paludibacteraceae),Position 13,Aldex2,0.009175183
+234,Filifactor,Position 14,Aldex2,NA
+235,Fretibacterium,Position 15,Aldex2,NA
+236,Fusobacterium,Position 16,Aldex2,NA
+237,Gemella,Position 17,Aldex2,0.001354023
+238,Granulicatella,Position 18,Aldex2,0.000212561
+239,Haemophilus,Position 19,Aldex2,NA
+240,Lachnoanaerobaculum,Position 20,Aldex2,NA
+241,Lautropia,Position 21,Aldex2,5.31E-07
+242,Lentimicrobium,Position 22,Aldex2,NA
+243,Moraxella,Position 23,Aldex2,0.000450176
+244,Neisseria,Position 24,Aldex2,0.042488814
+245,Oceanivirga,Position 25,Aldex2,NA
+246,Oribacterium,Position 26,Aldex2,0.001792488
+247,Peptoanaerobacter,Position 27,Aldex2,NA
+248,Peptococcus,Position 28,Aldex2,NA
+249,Prevotella,Position 29,Aldex2,0.023208618
+250,Rikenellaceae_RC9_gut_group,Position 30,Aldex2,NA
+251,Rothia,Position 31,Aldex2,0.000119237
+252,Shuttleworthia,Position 32,Aldex2,NA
+253,Streptobacillus,Position 33,Aldex2,0.039559537
+254,Streptococcus,Position 34,Aldex2,0.000831547
+255,Treponema,Position 35,Aldex2,0.00062073
+256,Veillonella,Position 36,Aldex2,5.46E-06
+257,ASV_62 (Lachnospiraceae),Position 37,Aldex2,NA
+258,ASV_187 (Absconditabacteriales_(SR1)),Position 38,Aldex2,NA
+259,ASV_205 (Clostridia_UCG-014),Position 39,Aldex2,NA
+260,ASV_209 (Clostridia_UCG-014),Position 40,Aldex2,NA
+261,ASV_280 (Absconditabacteriales_(SR1)),Position 41,Aldex2,NA
+262,ASV_307 (Veillonellaceae),Position 42,Aldex2,NA
+263,ASV_422 (Acholeplasmataceae),Position 43,Aldex2,NA
+264,ASV_540 (Saccharimonadales),Position 44,Aldex2,NA
+265,Abiotrophia,Position 1,corncob,NA
+266,Acinetobacter,Position 2,corncob,NA
+267,Actinomyces,Position 3,corncob,0.000210054
+268,Aggregatibacter,Position 4,corncob,4.65E-06
+269,Alloprevotella,Position 5,corncob,NA
+270,Amnipila,Position 6,corncob,NA
+271,Atopobium,Position 7,corncob,0.004280772
+272,Candidatus_Saccharimonas,Position 8,corncob,0.002570914
+273,Capnocytophaga,Position 9,corncob,0.006025605
+274,Comamonas,Position 10,corncob,NA
+275,Corynebacterium,Position 11,corncob,NA
+276,Defluviitaleaceae_UCG-011,Position 12,corncob,NA
+277,F0058 (Paludibacteraceae),Position 13,corncob,1.21E-05
+278,Filifactor,Position 14,corncob,NA
+279,Fretibacterium,Position 15,corncob,NA
+280,Fusobacterium,Position 16,corncob,NA
+281,Gemella,Position 17,corncob,0.000923067
+282,Granulicatella,Position 18,corncob,7.73E-06
+283,Haemophilus,Position 19,corncob,0.015891391
+284,Lachnoanaerobaculum,Position 20,corncob,0.007761549
+285,Lautropia,Position 21,corncob,2.36E-08
+286,Lentimicrobium,Position 22,corncob,NA
+287,Moraxella,Position 23,corncob,4.42E-06
+288,Neisseria,Position 24,corncob,0.034413492
+289,Oceanivirga,Position 25,corncob,0.00864077
+290,Oribacterium,Position 26,corncob,0.000139945
+291,Peptoanaerobacter,Position 27,corncob,NA
+292,Peptococcus,Position 28,corncob,0.020515821
+293,Prevotella,Position 29,corncob,0.001414904
+294,Rikenellaceae_RC9_gut_group,Position 30,corncob,NA
+295,Rothia,Position 31,corncob,1.10E-06
+296,Shuttleworthia,Position 32,corncob,NA
+297,Streptobacillus,Position 33,corncob,0.000139945
+298,Streptococcus,Position 34,corncob,1.12E-05
+299,Treponema,Position 35,corncob,3.67E-07
+300,Veillonella,Position 36,corncob,2.71E-08
+301,ASV_62 (Lachnospiraceae),Position 37,corncob,0.007761549
+302,ASV_187 (Absconditabacteriales_(SR1)),Position 38,corncob,NA
+303,ASV_205 (Clostridia_UCG-014),Position 39,corncob,0.002437579
+304,ASV_209 (Clostridia_UCG-014),Position 40,corncob,0.034413492
+305,ASV_280 (Absconditabacteriales_(SR1)),Position 41,corncob,NA
+306,ASV_307 (Veillonellaceae),Position 42,corncob,0.031253628
+307,ASV_422 (Acholeplasmataceae),Position 43,corncob,NA
+308,ASV_540 (Saccharimonadales),Position 44,corncob,NA
+309,Abiotrophia,Position 1,MasLin2_TSS_LOG,0.022444969
+310,Acinetobacter,Position 2,MasLin2_TSS_LOG,NA
+311,Actinomyces,Position 3,MasLin2_TSS_LOG,0.004902487
+312,Aggregatibacter,Position 4,MasLin2_TSS_LOG,0.000125565
+313,Alloprevotella,Position 5,MasLin2_TSS_LOG,NA
+314,Amnipila,Position 6,MasLin2_TSS_LOG,0.04161127
+315,Atopobium,Position 7,MasLin2_TSS_LOG,0.014526725
+316,Candidatus_Saccharimonas,Position 8,MasLin2_TSS_LOG,0.002511471
+317,Capnocytophaga,Position 9,MasLin2_TSS_LOG,0.000965014
+318,Comamonas,Position 10,MasLin2_TSS_LOG,NA
+319,Corynebacterium,Position 11,MasLin2_TSS_LOG,NA
+320,Defluviitaleaceae_UCG-011,Position 12,MasLin2_TSS_LOG,0.009903314
+321,F0058 (Paludibacteraceae),Position 13,MasLin2_TSS_LOG,1.11E-05
+322,Filifactor,Position 14,MasLin2_TSS_LOG,0.029989037
+323,Fretibacterium,Position 15,MasLin2_TSS_LOG,NA
+324,Fusobacterium,Position 16,MasLin2_TSS_LOG,NA
+325,Gemella,Position 17,MasLin2_TSS_LOG,0.005266767
+326,Granulicatella,Position 18,MasLin2_TSS_LOG,0.001078399
+327,Haemophilus,Position 19,MasLin2_TSS_LOG,0.006065856
+328,Lachnoanaerobaculum,Position 20,MasLin2_TSS_LOG,NA
+329,Lautropia,Position 21,MasLin2_TSS_LOG,3.84E-08
+330,Lentimicrobium,Position 22,MasLin2_TSS_LOG,0.042111255
+331,Moraxella,Position 23,MasLin2_TSS_LOG,7.57E-07
+332,Neisseria,Position 24,MasLin2_TSS_LOG,NA
+333,Oceanivirga,Position 25,MasLin2_TSS_LOG,0.039271223
+334,Oribacterium,Position 26,MasLin2_TSS_LOG,0.000906188
+335,Peptoanaerobacter,Position 27,MasLin2_TSS_LOG,0.014526725
+336,Peptococcus,Position 28,MasLin2_TSS_LOG,0.019837645
+337,Prevotella,Position 29,MasLin2_TSS_LOG,0.018150443
+338,Rikenellaceae_RC9_gut_group,Position 30,MasLin2_TSS_LOG,NA
+339,Rothia,Position 31,MasLin2_TSS_LOG,0.000125565
+340,Shuttleworthia,Position 32,MasLin2_TSS_LOG,0.043699771
+341,Streptobacillus,Position 33,MasLin2_TSS_LOG,0.002511471
+342,Streptococcus,Position 34,MasLin2_TSS_LOG,0.00068017
+343,Treponema,Position 35,MasLin2_TSS_LOG,2.08E-09
+344,Veillonella,Position 36,MasLin2_TSS_LOG,1.17E-05
+345,ASV_62 (Lachnospiraceae),Position 37,MasLin2_TSS_LOG,0.042111255
+346,ASV_187 (Absconditabacteriales_(SR1)),Position 38,MasLin2_TSS_LOG,0.042111255
+347,ASV_205 (Clostridia_UCG-014),Position 39,MasLin2_TSS_LOG,0.004315675
+348,ASV_209 (Clostridia_UCG-014),Position 40,MasLin2_TSS_LOG,0.010263063
+349,ASV_280 (Absconditabacteriales_(SR1)),Position 41,MasLin2_TSS_LOG,NA
+350,ASV_307 (Veillonellaceae),Position 42,MasLin2_TSS_LOG,0.043699771
+351,ASV_422 (Acholeplasmataceae),Position 43,MasLin2_TSS_LOG,NA
+352,ASV_540 (Saccharimonadales),Position 44,MasLin2_TSS_LOG,0.043114245
+353,Abiotrophia,Position 1,MasLin2_CLR_None,0.02294081
+354,Acinetobacter,Position 2,MasLin2_CLR_None,NA
+355,Actinomyces,Position 3,MasLin2_CLR_None,0.030369991
+356,Aggregatibacter,Position 4,MasLin2_CLR_None,0.000175155
+357,Alloprevotella,Position 5,MasLin2_CLR_None,0.034751777
+358,Amnipila,Position 6,MasLin2_CLR_None,0.012079792
+359,Atopobium,Position 7,MasLin2_CLR_None,NA
+360,Candidatus_Saccharimonas,Position 8,MasLin2_CLR_None,0.007287901
+361,Capnocytophaga,Position 9,MasLin2_CLR_None,0.014651754
+362,Comamonas,Position 10,MasLin2_CLR_None,0.023749209
+363,Corynebacterium,Position 11,MasLin2_CLR_None,NA
+364,Defluviitaleaceae_UCG-011,Position 12,MasLin2_CLR_None,0.000881557
+365,F0058 (Paludibacteraceae),Position 13,MasLin2_CLR_None,2.02E-05
+366,Filifactor,Position 14,MasLin2_CLR_None,0.009942247
+367,Fretibacterium,Position 15,MasLin2_CLR_None,0.039202206
+368,Fusobacterium,Position 16,MasLin2_CLR_None,0.049505302
+369,Gemella,Position 17,MasLin2_CLR_None,0.00962221
+370,Granulicatella,Position 18,MasLin2_CLR_None,0.016328878
+371,Haemophilus,Position 19,MasLin2_CLR_None,0.004052259
+372,Lachnoanaerobaculum,Position 20,MasLin2_CLR_None,NA
+373,Lautropia,Position 21,MasLin2_CLR_None,3.51E-08
+374,Lentimicrobium,Position 22,MasLin2_CLR_None,0.009630347
+375,Moraxella,Position 23,MasLin2_CLR_None,8.51E-07
+376,Neisseria,Position 24,MasLin2_CLR_None,NA
+377,Oceanivirga,Position 25,MasLin2_CLR_None,0.012079792
+378,Oribacterium,Position 26,MasLin2_CLR_None,0.001533528
+379,Peptoanaerobacter,Position 27,MasLin2_CLR_None,0.002459657
+380,Peptococcus,Position 28,MasLin2_CLR_None,0.009942247
+381,Prevotella,Position 29,MasLin2_CLR_None,NA
+382,Rikenellaceae_RC9_gut_group,Position 30,MasLin2_CLR_None,0.030766254
+383,Rothia,Position 31,MasLin2_CLR_None,0.006865299
+384,Shuttleworthia,Position 32,MasLin2_CLR_None,NA
+385,Streptobacillus,Position 33,MasLin2_CLR_None,0.001231115
+386,Streptococcus,Position 34,MasLin2_CLR_None,0.000175155
+387,Treponema,Position 35,MasLin2_CLR_None,3.22E-06
+388,Veillonella,Position 36,MasLin2_CLR_None,0.000460215
+389,ASV_62 (Lachnospiraceae),Position 37,MasLin2_CLR_None,0.021358177
+390,ASV_187 (Absconditabacteriales_(SR1)),Position 38,MasLin2_CLR_None,0.037532956
+391,ASV_205 (Clostridia_UCG-014),Position 39,MasLin2_CLR_None,0.001519062
+392,ASV_209 (Clostridia_UCG-014),Position 40,MasLin2_CLR_None,0.009942247
+393,ASV_280 (Absconditabacteriales_(SR1)),Position 41,MasLin2_CLR_None,0.034751777
+394,ASV_307 (Veillonellaceae),Position 42,MasLin2_CLR_None,0.016328878
+395,ASV_422 (Acholeplasmataceae),Position 43,MasLin2_CLR_None,0.039995278
+396,ASV_540 (Saccharimonadales),Position 44,MasLin2_CLR_None,0.049505302
+397,Abiotrophia,Position 1,Ancom2w.0.6,NA
+398,Acinetobacter,Position 2,Ancom2w.0.6,NA
+399,Actinomyces,Position 3,Ancom2w.0.6,0.04
+400,Aggregatibacter,Position 4,Ancom2w.0.6,4.00E-05
+401,Alloprevotella,Position 5,Ancom2w.0.6,NA
+402,Amnipila,Position 6,Ancom2w.0.6,NA
+403,Atopobium,Position 7,Ancom2w.0.6,NA
+404,Candidatus_Saccharimonas,Position 8,Ancom2w.0.6,NA
+405,Capnocytophaga,Position 9,Ancom2w.0.6,NA
+406,Comamonas,Position 10,Ancom2w.0.6,NA
+407,Corynebacterium,Position 11,Ancom2w.0.6,NA
+408,Defluviitaleaceae_UCG-011,Position 12,Ancom2w.0.6,NA
+409,F0058 (Paludibacteraceae),Position 13,Ancom2w.0.6,NA
+410,Filifactor,Position 14,Ancom2w.0.6,NA
+411,Fretibacterium,Position 15,Ancom2w.0.6,NA
+412,Fusobacterium,Position 16,Ancom2w.0.6,NA
+413,Gemella,Position 17,Ancom2w.0.6,NA
+414,Granulicatella,Position 18,Ancom2w.0.6,NA
+415,Haemophilus,Position 19,Ancom2w.0.6,0.04
+416,Lachnoanaerobaculum,Position 20,Ancom2w.0.6,NA
+417,Lautropia,Position 21,Ancom2w.0.6,4.00E-05
+418,Lentimicrobium,Position 22,Ancom2w.0.6,NA
+419,Moraxella,Position 23,Ancom2w.0.6,4.00E-05
+420,Neisseria,Position 24,Ancom2w.0.6,NA
+421,Oceanivirga,Position 25,Ancom2w.0.6,NA
+422,Oribacterium,Position 26,Ancom2w.0.6,0.04
+423,Peptoanaerobacter,Position 27,Ancom2w.0.6,NA
+424,Peptococcus,Position 28,Ancom2w.0.6,0.04
+425,Prevotella,Position 29,Ancom2w.0.6,NA
+426,Rikenellaceae_RC9_gut_group,Position 30,Ancom2w.0.6,NA
+427,Rothia,Position 31,Ancom2w.0.6,4.00E-04
+428,Shuttleworthia,Position 32,Ancom2w.0.6,NA
+429,Streptobacillus,Position 33,Ancom2w.0.6,4.00E-04
+430,Streptococcus,Position 34,Ancom2w.0.6,NA
+431,Treponema,Position 35,Ancom2w.0.6,4.00E-05
+432,Veillonella,Position 36,Ancom2w.0.6,4.00E-04
+433,ASV_62 (Lachnospiraceae),Position 37,Ancom2w.0.6,4.00E-04
+434,ASV_187 (Absconditabacteriales_(SR1)),Position 38,Ancom2w.0.6,NA
+435,ASV_205 (Clostridia_UCG-014),Position 39,Ancom2w.0.6,0.004
+436,ASV_209 (Clostridia_UCG-014),Position 40,Ancom2w.0.6,NA
+437,ASV_280 (Absconditabacteriales_(SR1)),Position 41,Ancom2w.0.6,NA
+438,ASV_307 (Veillonellaceae),Position 42,Ancom2w.0.6,NA
+439,ASV_422 (Acholeplasmataceae),Position 43,Ancom2w.0.6,NA
+440,ASV_540 (Saccharimonadales),Position 44,Ancom2w.0.6,NA

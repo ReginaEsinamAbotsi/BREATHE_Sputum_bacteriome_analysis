@@ -1,0 +1,214 @@
+---
+title: "heatmaps"
+output: html_notebook
+author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(tidyverse)
+library("reshape") 
+library(viridis)
+library(hrbrthemes)
+library(dplyr)
+```
+
+#AZM and Placebo at week 48
+
+```{r}
+daf<-read.csv("data/AZM_Placebo_12m21stSeptemberHeatmap2.csv", stringsAsFactors = TRUE)
+str(daf)
+daf_melt <- melt(daf) 
+str(daf_melt)
+# Reorder data
+head(daf_melt)
+```
+```{r}
+daf_melt <- daf_melt %>%
+  rename(p.value =value)
+rename(daf_melt, value = q.value)
+#names(daf_melt)[4] <- 'P_Class'
+str(daf_melt)
+#write.csv(daf_melt, "AZM_Placebo_12m21stSeptemberHeatmap_reshaped.csv")
+#value changed to q value and ASVs that are assigned given the available taxonomic info
+daf_melt2<- read.csv( "data/AZM_Placebo_12m21stSeptemberHeatmap_reshaped_edited1.csv", stringsAsFactors = TRUE, row.names = 1)
+str(daf_melt2)
+```
+
+
+```{r}
+heat1<-ggplot(daf_melt2, aes(variable, Genus)) +                           # Create heatmap with ggplot2
+  geom_tile(aes(fill = q.value), size=0.2, color="white")+
+  scale_fill_viridis(discrete=FALSE)+
+  theme_ipsum()+
+  labs(x="",y="")+
+  #remove extra space
+  scale_y_discrete(expand=c(0,0))+
+  #define new breaks on x-axis
+  scale_x_discrete(expand=c(0,0)
+                   )+
+  #set a base size for all fonts
+  theme_minimal()+
+  #theme options
+  theme(
+    #bold font for legend text
+    legend.title=element_text(face="bold.italic", size = 18),
+    legend.text=element_text(face="bold", size = 14),
+    legend.key.height = unit(2.5, "cm"),
+    #set thickness of axis ticks
+    axis.ticks=element_line(size=0.4),
+    axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (14)),
+    axis.title = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)),
+    axis.text.y=element_text(vjust=0.2),
+    axis.text.x=element_text(angle = 45, hjust=1),
+    #remove plot background
+    plot.background=element_blank(),
+    #remove plot border
+    panel.border=element_blank())+
+  scale_x_discrete(name ="Differential abundance testing method", 
+                    limits=c("Deseq2","Ancombc","Ancom2w.0.6","Aldex2", "VST_WMW", "corncob", "CLR_WMW","TSS_WMW", "MasLin2_CLR_None", "MasLin2_TSS_LOG"))
+heat1
+```
+```{r}
+ggsave("figure/AZM_Placebo_week48_heatmap17thDec2021.pdf", heat1, width = 35, height = 50, units = "cm")
+```
+
+
+```{r}
+ggsave("figure/AZM_Placebo_week48_heatmap17thDec2021P.pdf", heat1, width = 25, height = 30, units = "cm")
+```
+
+Heatmap link to complex types
+
+https://jokergoo.github.io/ComplexHeatmap-reference/book/legends.html
+
+
+#AZM at Baseline and week 48
+
+```{r}
+dfazm012<-read.csv("data/heatmap_data_AZMbaseline12m.csv", stringsAsFactors = TRUE)
+str(dfazm012)
+dfazm012_melt <- melt(dfazm012) 
+str(dfazm012_melt)
+# Reorder data
+head(dfazm012_melt)
+
+
+#write.csv(dfazm012_melt, "heatmap_data_AZMbaseline12m.csv_reshaped.csv")
+#value changed to q value and ASVs that are assigned given the available taxonomic info
+dfazm012_melt2<- read.csv( "data/heatmap_data_AZMbaseline12m.reshaped_edited1.csv", stringsAsFactors = TRUE, row.names = 1)
+str(dfazm012_melt2)
+```
+
+
+
+```{r}
+heatazm012<-ggplot(dfazm012_melt2, aes(variable, Genus)) +                           # Create heatmap with ggplot2
+  geom_tile(aes(fill = q.value), size=0.2, color="white")+
+  scale_fill_viridis(discrete=FALSE)+
+  theme_ipsum()+
+  labs(x="",y="")+
+  #remove extra space
+  scale_y_discrete(expand=c(0,0))+
+  #define new breaks on x-axis
+  scale_x_discrete(expand=c(0,0)
+                   )+
+  #set a base size for all fonts
+  theme_minimal()+
+  #theme options
+  theme(
+    #bold font for legend text
+    legend.title=element_text(face="bold.italic", size = 18),
+    legend.text=element_text(face="bold", size = 14),
+    legend.key.height = unit(2.5, "cm"),
+    #set thickness of axis ticks
+    axis.ticks=element_line(size=0.4),
+    axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (14)),
+    axis.title = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)),
+    axis.text.y=element_text(vjust=0.2),
+    axis.text.x=element_text(angle = 45, hjust=1),
+    #remove plot background
+    plot.background=element_blank(),
+    #remove plot border
+    panel.border=element_blank())+
+  scale_x_discrete(name ="Differential abundance testing method", 
+                    limits=c("Deseq2","Ancombc","Ancom2w.0.6","Aldex2", "VST_WMW", "corncob", "CLR_WMW","TSS_WMW", "MasLin2_CLR_None", "MasLin2_TSS_LOG"))
+heatazm012
+```
+
+```{r}
+ggsave("figure/AZM_baseline_week48heatmap17thDec2021.pdf", heatazm012, width = 25, height = 25, units = "cm")
+```
+taxa_id		
+Moraxella	0.004	0.7
+Lautropia	0.00004	0.9
+Rothia	0.04	0.6
+Aggregatibacter	0.00004	0.9
+ASV_62	0.004	0.7
+Oribacterium	0.004	0.7
+ASV_205	0.04	0.6
+ASV_209	0.04	0.6
+
+
+
+
+
+#AZM at week 48 and week 72
+
+```{r}
+dfazm1218<-read.csv("data/heatmapdata_AZM1218m.csv", stringsAsFactors = TRUE)
+str(dfazm1218)
+dfazm1218_melt <- melt(dfazm1218) 
+str(dfazm1218_melt)
+# Reorder data
+head(dfazm1218_melt)
+
+
+#write.csv(dfazm1218_melt, "heatmapdata_AZM1218m_reshaped.csv")
+#value changed to q value and ASVs that are assigned given the available taxonomic info
+dfazm1218_melt2<- read.csv( "data/heatmapdata_AZM1218m_reshaped.edited1.csv", stringsAsFactors = TRUE, row.names = 1)
+str(dfazm1218_melt2)
+```
+
+
+
+```{r}
+heatazm1218<-ggplot(dfazm1218_melt2, aes(variable, Genus)) +                           # Create heatmap with ggplot2
+  geom_tile(aes(fill = q.value), size=0.2, color="white")+
+  scale_fill_viridis(discrete=FALSE)+
+  theme_ipsum()+
+  labs(x="",y="")+
+  #remove extra space
+  scale_y_discrete(expand=c(0,0))+
+  #define new breaks on x-axis
+  scale_x_discrete(expand=c(0,0)
+                   )+
+  #set a base size for all fonts
+  theme_minimal()+
+  #theme options
+  theme(
+    #bold font for legend text
+    legend.title=element_text(face="bold.italic", size = 18),
+    legend.text=element_text(face="bold", size = 14),
+    legend.key.height = unit(2.5, "cm"),
+    #set thickness of axis ticks
+    axis.ticks=element_line(size=0.4),
+    axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (14)),
+    axis.title = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)),
+    axis.text.y=element_text(vjust=0.2),
+    axis.text.x=element_text(angle = 45, hjust=1),
+    #remove plot background
+    plot.background=element_blank(),
+    #remove plot border
+    panel.border=element_blank())+
+  scale_x_discrete(name ="Differential abundance testing method", 
+                    limits=c("Deseq2","Ancombc","Ancom2w.0.6","Aldex2", "VST_WMW", "corncob", "CLR_WMW","TSS_WMW", "MasLin2_CLR_None", "MasLin2_TSS_LOG"))
+heatazm1218
+```
+
+
+```{r}
+ggsave("figure/AZM_week48_72_heatmap17thDec2021.pdf", heatazm1218, width = 25, height = 25, units = "cm")
+```
+
