@@ -1,0 +1,15 @@
+"","OTU","diff.btw","diff.win","effect","wi.ep","wi.eBH","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"1","Aggregatibacter",-3.62466413567761,8.23080056048327,-0.462140098815216,1.29388300044031e-07,1.3017854710291e-05,"Bacteria","Proteobacteria","Gammaproteobacteria","Pasteurellales","Pasteurellaceae","Aggregatibacter",NA
+"2","Treponema",-2.15075693218338,5.66986170420532,-0.353835272462618,7.78234710900997e-05,0.00152837612700776,"Bacteria","Spirochaetota","Spirochaetia","Spirochaetales","Spirochaetaceae","Treponema",NA
+"3","Streptobacillus",-2.09925927482712,6.51396787506454,-0.306841374329175,0.00140366928483918,0.0130136859750749,"Bacteria","Fusobacteriota","Fusobacteriia","Fusobacteriales","Leptotrichiaceae","Streptobacillus",NA
+"4","Moraxella",-2.46223292594828,7.75104497439756,-0.306755465722039,0.000316223219296135,0.00499788598130199,"Bacteria","Proteobacteria","Gammaproteobacteria","Pseudomonadales","Moraxellaceae","Moraxella",NA
+"5","ASV_62",-2.15019060096338,7.07368490702541,-0.28407846317563,0.00178094389680164,0.0174413859927194,"Bacteria","Firmicutes","Clostridia","Lachnospirales","Lachnospiraceae","ASV_62",NA
+"6","ASV_209",-1.51045297231803,5.31231629053621,-0.255827223463921,0.00284209239281236,0.0237949202613209,"Bacteria","Firmicutes","Clostridia","Clostridia_UCG-014","ASV_209","ASV_209",NA
+"7","Haemophilus",-0.533626562689966,2.43363577442993,-0.18897931621107,0.00461570440154661,0.0430002476819671,"Bacteria","Proteobacteria","Gammaproteobacteria","Pasteurellales","Pasteurellaceae","Haemophilus",NA
+"8","Actinomyces",0.886705551675208,4.79634902107033,0.145282909592223,0.000785271318001296,0.0120606824256757,"Bacteria","Actinobacteriota","Actinobacteria","Actinomycetales","Actinomycetaceae","Actinomyces",NA
+"9","Veillonella",0.593258954797411,2.47386394334802,0.185789473939868,0.00175929380019329,0.021428524131819,"Bacteria","Firmicutes","Negativicutes","Veillonellales-Selenomonadales","Veillonellaceae","Veillonella",NA
+"10","Oribacterium",1.40113497521485,6.67161947817164,0.209566905007728,0.00150974533539413,0.0175018754752142,"Bacteria","Firmicutes","Clostridia","Lachnospirales","Lachnospiraceae","Oribacterium",NA
+"11","Rothia",1.12009880421427,3.6846332156537,0.218431604964363,1.23314848076428e-05,0.000423732201905945,"Bacteria","Actinobacteriota","Actinobacteria","Micrococcales","Micrococcaceae","Rothia",NA
+"12","Streptococcus",0.417257255523455,1.6911355012033,0.227968024678743,0.00346711920435234,0.0337791161402151,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Streptococcaceae","Streptococcus",NA
+"13","F0058",1.77077615279589,5.65483841460922,0.280583397819919,0.00113147902588242,0.01222629125467,"Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Paludibacteraceae","F0058",NA
+"14","Lautropia",1.62249519722915,4.46965219518687,0.297604234019427,3.74584701643915e-06,0.0001913766672723,"Bacteria","Proteobacteria","Gammaproteobacteria","Burkholderiales","Burkholderiaceae","Lautropia",NA
