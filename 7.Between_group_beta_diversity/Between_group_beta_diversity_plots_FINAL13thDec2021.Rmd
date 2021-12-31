@@ -1,0 +1,854 @@
+---
+title: "Between group beta diversity plots"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+
+
+```{r}
+# Libraries
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(ggpubr)
+library(cowplot)
+
+```
+
+```{r}
+mynamestheme <- theme_bw()+ 
+  theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (25)), 
+        legend.title = element_text(colour = "black",  face = "bold", family = "Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (18) ),
+        axis.title = element_text(family = "Helvetica", face = "bold",size = (20), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)))
+```
+
+
+
+```{r}
+#P value correction
+#AZM and Placebo at all visits Aitchison only 
+
+pa<-c(0.76, 0.001,0.07)
+p.adjust(pa, method="hochberg", n=length(pa))
+#[1] 0.760 0.003 0.140
+
+#P value correction
+#AZM and Placebo at all visits Bray-Curtis only 
+
+pb<-c(0.97, 0.001,0.10)
+p.adjust(pb, method="hochberg", n=length(pb))
+#[1] 0.970 0.003 0.200
+
+
+```
+
+
+#Baseline
+```{r}
+newdat0<-read.csv("data/t0fg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat0)
+str(newdat0)
+
+# Renaming factor levels dplyr
+newdat0$Group <- recode_factor(newdat0$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat0)
+```
+
+
+p values
+```{r}
+pvla0 <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.76",
+  y.position = 140
+)
+
+```
+
+
+```{r}
+ba0<-ggplot(newdat0, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+       y="Aitchison distance")+mynamestheme+stat_pvalue_manual(pvla0, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba0
+
+```
+
+#Baseline - Bray-Curtis
+```{r}
+newdat0b<-read.csv("data/t0fg_bray1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat0b)
+str(newdat0b)
+
+# Renaming factor levels dplyr
+newdat0b$Group <- recode_factor(newdat0b$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat0b)
+```
+
+
+p values
+```{r}
+pvla0b <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.97",
+  y.position = 1.08
+)
+
+```
+
+
+```{r}
+ba0b<-ggplot(newdat0b, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.2))+
+  labs( x=NULL,
+       y="Bray-Curtis distance")+mynamestheme+stat_pvalue_manual(pvla0b, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba0b
+
+```
+
+```{r}
+#Combine the two plots
+m1<-cowplot::plot_grid(ba0, ba0b, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("A", "B"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m1
+```
+
+
+
+
+
+
+#Week 48
+```{r}
+newdat12<-read.csv("data/t12fg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat12)
+str(newdat12)
+
+# Renaming factor levels dplyr
+newdat12$Group <- recode_factor(newdat12$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat12)
+```
+
+
+p values
+```{r}
+pvla12 <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.003",
+  y.position = 135
+)
+
+```
+
+
+```{r}
+ba12<-ggplot(newdat12, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+       y="Aitchison distance")+mynamestheme+stat_pvalue_manual(pvla12, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba12
+
+```
+
+
+
+#Week 48 - Bray-Curtis
+```{r}
+newdat12b<-read.csv("data/t12fg_bray1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat12b)
+str(newdat12b)
+
+# Renaming factor levels dplyr
+newdat12b$Group <- recode_factor(newdat12b$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat12b)
+```
+
+
+p values
+```{r}
+pvla12b <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.003",
+  y.position = 1.08
+)
+
+```
+
+
+```{r}
+ba12b<-ggplot(newdat12b, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.2))+
+  labs( x=NULL,
+       y="Bray-Curtis distance")+mynamestheme+stat_pvalue_manual(pvla12b, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba12b
+
+```
+
+```{r}
+#Combine the two plots
+m12<-cowplot::plot_grid(ba12, ba12b, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("C", "D"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m12
+```
+
+
+
+#Week 72
+
+```{r}
+newdat2<-read.csv("data/t18fg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat2)
+str(newdat2)
+
+# Renaming factor levels dplyr
+newdat2$Group <- recode_factor(newdat2$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat2)
+```
+
+
+p values
+```{r}
+pvla <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.14",
+  y.position = 135
+)
+
+```
+
+
+```{r}
+ba18<-ggplot(newdat2, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+       y="Aitchison distance")+mynamestheme+stat_pvalue_manual(pvla, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba18
+
+```
+
+
+
+#Week 72- Bray-Curtis
+```{r}
+newdat18b<-read.csv("data/t18fg_bray1.csv.csv", stringsAsFactors = TRUE)
+colnames(newdat18b)
+str(newdat18b)
+
+# Renaming factor levels dplyr
+newdat18b$Group <- recode_factor(newdat18b$Group, AZM= "1" , Placebo="2", Bewtween_group_matrix = "3"  )
+str(newdat18b)
+```
+
+
+p values
+```{r}
+pvla18b <- data.frame(
+  group1 = "1",
+  group2 = "3",
+  label = "*p = 0.20",
+  y.position = 1.08
+)
+
+```
+
+
+```{r}
+ba18b<-ggplot(newdat18b, aes(y=Values, x=Group, colour=Group)) + 
+  geom_violin(aes(fill=Group,colour=NULL))+geom_boxplot(aes(fill=Group, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.2))+
+  labs( x=NULL,
+       y="Bray-Curtis distance")+mynamestheme+stat_pvalue_manual(pvla18b, label = "label",size = 7, tip.length = 0)+theme(legend.position = "None")+
+  scale_fill_manual(values=c("#A087BC", "#FFF468", "white"))+
+  scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba18b
+
+```
+```{r}
+#Combine the two plots
+m18<-cowplot::plot_grid(ba18, ba18b, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("E", "F"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m18
+```
+
+
+#Combine all- AZM and placebo
+
+```{r}
+all<-cowplot::plot_grid(m1, m12, m18, nrow = 3, ncol = 1, scale = .8, vjust=c(2.0,1.2,1.2), hjust=c(-5.3,-5.5,-5.5), labels = c("Baseline", "Week 48", "Week 72"), label_size = 30,label_fontfamily = "Helvetica")
+all
+
+
+ggsave("Both_all_labels13thDec2021.pdf", all,  width = 50, height = 50, units = "cm")
+```
+
+
+
+
+
+
+
+#P value correction for multiple testing AZM only
+
+```{r}
+#P value correction
+#AZM at all visits Aitchison only 
+
+pa<-c(0.002, 0.002,0.56)
+p.adjust(pa, method="hochberg", n=length(pa))
+#[1] 0.004 0.004 0.560
+
+#P value correction
+#AZM at all visits Bray-Curtis only 
+
+pb<-c(0.001, 0.001,0.03)
+p.adjust(pb, method="hochberg", n=length(pb))
+#[1] 0.002 0.002 0.030
+
+
+
+
+```
+
+#---AZM only-----
+#Baseline and 48 weeks
+
+```{r}
+#AZM only
+
+
+#scale_fill_manual(values=c("#b3cde3", "#EE82EE", "#46019B"))
+
+#-----------------AZM baseline and 48 weeks -Bray- Curtis-----------------------
+datazm012<-read.csv("data/azm012pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm012)
+str(datazm012)
+summary(datazm012)
+
+
+#Manually assigning p values
+pv012 <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.002",
+  y.position = 1.05
+)
+
+#Figure
+bc012<-ggplot(datazm012, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv012, label = "label",size = 7,tip.length = 0.0)+
+  scale_fill_manual(values=c("#E1D0FF", "#8662BD", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 48", "Baseline & Week 48"))+
+  theme(legend.position = "None")
+bc012
+```
+
+
+```{r}
+#---------------AZM baseline and 48 weeks- Aitchison-------------------------------
+datazm012A<-read.csv("data/azm012pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm012A)
+str(datazm012A)
+summary(datazm012A)
+
+
+#Manually assigning p values
+pv012A <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.004",
+  y.position = 128
+)
+
+#Figure
+bc012A<-ggplot(datazm012A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 140))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv012A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#E1D0FF", "#8662BD", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 48", "Baseline & Week 48"))+
+  theme(legend.position = "None")
+bc012A
+
+
+#Combine the two plots
+m012<-cowplot::plot_grid(bc012A, bc012, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("A", "B"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m012
+
+ggsave("Month012AZM_beta13thDec.pdf", m012,  width = 40, height = 25, units = "cm")
+
+```
+
+
+#Week 48 and 72- AZM only
+```{r}
+
+#scale_fill_manual(values=c("#E1D0FF", "#8662BD", "#46019B"))
+
+#-----------------AZM 48 and 72 weeks-Bray-Curtis-----------------------
+datazm1218<-read.csv("data/azm1218pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm1218)
+str(datazm1218)
+summary(datazm1218)
+
+
+#Manually assigning p values
+pv1218 <- data.frame(
+  group1 = "12m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.002",
+  y.position = 1.05
+)
+
+#Figure
+bc1218<-ggplot(datazm1218, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv1218, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#8662BD", "#32224A", "white"))+
+  scale_x_discrete(labels=c("Week 48", "Week 72","Week 48 & 72" ))+
+  theme(legend.position = "None")
+bc1218
+
+
+#---------------AZM 48 and 72 weeks- Aitchison-------------------------------
+datazm1218A<-read.csv("data/azm1218pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm1218A)
+str(datazm1218A)
+summary(datazm1218A)
+
+
+#Manually assigning p values
+pv1218A <- data.frame(
+  group1 = "12m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.004",
+  y.position = 128
+)
+
+#Figure
+bc1218A<-ggplot(datazm1218A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 140))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv1218A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#8662BD", "#32224A", "white"))+
+  scale_x_discrete(labels=c("Week 48", "Week 72", "Week 48 & 72"))+
+  theme(legend.position = "None")
+bc1218A
+
+
+#Combine the two plots
+m1218<-cowplot::plot_grid(bc1218A, bc1218, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("C", "D"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m1218
+
+ggsave("Month1218AZM_beta13thDec2021.pdf", m1218,  width = 40, height = 25, units = "cm")
+
+
+
+```
+
+```{r}
+
+#scale_fill_manual(values=c("#E1D0FF", "#8662BD", "#46019B"))
+
+#-----------------AZM 48 and 72 weeks-Bray-Curtis-----------------------
+datazm018<-read.csv("data/azm018pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm018)
+str(datazm018)
+summary(datazm018)
+
+
+#Manually assigning p values
+pv018 <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.03",
+  y.position = 1.05
+)
+
+#Figure
+bc018<-ggplot(datazm018, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv018, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#E1D0FF", "#32224A", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 72", "Baseline & Week 72"))+
+  theme(legend.position = "None")
+bc018
+
+
+#---------------AZM 48 and 72 weeks- Aitchison-------------------------------
+datazm018A<-read.csv("data/azm018pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datazm018A)
+str(datazm018A)
+summary(datazm018A)
+
+
+#Manually assigning p values
+pv018A <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.56",
+  y.position = 128
+)
+
+#Figure
+bc018A<-ggplot(datazm018A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 140))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv018A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#E1D0FF", "#32224A", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 72", "Baseline & Week 72"))+
+  theme(legend.position = "None")
+bc018A
+
+#Combine the two plots
+m018<-cowplot::plot_grid(bc018A, bc018, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("E", "F"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m018
+
+ggsave("Month018AZM_beta13thDec2021.pdf", m018,  width = 40, height = 25, units = "cm")
+
+
+```
+
+
+#Combine all- AZM only
+
+```{r}
+all_azm<-cowplot::plot_grid(m012, m1218, m018, nrow = 3, ncol = 1, scale = .8, vjust=c(2.0,1.2,1.2), hjust=c(-1.5,-1.95,-1.5), labels = c("Baseline vs Week 48 (AZM)", "Week 48 vs 72 (AZM)", "Baseline vs Week 72 (AZM)"), label_size = 30,label_fontfamily = "Helvetica")
+all_azm
+
+
+ggsave("AZM_ONLY_all_labels13thDec.pdf", all_azm,  width = 50, height = 50, units = "cm")
+```
+
+
+
+
+#---Placebo only-----
+#P value correction for multiple testing Placebo only only
+
+```{r}
+#P value correction
+#AZM at all visits Aitchison only 
+
+pa<-c(0.33, 0.70,0.17)
+p.adjust(pa, method="hochberg", n=length(pa))
+#[1] 0.66 0.70 0.51
+
+#P value correction
+#AZM at all visits Bray-Curtis only 
+
+pb<-c(0.51, 0.33,0.28)
+p.adjust(pb, method="hochberg", n=length(pb))
+#[1] 0.51 0.51 0.51
+
+
+
+
+```
+
+#Baseline and 48 weeks
+
+```{r}
+#Placebo only
+
+
+#scale_fill_manual(values=c("#fff9ae", "#dab600", "#46019B"))
+
+#-----------------Placebo baseline and 48 weeks -Bray- Curtis-----------------------
+datPlacebo012<-read.csv("data/Placebo012pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo012)
+str(datPlacebo012)
+summary(datPlacebo012)
+
+
+#Manually assigning p values
+pv012 <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.51",
+  y.position = 1.05
+)
+
+#Figure
+bc012<-ggplot(datPlacebo012, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv012, label = "label",size = 7,tip.length = 0.0)+
+  scale_fill_manual(values=c("#fff9ae", "#dab600", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 48", "Baseline & Week 48"))+
+  theme(legend.position = "None")
+bc012
+```
+
+
+```{r}
+#---------------Placebo baseline and 48 weeks- Aitchison-------------------------------
+datPlacebo012A<-read.csv("data/Placebo012pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo012A)
+str(datPlacebo012A)
+summary(datPlacebo012A)
+
+
+#Manually assigning p values
+pv012A <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.66",
+  y.position = 138
+)
+
+#Figure
+bc012A<-ggplot(datPlacebo012A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv012A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#fff9ae", "#dab600", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 48", "Baseline & Week 48"))+
+  theme(legend.position = "None")
+bc012A
+
+
+#Combine the two plots
+m012<-cowplot::plot_grid(bc012A, bc012, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("A", "B"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m012
+
+ggsave("Month012Placebo_beta13thDec2021.pdf", m012,  width = 40, height = 25, units = "cm")
+
+```
+
+
+#Week 48 and 72- Placebo only
+```{r}
+
+#scale_fill_manual(values=c("#fff9ae", "#dab600", "#46019B"))
+
+#-----------------Placebo 48 and 72 weeks-Bray-Curtis-----------------------
+datPlacebo1218<-read.csv("data/Placebo1218pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo1218)
+str(datPlacebo1218)
+summary(datPlacebo1218)
+
+
+#Manually assigning p values
+pv1218 <- data.frame(
+  group1 = "12m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.51",
+  y.position = 1.05
+)
+
+#Figure
+bc1218<-ggplot(datPlacebo1218, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv1218, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#dab600", "#554904", "white"))+
+  scale_x_discrete(labels=c("Week 48", "Week 72","Week 48 & 72" ))+
+  theme(legend.position = "None")
+bc1218
+
+
+#---------------Placebo 48 and 72 weeks- Aitchison-------------------------------
+datPlacebo1218A<-read.csv("data/Placebo1218pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo1218A)
+str(datPlacebo1218A)
+summary(datPlacebo1218A)
+
+
+#Manually assigning p values
+pv1218A <- data.frame(
+  group1 = "12m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.70",
+  y.position = 138
+)
+
+#Figure
+bc1218A<-ggplot(datPlacebo1218A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv1218A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#dab600", "#554904", "white"))+
+  scale_x_discrete(labels=c("Week 48", "Week 72", "Week 48 & 72"))+
+  theme(legend.position = "None")
+bc1218A
+
+
+#Combine the two plots
+m1218<-cowplot::plot_grid(bc1218A, bc1218, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("C", "D"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m1218
+
+ggsave("Month1218Placebo_beta13thDec2021.pdf", m1218,  width = 40, height = 25, units = "cm")
+
+
+
+```
+
+```{r}
+
+#scale_fill_manual(values=c("#fff9ae", "#dab600", "#46019B"))
+
+#-----------------Placebo 48 and 72 weeks-Bray-Curtis-----------------------
+datPlacebo018<-read.csv("data/Placebo018pfg_bray1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo018)
+str(datPlacebo018)
+summary(datPlacebo018)
+
+
+#Manually assigning p values
+pv018 <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.51",
+  y.position = 1.05
+)
+
+#Figure
+bc018<-ggplot(datPlacebo018, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 1.15))+
+  labs( x=NULL,
+        y="Bray-Curtis distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv018, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#fff9ae", "#554904", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 72", "Baseline & Week 72"))+
+  theme(legend.position = "None")
+bc018
+
+
+#---------------Placebo 48 and 72 weeks- Aitchison-------------------------------
+datPlacebo018A<-read.csv("data/Placebo018pfg_CLR_euclidean1.csv.csv", stringsAsFactors = TRUE, row.names = 1)
+colnames(datPlacebo018A)
+str(datPlacebo018A)
+summary(datPlacebo018A)
+
+
+#Manually assigning p values
+pv018A <- data.frame(
+  group1 = "0m",
+  group2 = "Bewtween_group_matrix",
+  label = "*p = 0.51",
+  y.position = 138
+)
+
+#Figure
+bc018A<-ggplot(datPlacebo018A, aes(y=Values, x=Visit, colour=Visit)) + 
+  geom_violin(aes(fill=Visit,colour=NULL))+
+  geom_boxplot(aes(fill=Visit, colour=NULL), 
+               width=.1, fill="white", outlier.colour = "black")+
+  coord_cartesian(ylim = c(0, 150))+
+  labs( x=NULL,
+        y="Aitchison distance")+
+  mynamestheme+
+  stat_pvalue_manual(pv018A, label = "label",size = 7, tip.length = 0.0)+
+  scale_fill_manual(values=c("#fff9ae", "#554904", "white"))+
+  scale_x_discrete(labels=c("Baseline", "Week 72", "Baseline & Week 72"))+
+  theme(legend.position = "None")
+bc018A
+
+#Combine the two plots
+m018<-cowplot::plot_grid(bc018A, bc018, nrow = 1, ncol = 2, scale = .9, vjust=1.5, labels = c("E", "F"), hjust =-0.9,  label_size = 22, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+m018
+
+ggsave("Month018Placebo_beta13thDec2021.pdf", m018,  width = 40, height = 25, units = "cm")
+
+
+```
+
+
+#Combine all- Placebo only
+
+```{r}
+all_Placebo<-cowplot::plot_grid(m012, m1218, m018, nrow = 3, ncol = 1, scale = .9, vjust=c(1.1,1.2,1.2), hjust=c(-1.25,-1.69,-1.25), labels = c("Baseline vs Week 48 (Placebo)", "Week 48 vs 72 (Placebo)", "Baseline vs Week 72 (Placebo)"), label_size = 30,label_fontfamily = "Helvetica")
+all_Placebo
+
+
+ggsave("Placebo_ONLY_all_labels13thDec2021.pdf", all_Placebo,  width = 50, height = 50, units = "cm")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
