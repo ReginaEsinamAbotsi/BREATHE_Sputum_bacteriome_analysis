@@ -1,0 +1,389 @@
+---
+title: "R Notebook"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+
+```{r}
+library(ggplot2)
+library("cowplot")
+library(ggpubr)
+library(phyloseq)
+library (ggsci)
+```
+
+```{r}
+my16stheme <- theme_bw()+ 
+  theme(plot.title = element_text(family ="Helvetica", face = "bold", size = (25)), 
+        panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        strip.text= element_text(size=20, family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",family ="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (18) ), 
+        axis.title = element_text(family = "Helvetica", face = "bold", size = (20), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)))
+```
+
+
+```{r}
+#Data import
+phy <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+Trial <-data.frame (sample_data(phy))
+
+#----------__Subsettting data-----------------
+colnames(Trial)
+summary(Trial$templateDNA_16SqPCR_copies)
+Trial$templateDNA_16SqPCR_copies <-log10(Trial$templateDNA_16SqPCR_copies)
+summary(Trial$templateDNA_16SqPCR_copies)
+
+#------Trial arms- How many samples were collected from site-at each timepoint------------
+
+#use trial arms data and split into timepoints to compute data collected at each for each arm
+tmpt_1 <-Trial[which(Trial$visit=="Baseline"),]#331
+tmpt_12<-Trial[which(Trial$visit=="Week 48"),]#304
+tmpt_18<-Trial[which(Trial$visit=="Week 72"),]#240
+
+#---Prevalence Totals in main trial data-------------
+#Subsetting data into AZM and placebo
+AZM<-Trial[which(Trial$trial_arm=="AZM"),]#441
+Placebo<-Trial[which(Trial$trial_arm=="Placebo"),]#434
+
+AZM1<-tmpt_1[which(tmpt_1$trial_arm=="AZM"),]#164
+AZM12<-tmpt_12[which(tmpt_12$trial_arm=="AZM"),]#154
+AZM18<-tmpt_18[which(tmpt_18$trial_arm=="AZM"),]#123
+
+AZM012<-AZM[which(AZM$visit!="Week 72"),]
+AZM012p<-AZM[which(AZM$visit!="Week 72" & AZM$visit012=="yes"),]
+AZM1218p<-AZM[which(AZM$visit!="Baseline" & AZM$visit1218=="yes"),]
+AZM018p<-AZM[which(AZM$visit!="Week 48" & AZM$visit018=="yes"),]
+AZM3p<-AZM[which(AZM$all_3=="yes"),]
+
+
+
+Plac1<-tmpt_1[which(tmpt_1$trial_arm=="Placebo"),]#167
+Plac12<-tmpt_12[which(tmpt_12$trial_arm=="Placebo"),]#150
+Plac18<-tmpt_18[which(tmpt_18$trial_arm=="Placebo"),]#117
+
+Placebo012p<-Placebo[which(Placebo$visit!="Week 72" & Placebo$visit012=="yes"),]
+Placebo1218p<-Placebo[which(Placebo$visit!="Baseline" & Placebo$visit1218=="yes"),]
+Placebo018p<-Placebo[which(Placebo$visit!="Week 48" & Placebo$visit018=="yes"),]
+Placebo3p<-Placebo[which(Placebo$all_3=="yes"),]
+
+```
+
+```{r}
+
+#Summary for Table 1
+summary(AZM1$templateDNA_16SqPCR_copies)
+sd(AZM1$templateDNA_16SqPCR_copies)
+shapiro.test(AZM1$templateDNA_16SqPCR_copies)
+summary(Plac1$templateDNA_16SqPCR_copies)
+sd(Plac1$templateDNA_16SqPCR_copies)
+shapiro.test(Plac1$templateDNA_16SqPCR_copies)
+wilcox.test(AZM1$templateDNA_16SqPCR_copies,Plac1$templateDNA_16SqPCR_copies)
+t.test(AZM1$templateDNA_16SqPCR_copies,Plac1$templateDNA_16SqPCR_copies)
+
+summary(AZM1$Shannon)
+shapiro.test(AZM1$Shannon)
+summary(Plac1$Shannon)
+shapiro.test(Plac1$Shannon)
+wilcox.test(AZM1$Shannon,Plac1$Shannon )
+
+
+summary(AZM1$Simpson)
+shapiro.test(AZM1$Simpson)
+summary(Plac1$Simpson)
+shapiro.test(Plac1$Simpson)
+wilcox.test(AZM1$Simpson,Plac1$Simpson )
+
+shapiro.test(Trial$templateDNA_16SqPCR_copies)
+
+#Summary for intext 16S results
+summary(Trial$templateDNA_16SqPCR_copies)
+summary(AZM1$templateDNA_16SqPCR_copies)
+summary(Plac1$templateDNA_16SqPCR_copies)
+summary(AZM12$templateDNA_16SqPCR_copies)
+summary(Plac12$templateDNA_16SqPCR_copies)
+
+summary(AZM18$templateDNA_16SqPCR_copies)
+summary(Plac18$templateDNA_16SqPCR_copies)
+
+
+summary(Plac1$Shannon)
+
+summary(Plac12$Shannon)
+
+wilcox.test(Shannon~visit, data=Placebo012p)
+```
+
+
+
+#AZM and Placebo at all visits
+```{r}
+azmplac<-ggplot(Trial, aes(x=trial_arm, y=templateDNA_16SqPCR_copies, shape=trial_arm, fill=trial_arm)) + 
+  geom_jitter(width = 0.2)+
+  geom_boxplot()+
+  scale_fill_manual(values=c("#A087BC", "#FFF468"))+
+  facet_wrap("visit")+coord_cartesian(ylim = c(2, 8))+
+  #stat_summary(fun = "median",size = 0.5)+
+  stat_compare_means( method= "wilcox.test",comparisons=list(c("AZM", "Placebo")), size=6)+
+  labs(x=NULL,
+       y="16S copies in log10")+my16stheme
+ azmplac
+
+```
+#AZM at baseline and 48 weeks
+```{r}
+fig1<-ggpaired(AZM012p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1,line.color = "#5C5B58", fill = "visit", palette= c("#E1D0FF", "#8662BD"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 48")), size=6)+ 
+  labs(x="AZM at Baseline and 48 (n=146)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+fig1
+```
+#AZM at 48 and 72 weeks
+```{r}
+fig2<-ggpaired(AZM1218p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1, line.color = "#5C5B58",fill = "visit", palette= c("#8662BD", "#32224A"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Week 48", "Week 72")), size=6)+
+  labs(x="AZM at Week 48 and 72 (n=116)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+fig2
+```
+
+#AZM at baseline and 72 weeks
+```{r}
+fig3<-ggpaired(AZM018p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1,line.color = "#5C5B58", fill = "visit",palette= c("#E1D0FF", "#32224A"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 72")), size=6)+
+  labs(x="AZM at Week 48 and 72 (n=115)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+fig3
+
+```
+
+#Obtaining legends
+#AZM
+
+```{r}
+library (ggsci)
+fig1leg<-ggpaired(AZM3p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1,line.color = "black", fill = "visit", palette= c("#E1D0FF","#8662BD","#32224A"))+coord_cartesian(ylim = c(2, 8))+
+  #stat_compare_means( paired=TRUE, method= "anova",comparisons=list(c("Baseline", "Week 48", "Week 72")), size=6)+ 
+  labs(x="AZM at visits",
+       y="16S copies in log10")+my16stheme
+fig1leg
+
+# Extract the legend. Returns a gtable
+leg <- get_legend(fig1leg)
+
+# Convert to a ggplot and print
+legAZM<-as_ggplot(leg)
+```
+
+
+
+```{r}
+library(cowplot)
+AZM_all_visit16Scopies<-cowplot::plot_grid(fig1,fig2, fig3,legAZM, nrow = 1, ncol = 4, rel_widths = c(2,2,2, 1) , rel_heights = c(2,2,2, 1))
+AZM_all_visit16Scopies
+```
+
+
+#Placebo
+
+```{r}
+#Placebo
+#Baseline and Week 48
+fig4<-ggpaired(Placebo012p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1, line.color = "#5C5B58",fill = "visit", palette= c("#fff9ae", "#dab600"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 48")), size=6)+
+  labs(x="Placebo at Baseline and  48 (n=143)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+
+fig4
+```
+
+
+
+
+```{r}
+fig5<-ggpaired(Placebo1218p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1, line.color = "#5C5B58",fill = "visit",  palette= c("#dab600", "#554904"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Week 48", "Week 72")),size=6)+
+  labs(x="Placebo at Week 48 and 72 (n=112)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+fig5
+
+
+```
+
+
+```{r}
+fig6<-ggpaired(Placebo018p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1,line.color = "#5C5B58", fill = "visit", palette= c("#fff9ae", "#554904"))+coord_cartesian(ylim = c(2, 8))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 72")),size=6)+
+  labs(x="Placebo at Baseline and 72 (n=110)",
+       y="16S copies in log10")+my16stheme+theme(legend.position="none")
+fig6
+
+```
+
+#Placebo legend
+```{r}
+library (ggsci)
+#Placebo3p not working so AZM3p used but with different colors to generate the Placebo legend
+fig1t<-ggpaired(AZM3p,x="visit", y="templateDNA_16SqPCR_copies", line.size = 0.1,line.color = "black", fill = "visit", palette= c("#fff9ae","#dab600", "#554904"))+coord_cartesian(ylim = c(2, 8))+
+  #stat_compare_means( paired=TRUE, method= "anova",comparisons=list(c("Baseline", "Week 48", "Week 72")), size=6)+ 
+  labs(x="Placebo at all visits",
+       y="16S copies in log10")+my16stheme
+fig1t
+
+# Extract the legend. Returns a gtable
+leg <- get_legend(fig1t)
+
+# Convert to a ggplot and print
+legPla<-as_ggplot(leg)
+```
+
+
+
+
+```{r}
+library(cowplot)
+Placebo_all_visit16Scopies<-cowplot::plot_grid(fig4,fig5,fig6,legPla, nrow = 1, ncol = 4, rel_widths = c(2,2,2, 1) , rel_heights = c(2,2,2, 1))
+Placebo_all_visit16Scopies
+
+```
+
+```{r}
+tem16S<-cowplot::plot_grid(azmplac, AZM_all_visit16Scopies, Placebo_all_visit16Scopies, nrow = 3, ncol = 1, scale = .9, vjust=1.5, hjust= c(-3.5,-6.2,-5.0), labels = c("AZM vs. Placebo at all visits", "AZM samples only at all visits", "Placebo samples only at all visits"), label_size = 20, label_fontfamily = "Helvetica", label_fontface = "bold")
+tem16S
+
+tem16Sb<-cowplot::plot_grid(azmplac, AZM_all_visit16Scopies, Placebo_all_visit16Scopies, nrow = 3, ncol = 1, scale = .85, vjust=1.5, hjust= c(-1.92,-1.82,-1.6), labels = c("A) AZM vs. Placebo at all visits", "B) AZM samples only at all visits", "C) Placebo samples only at all visits"), label_size = 20, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+tem16Sb
+
+
+ggsave("16S_copies_final13thDec.pdf", tem16Sb,  width = 55, height = 50, units = "cm")
+```
+
+
+
+
+#ALPHA DIVERSITY
+
+#AZM and Placebo at all visits
+```{r}
+#Shannon
+#AZM and Placebo at three timepoint
+#Final
+azmplacA<-ggplot(Trial, aes(x=trial_arm, y=Shannon, shape=trial_arm, fill=trial_arm)) + 
+  geom_jitter(width = 0.2)+coord_cartesian(ylim = c(0, 4.5))+
+  geom_boxplot()+
+  scale_fill_manual(values=c("#A087BC", "#FFF468"))+
+  facet_wrap("visit")+
+  #stat_summary(fun = "median", geom = "crossbar",width=0.5,size = 0.5, color = "red3")+
+  stat_compare_means( method= "wilcox.test",comparisons=list(c("AZM", "Placebo")),size=6)+
+  labs( x=NULL,
+       y="Shannon index")+
+  my16stheme
+azmplacA
+
+```
+
+
+
+
+
+#AZM at baseline and 48 weeks
+
+```{r}
+#Azithromycin
+#Baseline and Week 48
+fig1A<-ggpaired(AZM012p,x="visit", y="Shannon", line.size = 0.1,line.color = "#5C5B58", fill = "visit", palette= c("#E1D0FF", "#8662BD"))+coord_cartesian(ylim = c(0, 4.5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 48")),size=6)+
+  labs(x="(n=146)",
+       y="Shannon index")+my16stheme+theme(legend.position="none")
+fig1A
+```
+
+#AZM at 48 and 72 weeks
+
+
+```{r}
+fig2A<-ggpaired(AZM1218p,x="visit", y="Shannon", line.size = 0.1,line.color = "#5C5B58", fill = "visit", palette= c("#8662BD", "#32224A"))+coord_cartesian(ylim = c(0, 4.5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Week 48", "Week 72")),size=6)+
+  labs(x="(n=116)",
+       y="Shannon index")+my16stheme+theme(legend.position="none", axis.title.y =element_blank(),axis.line = element_line(size = 0.1, colour = "black") )
+fig2A
+```
+
+
+#AZM at baseline and 72 weeks
+
+
+
+```{r}
+fig3A<-ggpaired(AZM018p,x="visit", y="Shannon", line.size = 0.1, line.color = "#5C5B58",fill = "visit", palette= c("#E1D0FF", "#32224A"))+coord_cartesian(ylim = c(0, 4.5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 72")),size=6)+
+  labs(x="(n=115)",
+       y="Shannon index")+my16stheme+theme(legend.position="none", axis.title.y =element_blank(),  axis.line = element_line(size = 0.1, colour = "black"))
+fig3A
+```
+
+```{r}
+library(cowplot)
+AZM_all_visitShannon<-cowplot::plot_grid(fig1A,fig2A, fig3A,legAZM, nrow = 1, ncol = 4, rel_widths = c(2.3,2,2, 1) , rel_heights = c(2,2,2, 1), align = "h")
+AZM_all_visitShannon
+```
+
+
+
+#Placebo
+
+
+```{r}
+#Placebo
+#Baseline and Week 48
+
+fig4A<-ggpaired(Placebo012p,x="visit", y="Shannon", line.size = 0.1,line.color = "#5C5B58", fill = "visit",palette= c("#fff9ae", "#dab600"))+coord_cartesian(ylim = c(0, 5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline","Week 48")),size=6)+
+  labs(x="(n=143)",
+       y="Shannon index")+my16stheme+theme(legend.position="none")
+fig4A
+```
+
+
+```{r}
+fig5A<-ggpaired(Placebo1218p,x="visit", y="Shannon", line.size = 0.1,line.color = "#5C5B58",fill = "visit",palette= c("#dab600", "#554904"))+coord_cartesian(ylim = c(0, 5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Week 48", "Week 72")),size=6)+
+  labs(x="(n=112)",
+       y="Shannon index")+my16stheme+theme(legend.position="none", axis.title.y =element_blank(),  axis.line = element_line(size = 0.1, colour = "black"))
+fig5A
+```
+
+
+
+```{r}
+fig6A<-ggpaired(Placebo018p,x="visit", y="Shannon", line.size = 0.1, line.color = "#5C5B58",fill = "visit", palette= c("#fff9ae", "#554904"))+coord_cartesian(ylim = c(0, 5))+
+  stat_compare_means( paired=TRUE, method= "wilcox.test",comparisons=list(c("Baseline", "Week 72")),size=6)+
+  labs(x="(n=110)",
+       y="Shannon index")+my16stheme+theme(legend.position="none", axis.title.y =element_blank(),  axis.line = element_line(size = 0.1, colour = "black"))
+fig6A
+```
+
+
+
+```{r}
+library(cowplot)
+Placebo_all_visitShannon<-cowplot::plot_grid(fig4A,fig5A,fig6A,legPla, nrow = 1, ncol = 4, rel_widths = c(2.3,2,2, 1) , rel_heights = c(2,2,2, 1), align = "h")
+Placebo_all_visitShannon
+```
+
+
+
+
+```{r}
+temShannonA<-cowplot::plot_grid(azmplacA, AZM_all_visitShannon, Placebo_all_visitShannon, nrow = 3, ncol = 1, scale = .8, labels = c("A) AZM and Placebo at all visits", "B) AZM arm only", "C) Placebo arm only"), label_size = 21, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue",axis = "r",align = "h", vjust = c(2.5, 2.0,2.0), hjust = c(-1.6, -3.3, -2.7),  rel_widths = c(2.5,5.5, 5.5))
+temShannonA
+
+
+ggsave("Shannon_final13thDec2021.pdf", temShannonA,  width = 50, height = 50, units = "cm")
+```
+
+
