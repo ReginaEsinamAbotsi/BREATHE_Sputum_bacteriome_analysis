@@ -1,0 +1,17 @@
+"","OTU","diff.btw","diff.win","effect","wi.ep","wi.eBH","Kingdom","Phylum","Class","Order","Family","Genus","Species"
+"1","Lautropia",-2.03605300886636,5.07758937807691,-0.349652155576908,3.23005671588635e-09,5.30963710576088e-07,"Bacteria","Proteobacteria","Gammaproteobacteria","Burkholderiales","Burkholderiaceae","Lautropia",NA
+"2","Veillonella",-1.22581177076043,2.95557494207228,-0.321358286907014,7.8997373546979e-08,5.45621442057659e-06,"Bacteria","Firmicutes","Negativicutes","Veillonellales-Selenomonadales","Veillonellaceae","Veillonella",NA
+"3","F0058",-1.8387384403405,5.73384004684051,-0.306104092704734,0.00133482515834941,0.00917518320153077,"Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Paludibacteraceae","F0058",NA
+"4","Oribacterium",-2.10414775024368,6.91034167135764,-0.29457782979084,0.000121673408365198,0.00179248806435254,"Bacteria","Firmicutes","Clostridia","Lachnospirales","Lachnospiraceae","Oribacterium",NA
+"5","Streptococcus",-0.608861638095378,2.01148152383898,-0.254262693865215,4.67084146258725e-05,0.000831547322828886,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Streptococcaceae","Streptococcus",NA
+"6","Rothia",-1.44199050503206,4.43846001501914,-0.247386765206708,3.43775273835594e-06,0.000119237360853129,"Bacteria","Actinobacteriota","Actinobacteria","Micrococcales","Micrococcaceae","Rothia",NA
+"7","Gemella",-0.719969076872533,2.38075118289048,-0.226060167559889,8.33167678808508e-05,0.00135402293887544,"Bacteria","Firmicutes","Bacilli","Staphylococcales","Gemellaceae","Gemella",NA
+"8","Capnocytophaga",-1.40727435533939,5.85547065994953,-0.223504389158917,0.00773306602064452,0.048169233788291,"Bacteria","Bacteroidota","Bacteroidia","Flavobacteriales","Flavobacteriaceae","Capnocytophaga",NA
+"9","Granulicatella",-0.836202587596031,2.51239348036968,-0.220398232329,8.62443598799802e-06,0.000212560971661151,"Bacteria","Firmicutes","Bacilli","Lactobacillales","Carnobacteriaceae","Granulicatella",NA
+"10","Prevotella",-0.797528230788299,3.3357097343767,-0.184687431501357,0.00226456183397693,0.0232086181092408,"Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Prevotellaceae","Prevotella",NA
+"11","Actinomyces",-1.07216029459076,6.4255841150883,-0.167148658981122,0.000262851085227072,0.00365056386586679,"Bacteria","Actinobacteriota","Actinobacteria","Actinomycetales","Actinomycetaceae","Actinomyces",NA
+"12","Neisseria",-0.627150905012134,2.84287288967498,-0.162430200484244,0.00518535380532887,0.0424888137232286,"Bacteria","Proteobacteria","Gammaproteobacteria","Burkholderiales","Neisseriaceae","Neisseria",NA
+"13","Streptobacillus",1.58450931100233,6.33426181612777,0.231030625680929,0.00632430646238661,0.0395595366950409,"Bacteria","Fusobacteriota","Fusobacteriia","Fusobacteriales","Leptotrichiaceae","Streptobacillus",NA
+"14","Aggregatibacter",2.1118005591065,8.33574272953611,0.278225792393238,0.000295883220050746,0.00344630205870269,"Bacteria","Proteobacteria","Gammaproteobacteria","Pasteurellales","Pasteurellaceae","Aggregatibacter",NA
+"15","Moraxella",3.02129121800805,7.90878229767336,0.355870678105195,3.31858446267667e-05,0.000450175780730329,"Bacteria","Proteobacteria","Gammaproteobacteria","Pseudomonadales","Moraxellaceae","Moraxella",NA
+"16","Treponema",2.19616016704976,5.69256529192007,0.356512602973354,4.58921755050104e-05,0.000620729952139576,"Bacteria","Spirochaetota","Spirochaetia","Spirochaetales","Spirochaetaceae","Treponema",NA
