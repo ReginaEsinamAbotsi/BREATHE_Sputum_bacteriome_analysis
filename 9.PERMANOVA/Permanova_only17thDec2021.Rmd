@@ -1,0 +1,1629 @@
+---
+title: "Conducting PERMANOVA and Perm disp Test"
+output:
+  html_document:
+    df_print: paged
+    Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(phyloseq); packageVersion("phyloseq") 
+library(vegan); packageVersion("vegan") 
+set.seed(123)
+```
+
+```{r}
+mythemet <- theme_classic()+ 
+  theme( legend.title = element_text(colour = "black",  face = "bold", family = "Helvetica",size = (19)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (17) ),
+        axis.title = element_text(family = "Helvetica", face = "bold",size = (19), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (17))) 
+```
+
+```{r, Data import, subsetting, merging and 0.5% prevalence filtering}
+# Read in phyloseq object
+trial <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021.RDS") # only trial data in this object
+trial
+
+
+#Subsets of AZM and Placebo at each visit
+t0 <-subset_samples(trial, visit=="Baseline")#304
+t0
+t12 <-subset_samples(trial, visit=="Week 48")#304
+t12
+t18 <-subset_samples(trial, visit=="Week 72")#304
+t18
+
+#Subsets of only AZM
+
+AZM <-subset_samples(trial, trial_arm=="AZM")#441
+AZM#441
+
+#---AZM at Baseline and Week 48----
+azm012<-subset_samples(AZM, visit!="Week 72")#318
+azm012
+
+#Selecting subset with samples at both Baseline and Week 48
+azm012p<-subset_samples(azm012, visit012=="yes")#292
+azm012p
+
+
+#---AZM at 12 and Week 72---
+azm1218<-subset_samples(AZM, visit!="Baseline")#318
+azm1218
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm1218p<-subset_samples(azm1218, visit1218=="yes")#292
+azm1218p
+
+
+
+#---AZM at Baseline and Week 72---
+azm018<-subset_samples(AZM, visit!="Week 48")#318
+azm018
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm018p<-subset_samples(azm018, visit018=="yes")#292
+azm018p
+
+#Subsets of only Placebo
+
+Placebo <-subset_samples(trial, trial_arm=="Placebo")#441
+Placebo#441
+
+#---Placebo at Baseline and Week 48----
+Placebo012<-subset_samples(Placebo, visit!="Week 72")#318
+Placebo012
+
+#Selecting subset with samples at both Baseline and Week 48s
+Placebo012p<-subset_samples(Placebo012, visit012=="yes")#292
+Placebo012p
+
+
+#---Placebo at 12 and Week 72---
+Placebo1218<-subset_samples(Placebo, visit!="Baseline")#318
+Placebo1218
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo1218p<-subset_samples(Placebo1218, visit1218=="yes")#292
+Placebo1218p
+
+
+#---Placebo at Baseline and Week 72---
+Placebo018<-subset_samples(Placebo, visit!="Week 48")#318
+Placebo018
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo018p<-subset_samples(Placebo018, visit018=="yes")#292
+Placebo018p
+
+
+# merge taxa to the Genus rank level
+
+trialg<-tax_glom(trial, taxrank = rank_names(trial)[6])
+taxa_names(trialg)<-as.character(tax_table(trialg)[,6])
+
+
+t0g<-tax_glom(t0, taxrank = rank_names(t0)[6])
+taxa_names(t0g)<-as.character(tax_table(t0g)[,6])
+OTU.t0g<-otu_table(t0g)
+
+
+t12g<-tax_glom(t12, taxrank = rank_names(t12)[6])
+taxa_names(t12g)<-as.character(tax_table(t12g)[,6])
+OTU.t12g<-otu_table(t12g)
+
+t18g<-tax_glom(t18, taxrank = rank_names(t18)[6])
+taxa_names(t18g)<-as.character(tax_table(t18g)[,6])
+OTU.t18g<-otu_table(t18g)
+
+AZMg<-tax_glom(AZM, taxrank = rank_names(AZM)[6])
+taxa_names(AZMg)<-as.character(tax_table(AZMg)[,6])
+
+azm012pg<-tax_glom(azm012p, taxrank = rank_names(azm012p)[6])
+taxa_names(azm012pg)<-as.character(tax_table(azm012pg)[,6])
+OTU.azm012pg<-otu_table(azm012pg)
+
+
+azm018pg<-tax_glom(azm018p, taxrank = rank_names(azm018p)[6])
+taxa_names(azm018pg)<-as.character(tax_table(azm018pg)[,6])
+OTU.azm018pg<-otu_table(azm018pg)
+
+
+azm1218pg<-tax_glom(azm1218p, taxrank = rank_names(azm1218p)[6])
+taxa_names(azm1218pg)<-as.character(tax_table(azm1218pg)[,6])
+OTU.azm1218pg<-otu_table(azm1218pg)
+
+Placebog<-tax_glom(Placebo, taxrank = rank_names(Placebo)[6])
+taxa_names(Placebog)<-as.character(tax_table(Placebog)[,6])
+
+Placebo012pg<-tax_glom(Placebo012p, taxrank = rank_names(Placebo012p)[6])
+taxa_names(Placebo012pg)<-as.character(tax_table(Placebo012pg)[,6])
+OTU.Placebo012pg<-otu_table(Placebo012pg)
+
+Placebo1218pg<-tax_glom(Placebo1218p, taxrank = rank_names(Placebo1218p)[6])
+taxa_names(Placebo1218pg)<-as.character(tax_table(Placebo1218pg)[,6])
+OTU.Placebo1218pg<-otu_table(Placebo1218pg)
+
+Placebo018pg<-tax_glom(Placebo018p, taxrank = rank_names(Placebo018p)[6])
+taxa_names(Placebo018pg)<-as.character(tax_table(Placebo018pg)[,6])
+OTU.Placebo018pg<-otu_table(Placebo018pg)
+
+#Filtering
+
+trialfg <- filter_taxa(trialg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+t0fg <- filter_taxa(t0g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+t12fg <- filter_taxa(t12g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+t18fg <- filter_taxa(t18g, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+AZMfg <- filter_taxa(AZMg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+azm012pfg <- filter_taxa(azm012pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+
+azm018pfg <- filter_taxa(azm018pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+azm1218pfg <- filter_taxa(azm1218pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+
+Placebofg <- filter_taxa(Placebog, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo012pfg <- filter_taxa(Placebo012pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo018pfg <- filter_taxa(Placebo018pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo1218pfg <- filter_taxa(Placebo1218pg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+```
+
+
+
+```{r}
+
+#CLR files
+#Create subsets for clr files
+trial_CLR <- readRDS("breathe_sputum_phyloseq_trial_13Dec2021CLR.RDS") #created using the clr transformed data sent by Yao labelled "clr_trans_yx.csv
+
+
+
+#Subsets of AZM and Placebo at each visit
+t0_CLR <-subset_samples(trial_CLR, visit=="Baseline")#304
+t12_CLR <-subset_samples(trial_CLR, visit=="Week 48")#304
+t18_CLR <-subset_samples(trial_CLR, visit=="Week 72")#304
+
+
+#Subsets of only AZM
+
+AZM_CLR <-subset_samples(trial_CLR, trial_arm=="AZM")#441
+
+#---AZM at Baseline and Week 48----
+azm012_CLR<-subset_samples(AZM_CLR, visit!="Week 72")#318
+
+#Selecting subset with samples at both Baseline and Week 48
+azm012p_CLR<-subset_samples(azm012_CLR, visit012=="yes")#292
+
+#---AZM at 12 and Week 72---
+azm1218_CLR<-subset_samples(AZM_CLR, visit!="Baseline")#318
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm1218p_CLR<-subset_samples(azm1218_CLR, visit1218=="yes")#292
+
+
+#---AZM at Baseline and Week 72---
+azm018_CLR<-subset_samples(AZM_CLR, visit!="Week 48")#318
+
+#Selecting subset with samples at both Baseline and Week 72s
+azm018p_CLR<-subset_samples(azm018_CLR, visit018=="yes")#292
+
+#Subsets of only Placebo
+
+Placebo_CLR <-subset_samples(trial_CLR, trial_arm=="Placebo")#441
+
+#---Placebo at Baseline and Week 48----
+Placebo012_CLR<-subset_samples(Placebo_CLR, visit!="Week 72")#318
+
+#Selecting subset with samples at both Baseline and Week 48s
+Placebo012p_CLR<-subset_samples(Placebo012_CLR, visit012=="yes")#292
+
+#---Placebo at 12 and Week 72---
+Placebo1218_CLR<-subset_samples(Placebo_CLR, visit!="Baseline")#318
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo1218p_CLR<-subset_samples(Placebo1218_CLR, visit1218=="yes")#292
+
+#---Placebo at Baseline and Week 72---
+Placebo018_CLR<-subset_samples(Placebo_CLR, visit!="Week 48")#318
+
+
+#Selecting subset with samples at both Baseline and Week 72s
+Placebo018p_CLR<-subset_samples(Placebo018_CLR, visit018=="yes")#292
+
+# merge taxa to the Genus rank level
+
+trial_CLRg<-tax_glom(trial_CLR, taxrank = rank_names(trial_CLR)[6])
+taxa_names(trial_CLRg)<-as.character(tax_table(trial_CLRg)[,6])
+OTU.trial_CLRg<-otu_table(trial_CLRg)
+
+t0g_CLR<-tax_glom(t0_CLR, taxrank = rank_names(t0_CLR)[6])
+taxa_names(t0g_CLR)<-as.character(tax_table(t0g_CLR)[,6])
+OTU.t0g_CLR<-otu_table(t0g_CLR)
+
+
+t12g_CLR<-tax_glom(t12_CLR, taxrank = rank_names(t12_CLR)[6])
+taxa_names(t12g_CLR)<-as.character(tax_table(t12g_CLR)[,6])
+OTU.t12g_CLR<-otu_table(t12g_CLR)
+
+
+t18g_CLR<-tax_glom(t18_CLR, taxrank = rank_names(t18_CLR)[6])
+taxa_names(t18g_CLR)<-as.character(tax_table(t18g_CLR)[,6])
+OTU.t18g_CLR<-otu_table(t18g_CLR)
+
+
+AZM_CLRg<-tax_glom(AZM_CLR, taxrank = rank_names(AZM_CLR)[6])
+taxa_names(AZM_CLRg)<-as.character(tax_table(AZM_CLRg)[,6])
+OTU.AZM_CLRg<-otu_table(AZM_CLRg)
+
+
+azm012pg_CLR<-tax_glom(azm012p_CLR, taxrank = rank_names(azm012p_CLR)[6])
+taxa_names(azm012pg_CLR)<-as.character(tax_table(azm012pg_CLR)[,6])
+OTU.azm012pg_CLR<-otu_table(azm012pg_CLR)
+
+
+azm018pg_CLR<-tax_glom(azm018p_CLR, taxrank = rank_names(azm018p_CLR)[6])
+taxa_names(azm018pg_CLR)<-as.character(tax_table(azm018pg_CLR)[,6])
+OTU.azm018pg_CLR<-otu_table(azm018pg_CLR)
+
+azm1218pg_CLR<-tax_glom(azm1218p_CLR, taxrank = rank_names(azm1218p_CLR)[6])
+taxa_names(azm1218pg_CLR)<-as.character(tax_table(azm1218pg_CLR)[,6])
+OTU.azm1218pg_CLR<-otu_table(azm1218pg_CLR)
+
+
+Placebo012pg_CLR<-tax_glom(Placebo012p_CLR, taxrank = rank_names(Placebo012p_CLR)[6])
+taxa_names(Placebo012pg_CLR)<-as.character(tax_table(Placebo012pg_CLR)[,6])
+OTU.Placebo012pg_CLR<-otu_table(Placebo012pg_CLR)
+
+
+
+Placebo1218pg_CLR<-tax_glom(Placebo1218p_CLR, taxrank = rank_names(Placebo1218p_CLR)[6])
+taxa_names(Placebo1218pg_CLR)<-as.character(tax_table(Placebo1218pg_CLR)[,6])
+OTU.Placebo1218pg_CLR<-otu_table(Placebo1218pg_CLR)
+
+
+Placebo018pg_CLR<-tax_glom(Placebo018p_CLR, taxrank = rank_names(Placebo018p_CLR)[6])
+taxa_names(Placebo018pg_CLR)<-as.character(tax_table(Placebo018pg_CLR)[,6])
+OTU.Placebo018pg_CLR<-otu_table(Placebo018pg_CLR)
+
+
+Placebo_CLRg<-tax_glom(Placebo_CLR, taxrank = rank_names(Placebo_CLR)[6])
+taxa_names(Placebo_CLRg)<-as.character(tax_table(Placebo_CLRg)[,6])
+OTU.Placebo_CLRg<-otu_table(Placebo_CLRg)
+
+#Filtering
+trial_CLRg
+
+trial_CLRfg <- filter_taxa(trial_CLRg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+
+t0fg_CLR <- filter_taxa(t0g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+t12fg_CLR <- filter_taxa(t12g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+t18fg_CLR <- filter_taxa(t18g_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+AZM_CLRfg <- filter_taxa(AZM_CLRg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+azm012pfg_CLR <- filter_taxa(azm012pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+azm018pfg_CLR <- filter_taxa(azm018pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+azm1218pfg_CLR <- filter_taxa(azm1218pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo_CLRfg <- filter_taxa(Placebo_CLRg, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo012pfg_CLR <- filter_taxa(Placebo012pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+Placebo018pfg_CLR <- filter_taxa(Placebo018pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+
+Placebo1218pfg_CLR <- filter_taxa(Placebo1218pg_CLR, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+
+```
+
+
+#-------------------PERMANOVA AND DISPERSION TESTS----------------------------
+
+
+#------------Assessing covariates that are associated with beta diversity and adjusting for this confounders------------
+#Univariate analysis at Baseline for variables associated with Bray_Curtis beta diversity
+```{r}
+
+set.seed(123)
+clr_dist_matrix1 <- phyloseq::distance(t0fg, method = "bray") 
+
+#trial arm
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$trial_arm, permutations = 1000)#0.968
+
+
+#ADONIS test- site
+print("site")
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$site, permutations = 1000)#0.0959
+
+#ADONIS test -templateDNA_16SqPCR_copies
+print("templateDNA_16SqPCR_copies")
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$templateDNA_16SqPCR_copies, permutations = 1000) #0.000999 ***
+
+#ADONIS test -fev1z
+
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$fev1z, permutations = 1000) # 0.000999 ***
+
+
+#ADONIS test -weightcat
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$weightcat, permutations = 1000) #0.1738
+
+
+
+#ADONIS test -f24mrcscore
+vegan::adonis(clr_dist_matrix1 ~factor(phyloseq::sample_data(t0fg)$f24mrcscore), permutations = 1000) #0.7632
+
+
+
+#ADONIS test -FEVpcpred
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FEVpcpred, permutations = 1000) #0.000999 ***
+
+
+
+
+#ADONIS test -FVC
+#vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FVC, permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -FVCZ
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FVCZ, permutations = 1000) ##Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -fFVCpcpred
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FVCpcpred, permutations = 1000) ##Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -FEV1FVC
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FEV1FVC, permutations = 1000) ##Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -FEV1FVCZ
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$FEV1FVCZ, permutations = 1000) ##Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -cd4
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$cd4, permutations = 1000) #0.004995 **
+
+
+
+#ADONIS test -vload
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$vload, permutations = 1000) ##Error in G * t(hat) : non-conformable arrays
+
+
+
+
+#ADONIS test -sex
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$sex, permutations = 1000) #0.003996 **
+
+
+
+#ADONIS test -bmi
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$bmi, permutations = 1000) #0.2038
+
+
+
+#ADONIS test -agey
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$agey, permutations = 1000) #0.03297 
+
+
+
+#ADONIS test -zwauk
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$zwauk, permutations = 1000) #0.1678
+
+
+
+#ADONIS test -zhauk
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$zhauk, permutations = 1000) #0.4745
+
+
+
+#ADONIS test -zbmiuk
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$zbmiuk, permutations = 1000) #0.6743
+
+
+
+#ADONIS test -vllog
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$vllog, permutations = 1000) #0.01898 *
+
+
+#ADONIS test -vlsup
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$vlsup, permutations = 1000) #0.04296 *
+
+
+#ADONIS test -vlsup400
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$vlsup400 , permutations = 1000) #0.02697 *
+
+
+
+#ADONIS test -vlsup40
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$vlsup40 , permutations = 1000) #0.1079
+
+#ADONIS test -normalbmi
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$normalbmi , permutations = 1000) #0.5085
+
+#ADONIS test -normalwaz
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$normalwaz , permutations = 1000) #0.5814
+
+
+#ADONIS test -normalhaz
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$normalhaz , permutations = 1000) #0.7672
+
+
+#ADONIS test -durartgp
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$durartgp , permutations = 1000) #0.7043
+
+
+
+#ADONIS test -cd4gp
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$cd4gp , permutations = 1000) #0.03796 *
+
+
+
+#ADONIS test -agegpsym
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$agegpsym , permutations = 1000) #0.2248
+
+
+#ADONIS test -abnrr
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$abnrr , permutations = 1000) #0.01499 *
+
+
+
+#ADONIS test -abnsat
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$abnsat , permutations = 1000) #0.3636
+
+
+
+
+
+#ADONIS test -abnhr
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$abnhr , permutations = 1000) #0.3966
+
+
+
+#ADONIS test -enrolmonth
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$enrolmonth , permutations = 1000) #0.01099 *
+
+
+#ADONIS test -agegp
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$agegp, permutations = 1000) #0.2288
+
+
+
+#ADONIS test -ageyart
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$ageyart , permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -duryart
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$duryart, permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -duryartgp
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$duryartgp, permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -attendschool
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$attendschool, permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test - artdrug1stline
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$artdrug1stline, permutations = 1000) #0.05195 .
+
+
+
+#ADONIS test -artdrug2ndline
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$artdrug2ndline, permutations = 1000) #0.1588
+
+
+
+#ADONIS test -f25cough
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$f25cough, permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -f11cotri
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$f11cotri , permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -f14adm
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$f14adm, permutations = 1000) #0.2338
+
+
+#ADONIS test -f16tbtreat
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$f16tbtreat, permutations = 1000) #0.2338
+
+
+#ADONIS test -f18breathe
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$f18breathe, permutations = 1000) #0.5055
+
+
+#ADONIS test -sc08repsc
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$sc08repsc , permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+#ADONIS test -artreg
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$artreg , permutations = 1000) #Error in G * t(hat) : non-conformable arrays
+
+
+
+#ADONIS test -artreg
+vegan::adonis(clr_dist_matrix1 ~ phyloseq::sample_data(t0fg)$sampling_month , permutations = 1000) #0.5225
+
+
+```
+
+
+
+
+##Error in G * t(hat) : non-conformable arrays due to NAs in the variable. Remove the observations with the NA to solve the issue. However,
+
+
+The variables below were significant in the PERMANOVA test on baseline data hence they will be adjusted for using them or a derived variable that has no NA final PERMANOVA tests
+                   
+phyloseq::sample_data(t0fg)$fev1z
+phyloseq::sample_data(t0fg)$templateDNA_16SqPCR_copies
+phyloseq::sample_data(t0fg)$FEVpcpred
+phyloseq::sample_data(t0fg)$sex
+phyloseq::sample_data(t0fg)$agey
+phyloseq::sample_data(t0fg)$vllog
+phyloseq::sample_data(t0fg)$vlsup
+phyloseq::sample_data(t0fg)$vlsup400
+phyloseq::sample_data(t0fg)$cd4gp
+phyloseq::sample_data(t0fg)$abnrr
+phyloseq::sample_data(t0fg)$enrolmonth
+phyloseq::sample_data(t0fg)$artdrug1stline
+
+
+Since fev1z has NAs, FEV1_baseline.1 will be used instead
+trial_arm, visit, sex,site, colmonthgp_mal2,f24mrcscore_baseline,f14adm_baseline,agey,
+cd4enrl_baseline will be used instead of CD4gp or vllog or vlsup or vlsup400
+artdrug1stline_baseline,templateDNA_16SqPCR_copies,adherence, abnrr_baseline,
+
+
+
+
+
+#All the below are correct and should be kept
+
+
+
+
+#Dispersion test will be conducted on only trial arm and visit as the test does not allow multivariate testing
+
+#---------------All data visit - Aitchison distance---------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrixA <- phyloseq::distance(trial_CLRfg, method = "euclidean") 
+
+#ADONIS test- Trial arm only
+vegan::adonis2(clr_dist_matrixA ~ phyloseq::sample_data(trial_CLRfg)$trial_arm,permutations = 1000)
+
+#ADONIS test- Visit arm only
+vegan::adonis2(clr_dist_matrixA ~ phyloseq::sample_data(trial_CLRfg)$trial_arm,permutations = 1000)
+
+
+#ADONIS test including both trial arm and visit variables
+ad<-vegan::adonis2(clr_dist_matrixA ~ phyloseq::sample_data(trial_CLRfg)$trial_arm+phyloseq::sample_data(trial_CLRfg)$visit)
+ad
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(clr_dist_matrixA ~ sample_data(trial_CLRfg)$trial_arm+sample_data(trial_CLRfg)$visit+
+          sample_data(trial_CLRfg)$sex+
+          sample_data(trial_CLRfg)$site+
+          #sample_data(trial_CLRfg)$colmonthgp_mal2+
+          factor(sample_data(trial_CLRfg)$f24mrcscore_baseline)+
+          sample_data(trial_CLRfg)$f14adm_baseline+
+          sample_data(trial_CLRfg)$agey+
+          sample_data(trial_CLRfg)$cd4enrl_baseline+
+          sample_data(trial_CLRfg)$artdrug1stline_baseline+
+          sample_data(trial_CLRfg)$templateDNA_16SqPCR_copies+
+          sample_data(trial_CLRfg)$adherence+
+          sample_data(trial_CLRfg)$FEV1_baseline.1+
+          sample_data(trial_CLRfg)$abnrr_baseline,
+        permutations = 1000)
+
+
+
+#Dispersion test and plot -Trial arm
+dispr_arm <- vegan::betadisper(clr_dist_matrixA, phyloseq::sample_data(trial_CLRfg)$trial_arm)
+dispr_arm
+
+plot(dispr_arm, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr_arm, main = "", xlab = "")
+permutest(dispr_arm, pairwise = TRUE)
+
+#Dispersion test and plot -Visits
+dispr_visit <- vegan::betadisper(clr_dist_matrixA, phyloseq::sample_data(trial_CLRfg)$visit)
+dispr_visit
+
+plot(dispr_visit, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr_visit, main = "", xlab = "")
+permutest(dispr_visit, pairwise = TRUE)
+
+```
+
+#---------------All data visit - Bray-Curtis distance---------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrixB <- phyloseq::distance(trialfg, method = "bray") 
+
+#ADONIS test- Trial arm only
+vegan::adonis2(bray_dist_matrixA ~ phyloseq::sample_data(trialfg)$trial_arm,permutations = 1000)
+
+#ADONIS test- Visit only
+vegan::adonis2(bray_dist_matrixA ~ phyloseq::sample_data(trialfg)$visit,permutations = 1000)
+
+#ADONIS test including both trial arm and visit variables
+ad<-vegan::adonis2(clr_dist_matrixB ~ phyloseq::sample_data(trialfg)$trial_arm+phyloseq::sample_data(trialfg)$visit)
+ad
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(bray_dist_matrixA ~ sample_data(trialfg)$trial_arm+sample_data(trialfg)$visit+
+          sample_data(trialfg)$sex+
+          sample_data(trialfg)$site+
+          #sample_data(trialfg)$colmonthgp_mal2+
+          factor(sample_data(trialfg)$f24mrcscore_baseline)+
+          sample_data(trialfg)$f14adm_baseline+
+          sample_data(trialfg)$agey+
+          sample_data(trialfg)$cd4enrl_baseline+
+          sample_data(trialfg)$artdrug1stline_baseline+
+          sample_data(trialfg)$templateDNA_16SqPCR_copies+
+          sample_data(trialfg)$adherence+
+          sample_data(trialfg)$FEV1_baseline.1+
+          sample_data(trialfg)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot- trial_arm
+dispr_armb <- vegan::betadisper(clr_dist_matrixB, phyloseq::sample_data(trialfg)$trial_arm)
+dispr_armb
+
+plot(dispr_armb, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr_armb, main = "", xlab = "")
+permutest(dispr_armb, pairwise = TRUE)
+
+
+
+#Dispersion test and plot- Visit
+dispr_visit <- vegan::betadisper(clr_dist_matrixB, phyloseq::sample_data(trialfg)$visit)
+dispr_visit
+
+plot(dispr_visit, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr_visit, main = "", xlab = "")
+permutest(dispr_visit, pairwise = TRUE)
+
+```
+#-------------------------------------------------------------------------------------------------------
+#-------------------------------TRIAL ARM at each visit-Baseline----------------------------------------
+#-------------------------------------------------------------------------------------------------------
+
+
+#-------------TRIAL ARM at Baseline-Aitchison--------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix <- phyloseq::distance(t0fg_CLR, method = "euclidean") 
+
+#ADONIS test - Trial arm only
+me<-vegan::adonis2(clr_dist_matrix ~ phyloseq::sample_data(t0fg_CLR)$trial_arm)
+me
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(clr_dist_matrix ~ sample_data(t0fg_CLR)$trial_arm+
+          sample_data(t0fg_CLR)$sex+
+          sample_data(t0fg_CLR)$site+
+          sample_data(t0fg_CLR)$colmonthgp_mal2+
+          factor(sample_data(t0fg_CLR)$f24mrcscore_baseline)+
+          sample_data(t0fg_CLR)$f14adm_baseline+
+          sample_data(t0fg_CLR)$agey+
+          sample_data(t0fg_CLR)$cd4enrl_baseline+
+          sample_data(t0fg_CLR)$artdrug1stline_baseline+
+          sample_data(t0fg_CLR)$templateDNA_16SqPCR_copies+
+          sample_data(t0fg_CLR)$adherence+
+          sample_data(t0fg_CLR)$FEV1_baseline.1+
+          sample_data(t0fg_CLR)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+disprt0 <- vegan::betadisper(clr_dist_matrix, phyloseq::sample_data(t0fg_CLR)$trial_arm)
+disprt0
+
+plot(disprt0, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+boxplot(disprt0, main = "", xlab = "")
+
+permutest(disprt0, pairwise = TRUE)
+```
+Although, the groups are not different from each other based on PERMANOVA test, the Placebo samples have a higher dispersion than AZM for Aitchison's distance
+
+
+#-------------TRIAL ARM at Baseline-Bray-Curtis--------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+bray_dist_matrixb <- phyloseq::distance(t0fg, method = "bray") 
+
+#ADONIS test-trial arm only
+vegan::adonis2(bray_dist_matrixb ~ phyloseq::sample_data(t0fg)$trial_arm)
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(bray_dist_matrixb ~ sample_data(t0fg)$trial_arm+
+          sample_data(t0fg)$sex+
+          sample_data(t0fg)$site+
+          sample_data(t0fg)$colmonthgp_mal2+
+          factor(sample_data(t0fg)$f24mrcscore_baseline)+
+          sample_data(t0fg)$f14adm_baseline+
+          sample_data(t0fg)$agey+
+          sample_data(t0fg)$cd4enrl_baseline+
+          sample_data(t0fg)$artdrug1stline_baseline+
+          sample_data(t0fg)$templateDNA_16SqPCR_copies+
+          sample_data(t0fg)$adherence+
+          sample_data(t0fg)$FEV1_baseline.1+
+          sample_data(t0fg)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+disprt0b <- vegan::betadisper(bray_dist_matrixb, phyloseq::sample_data(t0fg)$trial_arm)
+disprt0b
+
+plot(disprt0b, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+boxplot(disprt0b, main = "", xlab = "")
+
+permutest(disprt0b, pairwise = TRUE)
+```
+BOth PERMANOVA and disperison tests are not significant
+
+
+#-------------------Week 48----------------------------
+#------------TRIAL ARM at Week 48-Aitchison's Distance--------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix12E <- phyloseq::distance(t12fg_CLR, method = "euclidean") 
+
+#ADONIS test- trial arm only
+vegan::adonis2(clr_dist_matrix12E ~ phyloseq::sample_data(t12fg_CLR)$trial_arm,permutations = 1000)
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(clr_dist_matrix12E ~ sample_data(t12fg_CLR)$trial_arm+
+          sample_data(t12fg_CLR)$sex+
+          sample_data(t12fg_CLR)$site+
+          sample_data(t12fg_CLR)$colmonthgp_mal2+
+          factor(sample_data(t12fg_CLR)$f24mrcscore_baseline)+
+          sample_data(t12fg_CLR)$f14adm_baseline+
+          sample_data(t12fg_CLR)$agey+
+          sample_data(t12fg_CLR)$cd4enrl_baseline+
+          sample_data(t12fg_CLR)$artdrug1stline_baseline+
+          sample_data(t12fg_CLR)$templateDNA_16SqPCR_copies+
+          sample_data(t12fg_CLR)$adherence+
+          sample_data(t12fg_CLR)$FEV1_baseline.1+
+          sample_data(t12fg_CLR)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+dispr12 <- vegan::betadisper(clr_dist_matrix12E, phyloseq::sample_data(t12fg_CLR)$trial_arm)
+dispr12
+
+plot(dispr12, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr12, main = "", xlab = "")
+
+permutest(dispr12)
+```
+ThE dispersion is similar in samples from AZM and placebo arms. Hence the significant PERMANOVA results are not confounders by difference in dispersion of the two groups. In other words, the significant result is likely due to location effect
+https://www.youtube.com/watch?v=hA253atqbGo&ab_channel=ChipsterTutorials
+
+
+
+#-------------TRIAL ARM at Week 48-Bray-Curtis Distance--------------
+```{r}
+set.seed(123)
+clr_dist_matrix12B <- phyloseq::distance(t12fg, method = "bray") 
+
+#ADONIS test- trial arm only
+vegan::adonis(clr_dist_matrix12B ~ phyloseq::sample_data(t12fg)$trial_arm,permutations = 1000)
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(bray_dist_matrix12E ~ sample_data(t12fg)$trial_arm+
+          sample_data(t12fg)$sex+
+          sample_data(t12fg)$site+
+          sample_data(t12fg)$colmonthgp_mal2+
+          factor(sample_data(t12fg)$f24mrcscore_baseline)+
+          sample_data(t12fg)$f14adm_baseline+
+          sample_data(t12fg)$agey+
+          sample_data(t12fg)$cd4enrl_baseline+
+          sample_data(t12fg)$artdrug1stline_baseline+
+          sample_data(t12fg)$templateDNA_16SqPCR_copies+
+          sample_data(t12fg)$adherence+
+          sample_data(t12fg)$FEV1_baseline.1+
+          sample_data(t12fg)$abnrr_baseline,
+        permutations = 1000)
+
+#Dispersion test and plot
+dispr12B <- vegan::betadisper(clr_dist_matrix12B, phyloseq::sample_data(t12fg)$trial_arm)
+dispr12B
+
+plot(dispr12B, main = "Ordination Centroids and Dispersion Labeled: Bray_Curtis Distance", sub = "")
+
+boxplot(dispr12B, main = "", xlab = "")
+
+permutest(dispr12B)
+```
+ The Placebo group is more disperse than AZM group when Bray-Curtis distance is used. Therefore, the significant PERMANOVA results can be due to both location and dispersion effects or only dispersion effects. 
+ 
+ 
+#Check if this will be the case for bray-curtis distance in CLR transformed points
+```{r}
+set.seed(123)
+clr_dist_matrix12B <- phyloseq::distance(t12fg_CLR, method = "bray") 
+
+#ADONIS test
+vegan::adonis(clr_dist_matrix12B ~ phyloseq::sample_data(t12fg_CLR)$trial_arm,permutations = 1000)
+
+#------Adjusted ADONIS test -------------
+
+set.seed(123)
+adonis2(clr_dist_matrix12B ~ sample_data(t12fg_CLR)$trial_arm+
+          sample_data(t12fg_CLR)$sex+
+          sample_data(t12fg_CLR)$site+
+          sample_data(t12fg_CLR)$colmonthgp_mal2+
+          factor(sample_data(t12fg_CLR)$f24mrcscore_baseline)+
+          sample_data(t12fg_CLR)$f14adm_baseline+
+          sample_data(t12fg_CLR)$agey+
+          sample_data(t12fg_CLR)$cd4enrl_baseline+
+          sample_data(t12fg_CLR)$artdrug1stline_baseline+
+          sample_data(t12fg_CLR)$templateDNA_16SqPCR_copies+
+          sample_data(t12fg_CLR)$adherence+
+          sample_data(t12fg_CLR)$FEV1_baseline.1+
+          sample_data(t12fg_CLR)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+dispr12B <- vegan::betadisper(clr_dist_matrix12B, phyloseq::sample_data(t12fg_CLR)$trial_arm)
+dispr12B
+
+plot(dispr12B, main = "Ordination Centroids and Dispersion Labeled: Bray_Curtis Distance on CLR transformed counts", sub = "")
+
+boxplot(dispr12B, main = "", xlab = "")
+
+permutest(dispr12B)
+```
+ Its the same
+ 
+ 
+#------Visualisation of Dispersion/location effects using NMDS---------------
+Since there dispersion test is significant, we use NMDS to assess if the PERMANOVA results is by both  location and dispersion effects or only dispersion effect which we know is present based on the test.
+```{r}
+ord_aitch <- ordinate(t12fg_CLR, method = "NMDS", distance = "euclidean") 
+ord_bray <- ordinate(t12fg, method = "NMDS", distance = "bray") 
+ord_bray_CLR <- ordinate(t12fg_CLR, method = "NMDS", distance = "bray")#Bray-Curtis distance on CLR transformed counts
+
+
+#Plot ordinations
+d <- plot_ordination(t12fg_CLR, ord_aitch, color = "trial_arm") + 
+  geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), 
+                                     linetype = 2)+mythemet+scale_color_manual(values=c("#450b70", "#957f07"))
+d
+e <- plot_ordination(t12fg, ord_bray, color = "trial_arm") +
+  geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), 
+                                     linetype = 2)+mythemet+scale_color_manual(values=c("#450b70", "#957f07"))
+e
+
+f <- plot_ordination(t12fg_CLR, ord_bray_CLR, color = "trial_arm") +
+  geom_point(size = 2)+ stat_ellipse(aes(group = trial_arm), 
+                                     linetype = 2)+mythemet+scale_color_manual(values=c("#450b70", "#957f07"))
+f
+
+
+Ti<-cowplot::plot_grid(d,e,f, nrow = 2, ncol = 2, scale = .9, labels = c("A) Aitchison distance", "B) Bray-Curtis distance","C) Bray-Curtis distance on CLR transformed ASV counts"  ),label_size = 20, label_fontfamily = "Helvetica")
+Ti
+ggsave("NMDS_12m_trial13thDec.pdf", Ti,  width = 40, height = 50, units = "cm")
+
+```
+ Based on the NMDS figures it appears there are both dispersion and location effects accounting for the 
+ significant PERMANOVA results. The location effect is with the AZM while the dispersion effect is with the Placebo.
+ 
+ 
+
+ 
+
+#-----------------------TRIAL ARM at Week 72-----------------------------------------------------
+
+#-------------------------TRIAL ARM at Week 72-Aitchison distance----------------------------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix18E <- phyloseq::distance(t18fg_CLR, method = "euclidean") 
+
+#ADONIS test - trial arm only
+vegan::adonis(clr_dist_matrix18E ~ phyloseq::sample_data(t18fg_CLR)$trial_arm,permutations = 1000)
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(clr_dist_matrix18E ~ sample_data(t18fg_CLR)$trial_arm+
+          sample_data(t18fg_CLR)$sex+
+          sample_data(t18fg_CLR)$site+
+          #sample_data(t18fg_CLR)$colmonthgp_mal2+
+          factor(sample_data(t18fg_CLR)$f24mrcscore_baseline)+
+          sample_data(t18fg_CLR)$f14adm_baseline+
+          sample_data(t18fg_CLR)$agey+
+          sample_data(t18fg_CLR)$cd4enrl_baseline+
+          sample_data(t18fg_CLR)$artdrug1stline_baseline+
+          sample_data(t18fg_CLR)$templateDNA_16SqPCR_copies+
+          sample_data(t18fg_CLR)$adherence+
+          #sample_data(t18fg_CLR)$FEV1_baseline.1+
+          sample_data(t18fg_CLR)$abnrr_baseline,
+        permutations = 1000)
+
+```
+This isn't significant
+
+#Assessing dispersion - Aitchison distance
+
+```{r}
+#Dispersion test and plot
+dispr18 <- vegan::betadisper(clr_dist_matrix18E, phyloseq::sample_data(t18fg_CLR)$trial_arm)
+dispr18
+
+plot(dispr18, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr18, main = "", xlab = "")
+permutest(dispr18, pairwise = TRUE)
+```
+No dispersion differences
+
+
+#---------------TRIAL ARM at Week 72- Bray-Curtis distance--------------
+```{r}
+set.seed(123)
+bray_dist_matrix18E <- phyloseq::distance(t18fg, method = "bray") 
+#ADONIS test
+vegan::adonis(bray_dist_matrix18E ~ phyloseq::sample_data(t18fg)$trial_arm, permutations = 1000)
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(bray_dist_matrix18E ~ sample_data(t18fg)$trial_arm+
+          sample_data(t18fg)$sex+
+          sample_data(t18fg)$site+
+          #sample_data(t18fg)$colmonthgp_mal2+
+          factor(sample_data(t18fg)$f24mrcscore_baseline)+
+          sample_data(t18fg)$f14adm_baseline+
+          sample_data(t18fg)$agey+
+          sample_data(t18fg)$cd4enrl_baseline+
+          sample_data(t18fg)$artdrug1stline_baseline+
+          sample_data(t18fg)$templateDNA_16SqPCR_copies+
+          sample_data(t18fg)$adherence+
+          #sample_data(t18fg)$FEV1_baseline.1+
+          sample_data(t18fg)$abnrr_baseline,
+        permutations = 1000)
+```
+No difference
+
+#Assessing dispersion - Bray-Curtis distance
+```{r}
+#Dispersion test and plot
+dispr18B <- vegan::betadisper(bray_dist_matrix18E, phyloseq::sample_data(t18fg)$trial_arm)
+dispr18B
+
+plot(dispr18B, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr18B, main = "", xlab = "")
+permutest(dispr18B, pairwise = TRUE)
+```
+
+Samples from Placebo has a higher dispersion than AZM arm at 18 months
+
+
+
+
+#------------------------------------------------------------------------------------------------------
+#--------------------------------------------AZM only-------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+
+
+#ALL visits
+
+#--------------AZM at all visits Aitchison distance--------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrixAZM <- phyloseq::distance(AZM_CLRfg, method = "euclidean") 
+
+#ADONIS TEST -trial arm only
+p3 <- vegan::adonis2(clr_dist_matrixAZM ~ phyloseq::sample_data(AZM_CLRfg)$visit)
+p3
+
+
+#------Adjusted ADONIS test -------------
+adonis2(clr_dist_matrixAZM ~ sample_data(AZM_CLRfg)$visit+
+          sample_data(AZM_CLRfg)$sex+
+          sample_data(AZM_CLRfg)$site+
+          sample_data(AZM_CLRfg)$colmonthgp_mal2+
+          factor(sample_data(AZM_CLRfg)$f24mrcscore_baseline)+
+          sample_data(AZM_CLRfg)$f14adm_baseline+
+          sample_data(AZM_CLRfg)$agey+
+          sample_data(AZM_CLRfg)$cd4enrl_baseline+
+          sample_data(AZM_CLRfg)$artdrug1stline_baseline+
+          sample_data(AZM_CLRfg)$templateDNA_16SqPCR_copies+
+          sample_data(AZM_CLRfg)$adherence+
+          sample_data(AZM_CLRfg)$FEV1_baseline.1+
+          sample_data(AZM_CLRfg)$abnrr_baseline,
+        permutations = 1000)
+
+#Dispersion test and plot
+dispr_AZM <- vegan::betadisper(clr_dist_matrixAZM, phyloseq::sample_data(AZM_CLRfg)$visit)
+dispr_AZM
+
+plot(dispr_AZM, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr_AZM, main = "", xlab = "")
+permutest(dispr_AZM, pairwise = TRUE)
+
+```
+The three visit samples from the AZM arm are different in composition and relative abundances of taxa. And there are no dispersion effects meaning all significant PERMANOVA results are due to location effects. In other words all groups have similar dispersion of the samples location relative to the centroid. The pairwise analysis has to be conducted on pairs of data. I have conducted this using data subset into pairs however, there is an R code to do this as well. This R code is called pairwiseAdonis and it returns adjusted P vlaues.
+
+
+#PairwiseAdonis - AZM all visits
+
+```{r}
+#library(devtools)
+#install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+library(pairwiseAdonis)
+
+```
+
+Pairwise adonis
+https://github.com/pmartinezarbizu/pairwiseAdonis
+The p values returned are adjusted for
+```{r}
+clr_dist_matrixAZM <- phyloseq::distance(AZM_CLRfg, method = "euclidean") 
+dat <- data.frame(sample_data(AZM_CLRfg))
+
+#------------Pairwise Adonis- visit only-------------------
+pairwise.adonis2(clr_dist_matrixAZM ~ visit, data =dat, nperm = 10000 )
+
+#------Adjusted Pairwise Adonis----------------------------
+clr_dist_matrixAZM <- phyloseq::distance(AZM_CLRfg, method = "euclidean") 
+dat <- data.frame(sample_data(AZM_CLRfg))
+pairwise.adonis2(clr_dist_matrixAZM ~ visit+
+                   sex+
+                   site+
+                   colmonthgp_mal2+
+                   factor(f24mrcscore_baseline)+
+                   f14adm_baseline+agey+
+                   cd4enrl_baseline+
+                   artdrug1stline_baseline+
+                   templateDNA_16SqPCR_copies+
+                   adherence+
+                   FEV1_baseline.1+
+                   abnrr_baseline, data =dat, nperm = 10000 )
+
+```
+
+
+
+
+
+#--------------AZM at all visits Bray-Curtis distance--------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+bray_dist_matrixAZM <- phyloseq::distance(AZMfg, method = "bray") 
+
+#------------Pairwise Adonis- visit only-------------------
+p3 <- vegan::adonis2(bray_dist_matrixAZM ~ phyloseq::sample_data(AZMfg)$visit)
+p3
+
+#------Adjusted ADONIS test -------------
+adonis2(bray_dist_matrixAZM ~ sample_data(AZMfg)$visit+
+          sample_data(AZMfg)$sex+
+          sample_data(AZMfg)$site+
+          sample_data(AZMfg)$colmonthgp_mal2+
+          factor(sample_data(AZMfg)$f24mrcscore_baseline)+
+          sample_data(AZMfg)$f14adm_baseline+
+          sample_data(AZMfg)$agey+
+          sample_data(AZMfg)$cd4enrl_baseline+
+          sample_data(AZMfg)$artdrug1stline_baseline+
+          sample_data(AZMfg)$templateDNA_16SqPCR_copies+
+          sample_data(AZMfg)$adherence+
+          sample_data(AZMfg)$FEV1_baseline.1+
+          sample_data(AZMfg)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+dispr_AZMb <- vegan::betadisper(bray_dist_matrixAZM, phyloseq::sample_data(AZMfg)$visit)
+dispr_AZMb
+
+plot(dispr_AZMb, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr_AZMb, main = "", xlab = "")
+permutest(dispr_AZMb, pairwise = TRUE)
+
+```
+Just like the Aitchison distance analysis above, the three visit samples from the AZM arm are different in composition and relative abundances of taxa. And there are no dispersion effects meaning all significant PERMANOVA results are due to location effects.
+
+#PairwiseAdonis - AZM all visits
+```{r}
+bray_dist_matrixAZM <- phyloseq::distance(AZMfg, method = "bray") 
+datp <- data.frame(sample_data(AZMfg))
+#------------Pairwise Adonis- visit only-------------------
+pairwise.adonis2(bray_dist_matrixAZM ~ visit, data =dat, nperm = 10000 )
+
+
+#------Adjusted Pairwise Adonis----------------------------
+pairwise.adonis2(bray_dist_matrixAZM ~ visit+
+                   sex+
+                   site+
+                   colmonthgp_mal2+
+                   factor(f24mrcscore_baseline)+
+                   f14adm_baseline+agey+
+                   cd4enrl_baseline+
+                   artdrug1stline_baseline+
+                   templateDNA_16SqPCR_copies+
+                   adherence+
+                   FEV1_baseline.1+
+                   abnrr_baseline, data =dat, nperm = 10000 )
+
+```
+
+The results here agree with that with Aitchison distance. The author of PairwiseAdonis recommend that the results be validated hence pairwise comparisons conducted below. However, adjustments for covariates was not conducted for each individual interval.
+
+
+
+#-----Pairwise PERMANOVA test for AZM arm------------------
+#AZM Baseline and 48 weeks
+
+#-------------AZM Baseline and 48 weeks-Aitchison distance--------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix012 <- phyloseq::distance(azm012pfg_CLR, method = "euclidean") 
+
+#ADONIS test- visit only
+vegan::adonis2(clr_dist_matrix012 ~ phyloseq::sample_data(azm012pfg_CLR)$visit, permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr012 <- vegan::betadisper(clr_dist_matrix012, phyloseq::sample_data(azm012pfg_CLR)$visit)
+dispr012
+
+plot(dispr012, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr012, main = "", xlab = "")
+permutest(dispr012, pairwise = TRUE)
+```
+Permanova result is significant but dispersion is not. This agrees with what i have already detected that within the AZM arm that dispersion is similar across visits. 
+
+#-------------AZM Baseline and 48 weeks-Bray-Curtis distance--------------
+```{r}
+set.seed(123)
+bray_dist_matrix012 <- phyloseq::distance(azm012pfg, method = "bray") 
+#ADONIS test
+vegan::adonis(bray_dist_matrix012 ~ phyloseq::sample_data(azm012pfg)$visit, permutations = 1000)
+
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr012B <- vegan::betadisper(clr_dist_matrix012, phyloseq::sample_data(azm012pfg)$visit)
+dispr012B
+
+plot(dispr012B, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr012B, main = "", xlab = "")
+permutest(dispr012B, pairwise = TRUE)
+```
+Permanova result is significant but dispersion is not.This agrees with what i have already detected that within the AZM arm that dispersion is similar across visits. So both Aitchision and Bray-Curtis results agree with the pairwiseAdonis results. 
+
+
+#48 weeks and 72 weeks
+#-------------AZM 48 weeks and 72 weeks-Aitchison distance--------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix1218 <- phyloseq::distance(azm1218pfg_CLR, method = "euclidean") 
+#ADONIS test
+vegan::adonis2(clr_dist_matrix1218 ~ phyloseq::sample_data(azm1218pfg_CLR)$visit,permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr1218 <- vegan::betadisper(clr_dist_matrix1218, phyloseq::sample_data(azm1218pfg_CLR)$visit)
+dispr1218
+#azm1218pfg_CLR
+
+plot(dispr1218, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr1218, main = "", xlab = "")
+permutest(dispr1218, pairwise = TRUE)
+```
+Permanova results is significant and there dispersion between visits is similar.
+
+
+#-------------AZM 48 weeks and 72 weeks-Bray-Curtis distance--------------
+```{r}
+set.seed(123)
+bray_dist_matrix1218 <- phyloseq::distance(azm1218pfg, method = "bray") 
+#ADONIS test
+vegan::adonis2(bray_dist_matrix1218 ~ phyloseq::sample_data(azm1218pfg)$visit,permutations = 1000)
+
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr1218B <- vegan::betadisper(bray_dist_matrix1218, phyloseq::sample_data(azm1218pfg)$visit)
+dispr1218B
+
+plot(dispr1218B, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr1218B, main = "", xlab = "")
+permutest(dispr1218B, pairwise = TRUE)
+```
+
+Permanova results is significant and the dispersion between visits is similar just like Aitchison's result
+
+
+
+#Baseline and 72 weeks
+
+#------------AZM at Baseline and 72 weeks--Aitchison distance--------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix018 <- phyloseq::distance(azm018pfg_CLR, method = "euclidean") 
+#ADONIS test
+vegan::adonis2(clr_dist_matrix018 ~ phyloseq::sample_data(azm018pfg_CLR)$visit,permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr018 <- vegan::betadisper(clr_dist_matrix018, phyloseq::sample_data(azm018pfg_CLR)$visit)
+dispr018
+
+plot(dispr018, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr018, main = "", xlab = "")
+permutest(dispr018, pairwise = TRUE)
+```
+Neither PERMANOVA nor dispersion test is significant. Agrees with PairwiseAdonis results above.
+
+#-------------AZM at Baseline and 72 weeks-Bray-Curtis distance--------------
+```{r}
+set.seed(123)
+bray_dist_matrix018 <- phyloseq::distance(azm018pfg, method = "bray") 
+#ADONIS test
+vegan::adonis2(bray_dist_matrix018 ~ phyloseq::sample_data(azm018pfg)$visit, permutations = 1000)
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr018B <- vegan::betadisper(bray_dist_matrix018, phyloseq::sample_data(azm018pfg)$visit)
+dispr018B
+
+plot(dispr018B, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr018B, main = "", xlab = "")
+permutest(dispr018B, pairwise = TRUE)
+```
+
+The two visit are different in beta diversity but dispersion is similar between them hence not a confounder. It suggest that the difference in beta diversity is due to location effects. This is contrary to the Aitchison results above where Permonva is not significant. It is also contrary to the PairwiseAdonis results where samples from Baseline and 72 weeks were not different in beta diversity.
+
+
+
+
+#------------------Placebo only-----------------------------------
+
+
+#Placebo at all visits Aitchison distance
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrixPlacebo <- phyloseq::distance(Placebo_CLRfg, method = "euclidean") 
+
+#------------ADONIS TEST -trial arm only------------------
+p4 <- vegan::adonis2(clr_dist_matrixPlacebo ~ phyloseq::sample_data(Placebo_CLRfg)$visit)
+p4
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(clr_dist_matrixPlacebo ~ sample_data(Placebo_CLRfg)$visit+
+          sample_data(Placebo_CLRfg)$sex+
+          sample_data(Placebo_CLRfg)$site+
+          #sample_data(Placebo_CLRfg)$colmonthgp_mal2+
+          factor(sample_data(Placebo_CLRfg)$f24mrcscore_baseline)+
+          sample_data(Placebo_CLRfg)$f14adm_baseline+
+          sample_data(Placebo_CLRfg)$agey+
+          sample_data(Placebo_CLRfg)$cd4enrl_baseline+
+          sample_data(Placebo_CLRfg)$artdrug1stline_baseline+
+          sample_data(Placebo_CLRfg)$templateDNA_16SqPCR_copies+
+          sample_data(Placebo_CLRfg)$adherence+
+          sample_data(Placebo_CLRfg)$FEV1_baseline.1+
+          sample_data(Placebo_CLRfg)$abnrr_baseline,
+        permutations = 1000)
+
+#Dispersion test and plot
+dispr_Placebo <- vegan::betadisper(clr_dist_matrixPlacebo, phyloseq::sample_data(Placebo_CLRfg)$visit)
+dispr_Placebo
+
+plot(dispr_Placebo, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr_Placebo, main = "", xlab = "")
+permutest(dispr_Placebo, pairwise = TRUE)
+
+```
+According to the Permova test, the samples from the three visits are not different in composition or profiles. However, the samples from baseline have higher dispersion from the median compared to Week 48 and 72. Week 48 and 72 have similar dispersion around the centroid. 
+
+```{r}
+clr_dist_matrixPlacebo <- phyloseq::distance(Placebo_CLRfg, method = "euclidean") 
+dat1 <- data.frame(sample_data(Placebo_CLRfg))
+
+#------------Pairwise Adonis- visit only-------------------
+pairwise.adonis2(clr_dist_matrixPlacebo ~ visit, data =dat1, nperm = 10000 )
+
+#------Adjusted Pairwise Adonis----------------------------
+pairwise.adonis2(clr_dist_matrixPlacebo ~ visit+
+                   sex+
+                   site+
+                   #colmonthgp_mal2+#has one NA
+                   factor(f24mrcscore_baseline)+
+                   f14adm_baseline+agey+
+                   cd4enrl_baseline+
+                   artdrug1stline_baseline+
+                   templateDNA_16SqPCR_copies+
+                   adherence+
+                   FEV1_baseline.1+
+                   abnrr_baseline, data =dat1, nperm = 1000 )
+
+```
+
+#Placebo at all visits Bray-Curtis distance
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+bray_dist_matrixPlacebo <- phyloseq::distance(Placebofg, method = "bray") 
+
+#------------ADONIS TEST - visit only------------------
+p5 <- vegan::adonis2(bray_dist_matrixPlacebo ~ phyloseq::sample_data(Placebofg)$visit)
+p5
+
+#------Adjusted ADONIS test -------------
+set.seed(123)
+adonis2(bray_dist_matrixPlacebo ~ sample_data(Placebofg)$visit+
+          sample_data(Placebofg)$sex+
+          sample_data(Placebofg)$site+
+          #sample_data(Placebofg)$colmonthgp_mal2+
+          factor(sample_data(Placebofg)$f24mrcscore_baseline)+
+          sample_data(Placebofg)$f14adm_baseline+
+          sample_data(Placebofg)$agey+
+          sample_data(Placebofg)$cd4enrl_baseline+
+          sample_data(Placebofg)$artdrug1stline_baseline+
+          sample_data(Placebofg)$templateDNA_16SqPCR_copies+
+          sample_data(Placebofg)$adherence+
+          sample_data(Placebofg)$FEV1_baseline.1+
+          sample_data(Placebofg)$abnrr_baseline,
+        permutations = 1000)
+
+
+#Dispersion test and plot
+dispr_Placebob <- vegan::betadisper(bray_dist_matrixPlacebo, phyloseq::sample_data(Placebofg)$visit)
+dispr_Placebob
+
+plot(dispr_Placebob, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr_Placebob, main = "", xlab = "")
+permutest(dispr_Placebob, pairwise = TRUE)
+
+```
+
+The permanova and dispersion results are not significant.
+
+#PairwiseAdonis - Placebo all visits
+```{r}
+bray_dist_matrixPlacebo <- phyloseq::distance(Placebofg, method = "bray") 
+dat2 <- data.frame(sample_data(Placebofg))
+
+#------------ADONIS TEST -visit only------------------
+pairwise.adonis2(bray_dist_matrixPlacebo ~ visit, data =dat2, nperm = 10000 )
+
+
+#------Adjusted Pairwise Adonis----------------------------
+pairwise.adonis2(bray_dist_matrixPlacebo ~ visit+
+                   sex+
+                   site+
+                   #colmonthgp_mal2+
+                   factor(f24mrcscore_baseline)+
+                   f14adm_baseline+agey+
+                   cd4enrl_baseline+
+                   artdrug1stline_baseline+
+                   templateDNA_16SqPCR_copies+
+                   adherence+
+                   FEV1_baseline.1+
+                   abnrr_baseline, data =dat2, nperm = 1000 )
+```
+
+Pairwise test based on stratified data conducted to validate Pairwise Adonis findings. However, adjustments for covariates was not conducted for each individual interval.
+
+
+#-----Pairwise PERMANOVA test for Placebo arm------------------
+#Placebo Baseline and 48 weeks
+
+#-----------Placebo Baseline and 48 weeks- Aitchison distance----------------------------------
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix012p <- phyloseq::distance(Placebo012pfg_CLR, method = "euclidean") 
+#ADONIS test
+vegan::adonis2(clr_dist_matrix012p ~ phyloseq::sample_data(Placebo012pfg_CLR)$visit, permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr012p <- vegan::betadisper(clr_dist_matrix012p, phyloseq::sample_data(Placebo012pfg_CLR)$visit)
+dispr012p
+
+plot(dispr012p, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr012p, main = "", xlab = "")
+permutest(dispr012p, pairwise = TRUE)
+```
+Permanova result is NOT significant but dispersion is. Agrees with previous anlaysis of all Placebo data.  
+
+
+#---------------Placebo Baseline and 48 weeks-Bray-Curtis distance----------------------
+```{r}
+set.seed(123)
+bray_dist_matrix012p <- phyloseq::distance(Placebo012pfg, method = "bray") 
+#ADONIS test
+vegan::adonis(bray_dist_matrix012p ~ phyloseq::sample_data(Placebo012pfg)$visit, permutations = 1000)
+
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr012Bp <- vegan::betadisper(clr_dist_matrix012p, phyloseq::sample_data(Placebo012pfg)$visit)
+dispr012Bp
+
+plot(dispr012Bp, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr012Bp, main = "", xlab = "")
+permutest(dispr012Bp, pairwise = TRUE)
+```
+Permanova result is NOT significant but dispersion is. Agrees with previous anlaysis of all Placebo data.  
+
+
+#Placebo 48 weeks and 72 weeks
+
+#-----------Placebo 48 weeks and 72 weeks- Aitchison distance----------------------------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix1218p <- phyloseq::distance(Placebo1218pfg_CLR, method = "euclidean") 
+#ADONIS test
+vegan::adonis2(clr_dist_matrix1218p ~ phyloseq::sample_data(Placebo1218pfg_CLR)$visit,permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr1218p <- vegan::betadisper(clr_dist_matrix1218p, phyloseq::sample_data(Placebo1218pfg_CLR)$visit)
+dispr1218p
+#Placebo1218pfg_CLR
+
+plot(dispr1218p, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr1218p, main = "", xlab = "")
+permutest(dispr1218p, pairwise = TRUE)
+```
+Permanova result is NOT significant and there dispersion between visits is similar. Agrees with previous analysis of all Placebo data that week 48 and 72 weeks dispersion did not differ. It is the Baseline samples that are more disperse.
+
+#---------------Placebo 48 weeks and 72 weeks-Bray-Curtis distance----------------------
+
+```{r}
+set.seed(123)
+bray_dist_matrix1218p <- phyloseq::distance(Placebo1218pfg, method = "bray") 
+#ADONIS test
+vegan::adonis2(bray_dist_matrix1218p ~ phyloseq::sample_data(Placebo1218pfg)$visit,permutations = 1000)
+
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr1218Bp <- vegan::betadisper(bray_dist_matrix1218p, phyloseq::sample_data(Placebo1218pfg)$visit)
+dispr1218Bp
+
+plot(dispr1218Bp, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr1218Bp, main = "", xlab = "")
+permutest(dispr1218Bp, pairwise = TRUE)
+```
+
+Permanova result is NOT significant and there dispersion between visits is similar. Agrees with previous analysis of all Placebo data and Aitchison results above that week 48 and 72 weeks dispersion did not differ. Its the Baseline thats the issue.
+
+
+
+#Placebo Baseline and 72 weeks
+
+#-----------Placebo Baseline and 72 weeks- Aitchison distance----------------------------------
+
+```{r}
+set.seed(123)
+#Generate distance matrix
+clr_dist_matrix018p <- phyloseq::distance(Placebo018pfg_CLR, method = "euclidean") 
+#ADONIS test
+vegan::adonis2(clr_dist_matrix018p ~ phyloseq::sample_data(Placebo018pfg_CLR)$visit,permutations = 1000)
+
+#Assessing dispersion - Aitchison distance
+#Dispersion test and plot
+dispr018p <- vegan::betadisper(clr_dist_matrix018p, phyloseq::sample_data(Placebo018pfg_CLR)$visit)
+dispr018p
+
+plot(dispr018p, main = "Ordination Centroids and Dispersion Labeled: Aitchison Distance", sub = "")
+
+boxplot(dispr018p, main = "", xlab = "")
+permutest(dispr018p, pairwise = TRUE)
+```
+Neither PERMANOVA nor dispersion test is significant
+
+#---------------Placebo Baseline and 72 weeks-Bray-Curtis distance----------------------
+
+```{r}
+set.seed(123)
+bray_dist_matrix018p <- phyloseq::distance(Placebo018pfg, method = "bray") 
+#ADONIS test
+vegan::adonis2(bray_dist_matrix018p ~ phyloseq::sample_data(Placebo018pfg)$visit, permutations = 1000)
+#Assessing dispersion - Bray-Curtis distance
+#Dispersion test and plot
+dispr018Bp <- vegan::betadisper(bray_dist_matrix018p, phyloseq::sample_data(Placebo018pfg)$visit)
+dispr018Bp
+
+plot(dispr018Bp, main = "Ordination Centroids and Dispersion Labeled: Bray-Curtis Distance", sub = "")
+
+boxplot(dispr018Bp, main = "", xlab = "")
+permutest(dispr018Bp, pairwise = TRUE)
+```
+Neither PERMANOVA nor dispersion test is significant
+
