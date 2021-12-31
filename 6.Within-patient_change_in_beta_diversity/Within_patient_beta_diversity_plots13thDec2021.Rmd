@@ -1,0 +1,139 @@
+---
+title: "Within_participant beta diversity distance plots"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+
+```{r}
+# Libraries
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(ggpubr)
+
+
+```
+
+
+
+```{r}
+my16stheme <- theme_bw()+ 
+  theme(plot.title = element_text(family ="Helvetica", face = "bold", size = (25)), 
+        panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        strip.text= element_text(size=20, family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",family ="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (18) ), 
+        axis.title = element_text(family = "Helvetica", face = "bold", size = (20), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)))
+```
+
+
+
+#Within-participant change in Aitchison's distance
+```{r}
+datE<-read.csv("data/beta_FVC_FEV_euclidean_CLR.csv", row.names = 1,stringsAsFactors=TRUE)
+
+```
+
+
+
+
+```{r}
+datE2<-datE%>%
+  mutate(visit=recode(visit,"T1 vs T2"="Baseline vs Week 48" ))
+datE2<-datE2%>%
+  mutate(visit=recode(visit,"T2 vs T3"="Week 48 vs Week 72" ))
+datE2<-datE2%>%
+  mutate(visit=recode(visit,"T1 vs T3"="Baseline vs Week 72" ))
+str(datE2)
+summary(datE2)
+```
+
+
+```{r}
+
+ba1<-ggplot(datE2, aes( x = trial_arm, y = euclidean, colour=trial_arm)) + 
+  geom_violin(aes(fill=trial_arm,colour=NULL))+geom_boxplot(aes(fill=trial_arm, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 80))+
+  scale_fill_manual(values=c("#A087BC", "#FFF468"))+
+  facet_wrap(~visit)+
+  labs( x=NULL,
+       y="Aitchison distance")+
+  my16stheme+
+  stat_compare_means(method = "wilcox.test", vjust=-2, size=6.5)+
+  #stat_pvalue_manual(pvla0, label = "label",size = 7, tip.length = 0)+
+  theme(legend.position = "None")
+  #scale_fill_manual(values=c("#F8766D", "#00BFC4", "white"))
+  #scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba1
+
+
+```
+
+
+#Within-participant change in Bray-Curtis distance on relative abundances
+```{r}
+datR<-read.csv("data/beta_FVC_FEV_relative_abundance_braycurtis.csv", row.names = 1,stringsAsFactors=TRUE)
+```
+
+```{r}
+datR2<-datR%>%
+  mutate(visit=recode(visit,"T1 vs T2"="Baseline vs Week 48" ))
+datR2<-datR2%>%
+  mutate(visit=recode(visit,"T2 vs T3"="Week 48 vs Week 72" ))
+datR2<-datR2%>%
+  mutate(visit=recode(visit,"T1 vs T3"="Baseline vs Week 72" ))
+str(datR2)
+summary(datR2)
+```
+
+
+```{r}
+ba3<-ggplot(datR2, aes( x = trial_arm, y = braycurtis, colour=trial_arm)) + 
+  geom_violin(aes(fill=trial_arm,colour=NULL))+geom_boxplot(aes(fill=trial_arm, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.2))+
+  scale_fill_manual(values=c("#A087BC", "#FFF468"))+
+  facet_wrap(~visit)+
+  labs( x=NULL,
+       y="Bray-Curtis distance")+
+  my16stheme+
+  stat_compare_means(method = "wilcox.test", vjust=-2.5, size=6.5)+
+  #stat_pvalue_manual(pvla0, label = "label",size = 7, tip.length = 0)+
+  theme(legend.position = "None")
+  #scale_fill_manual(values=c("#F8766D", "#00BFC4", "white"))
+  #scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ba3
+
+```
+
+
+
+
+Combine Bray-curtis on relative abundances and Euclidean distance on CLR transformed
+```{r}
+library(cowplot)
+ap<-cowplot::plot_grid(ba3,ba1, nrow = 2, ncol = 1, scale = .75, labels = c("A) Bray-Curtis distance", "B) Aitchison distance"), vjust =2.8,  label_size = 21, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+ap
+ggsave("Aithision_braycurtis_relative_abundanceViolinbox13thDec.pdf", ap,  width = 40, height = 40, units = "cm")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

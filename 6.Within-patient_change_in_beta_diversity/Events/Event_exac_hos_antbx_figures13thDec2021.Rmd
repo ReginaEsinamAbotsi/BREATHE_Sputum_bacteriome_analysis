@@ -1,0 +1,123 @@
+---
+title: "Within-participant change in beta diversity_Events"
+output: html_notebook
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa.
+---
+
+
+```{r}
+# Libraries
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(ggpubr)
+library(cowplot)
+
+```
+
+
+```{r}
+d2<-read.csv("./data/Placebo_braycurtis_any3_reasons.1_clr.csv", stringsAsFactors=TRUE)
+colnames(d2)
+str(d2)
+```
+
+```{r}
+d22<-d2%>%
+  mutate(visit=recode(visit,"T1 vs T2"="Baseline vs Week 48" ))
+d22<-d22%>%
+  mutate(visit=recode(visit,"T2 vs T3"="Week 48 vs Week 72" ))
+d22<-d22%>%
+  mutate(visit=recode(visit,"T1 vs T3"="Baseline vs Week 72" ))
+str(d22)
+summary(d22)
+```
+
+
+```{r}
+my16stheme <- theme_bw()+ 
+  theme(plot.title = element_text(family ="Helvetica", face = "bold", size = (25)), 
+        panel.background = element_blank(),
+        panel.border = element_rect(fill=NA,color = "black", size = 1),
+        panel.spacing= unit(0.7,"cm"),
+        strip.text= element_text(size=20, family ="Helvetica", face="bold"),
+        legend.title = element_text(colour = "black",  face = "bold",family ="Helvetica",size = (20)), 
+        legend.text = element_text(face = "bold", colour="black",family = "Helvetica",size = (18) ), 
+        axis.title = element_text(family = "Helvetica", face = "bold", size = (20), colour = "black"),
+        axis.text = element_text(family = "Helvetica",face = "bold", colour = "black", size = (18)))
+```
+
+
+```{r}
+str(d22)
+```
+
+
+```{r}
+ta0<-ggplot(d22, aes( x = any3_reasons.1, y = braycurtis, colour=any3_reasons.1)) + 
+  geom_violin(aes(fill=any3_reasons.1,colour=NULL))+geom_boxplot(aes(fill=any3_reasons.1, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.0))+
+  facet_wrap(~visit)+
+  labs( x="Any event during intervention",
+       y="Bray-Curtis distance")+
+  my16stheme+
+  stat_compare_means(method = "wilcox.test", vjust=-1.2,size=6.5)+
+  #stat_pvalue_manual(pvla0, label = "label",size = 7, tip.length = 0)+
+  theme(legend.position = "None")+
+  scale_fill_manual(values=c( "#FFD579", "#AF9354"))
+  #scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ta0
+
+
+```
+
+
+
+
+```{r}
+d3<-read.csv("./data/AZM_braycurtis_any3_reasons.1_clr.csv",stringsAsFactors=TRUE)
+colnames(d3)
+str(d3)
+```
+
+
+```{r}
+d32<-d3%>%
+  mutate(visit=recode(visit,"T1 vs T2"="Baseline vs Week 48" ))
+d32<-d32%>%
+  mutate(visit=recode(visit,"T2 vs T3"="Week 48 vs Week 72" ))
+d32<-d32%>%
+  mutate(visit=recode(visit,"T1 vs T3"="Baseline vs Week 72" ))
+str(d32)
+summary(d32)
+```
+
+
+```{r}
+ta1<-ggplot(d32, aes( x = any3_reasons.1, y = braycurtis, colour=any3_reasons.1)) + 
+  geom_violin(aes(fill=any3_reasons.1,colour=NULL))+geom_boxplot(aes(fill=any3_reasons.1, colour=NULL), width=.1, fill="white", outlier.colour = "black")+coord_cartesian(ylim = c(0, 1.0))+
+  facet_wrap(~visit)+
+  labs( x="Any event during intervention",
+       y="Bray-Curtis distance")+
+  my16stheme+
+  stat_compare_means(method = "wilcox.test", vjust=-2.5, size=6.5)+
+  #stat_pvalue_manual(pvla0, label = "label",size = 7, tip.length = 0)+
+  theme(legend.position = "None")+
+  scale_fill_manual(values=c( "#D883FF", "#9437FF"))#"#D49B7E" "#00539CFF", "#EEA47FFF"
+  #scale_x_discrete(labels=c("AZM", "Placebo", "AZM & Placebo"))
+ta1
+
+```
+
+
+
+
+
+```{r}
+library(cowplot)
+dfg<-cowplot::plot_grid(ta1,ta0, nrow = 2, ncol = 1, scale = .75, labels = c("A) AZM arm only", "B) Placebo arm only"),  vjust = 2.9, label_size = 21, label_fontfamily = "Helvetica", label_fontface = "bold", label_colour = "dark blue")
+dfg
+
+ggsave("AZM_Placebo_events_within-patientsBC_CLR13thDec2021.pdf", dfg,  width = 45, height = 40, units = "cm")
+
+```
+
