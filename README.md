@@ -1,19 +1,20 @@
 # BREATHE_Sputum_bacteriome_analysis
 Details all analysis related to the BREATHE Sputum bacteriome analysis
 
-This github repository houses R notebooks of codes used in the manuscript Abotsi RE. The impact of long-term azithromycin treatment on the sputum bacteriome of African children with HIV-associated chronic lung disease: an analysis from the double-blind, placebo-controlled BREATHE trial Microbiome .... https://doi....
+This github repository houses R notebooks of codes used in the manuscript Abotsi RE et al. "Sputum bacterial load and bacterial composition correlate with lung function and are altered by long term azithromycin treatment in children with HIV-associated chronic lung disease" published in Microbiome 2023.
+https://doi....
 
 
 The following README gives an overview of the overall structure of the repository, and important notes on how to run the scripts.
 
 # Directory tree for repository
-BREATHE_Sputum_bacteriome_published_2021
+BREATHE_Sputum_bacteriome_published_2023
 
 
 
       1.Microbiome_published_material -- contains manuscript (pdf) and supplementary material (pdf, xlsx) published in BMC Microbiome
 
-      2.Preprocessing_QC_generating_phyloseq -- contains scripts aused for sequences processing to generating first phyloseq object using TADA - Targeted Amplicon Diversity Analysis using DADA2, implemented in Nextflow found here https://github.com/h3abionet/TADA. The output from the pipeline is also included.
+      2.Preprocessing_QC_generating_phyloseq -- contains scripts used for sequence processing to generating first phyloseq object using TADA - Targeted Amplicon Diversity Analysis using DADA2, implemented in Nextflow found here https://github.com/h3abionet/TADA. The output from the pipeline is also included.
 
       3.Decontamination_steps -- houses R scripts used to check extraction efficiency,reproducibility between and within run, in silico decontamination etc 
 
@@ -65,7 +66,7 @@ BREATHE_Sputum_bacteriome_published_2021
           
           |-- Change_genus_abun_Lung_function -- contains scripts used to run linear regression on within-participant change in the relative                      abundances of selected genera and within-participant change in lung function metrics- FEV1z and FVCZ 
 
-          |--  Genus_association_analysis -- contains scripts used to run linear mixed effect models on the relative abundances of selected                       genera and clinical and socio-demographic factors
+          |--  Genus_association_analysis -- contains scripts used to run linear mixed effect models on the relative abundances of selected                       genera and clinical and socio-demographic factors using MaAsLin2
           
           |-- Shannon_diversity_lme -- contains scripts used to run linear mixed effect models on Shannon diversity indices and clinical and                      socio-demographic factors
           
