@@ -1,0 +1,232 @@
+2022-01-13 05:08:51 INFO::Writing function arguments to log file
+2022-01-13 05:08:51 DEBUG::Function arguments
+2022-01-13 05:08:51 DEBUG::Output folder: ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly
+2022-01-13 05:08:51 DEBUG::Min Abundance: 0.000000
+2022-01-13 05:08:51 DEBUG::Min Prevalence: 0.000000
+2022-01-13 05:08:51 DEBUG::Normalization: TSS
+2022-01-13 05:08:51 DEBUG::Transform: LOG
+2022-01-13 05:08:51 DEBUG::Analysis method: LM
+2022-01-13 05:08:51 DEBUG::Max significance: 0.050000
+2022-01-13 05:08:51 DEBUG::Random effects: studyno
+2022-01-13 05:08:51 DEBUG::Fixed effects: visit,trial_arm,fev1z,visit12m,visit18m,visit12m_azm,visit18m_azm
+2022-01-13 05:08:51 DEBUG::Correction method: BH
+2022-01-13 05:08:51 DEBUG::Standardize: FALSE
+2022-01-13 05:08:51 DEBUG::Cores: 1
+2022-01-13 05:08:51 INFO::Verifying options selected are valid
+2022-01-13 05:08:51 INFO::Determining format of input files
+2022-01-13 05:08:51 INFO::Input format is data samples as columns and metadata samples as rows
+2022-01-13 05:08:51 DEBUG::Transformed data so samples are rows
+2022-01-13 05:08:51 DEBUG::A total of 875 samples were found in both the data and metadata
+2022-01-13 05:08:51 DEBUG::Reordering data/metadata to use same sample ordering
+2022-01-13 05:08:51 INFO::Formula for random effects: expr ~ (1 | studyno)
+2022-01-13 05:08:51 INFO::Formula for fixed effects: expr ~  visit + trial_arm + fev1z + visit12m + visit18m + visit12m_azm + visit18m_azm
+2022-01-13 05:08:51 INFO::Filter data based on min abundance and min prevalence
+2022-01-13 05:08:51 INFO::Total samples in data: 875
+2022-01-13 05:08:51 INFO::Min samples required with min abundance for a feature not to be filtered: 0.000000
+2022-01-13 05:08:51 INFO::Total filtered features: 0
+2022-01-13 05:08:51 INFO::Filtered feature names from abundance and prevalence filtering:
+2022-01-13 05:08:51 INFO::Running selected normalization method: TSS
+2022-01-13 05:08:51 INFO::Total filtered features with variance filtering: 0
+2022-01-13 05:08:51 INFO::Filtered feature names from variance filtering:
+2022-01-13 05:08:51 INFO::Bypass z-score application to metadata
+2022-01-13 05:08:51 INFO::Running selected transform method: LOG
+2022-01-13 05:08:51 INFO::Running selected analysis method: LM
+2022-01-13 05:08:51 INFO::Fitting model to feature number 1, Neisseria
+2022-01-13 05:08:52 INFO::Fitting model to feature number 2, Haemophilus
+2022-01-13 05:08:52 INFO::Fitting model to feature number 3, Streptococcus
+2022-01-13 05:08:52 INFO::Fitting model to feature number 4, Prevotella
+2022-01-13 05:08:52 INFO::Fitting model to feature number 5, Moraxella
+2022-01-13 05:08:52 INFO::Fitting model to feature number 6, Veillonella
+2022-01-13 05:08:52 INFO::Fitting model to feature number 7, Fusobacterium
+2022-01-13 05:08:53 INFO::Fitting model to feature number 8, Porphyromonas
+2022-01-13 05:08:53 INFO::Fitting model to feature number 9, Lautropia
+2022-01-13 05:08:53 INFO::Fitting model to feature number 10, Actinobacillus
+2022-01-13 05:08:53 INFO::Fitting model to feature number 11, Gemella
+2022-01-13 05:08:53 INFO::Fitting model to feature number 12, Alloprevotella
+2022-01-13 05:08:53 INFO::Fitting model to feature number 13, Leptotrichia
+2022-01-13 05:08:53 INFO::Fitting model to feature number 14, Rothia
+2022-01-13 05:08:54 INFO::Fitting model to feature number 15, Aggregatibacter
+2022-01-13 05:08:54 INFO::Fitting model to feature number 16, Granulicatella
+2022-01-13 05:08:54 INFO::Fitting model to feature number 17, Escherichia.Shigella
+2022-01-13 05:08:54 INFO::Fitting model to feature number 18, ASV_52
+2022-01-13 05:08:54 INFO::Fitting model to feature number 19, Actinomyces
+2022-01-13 05:08:54 INFO::Fitting model to feature number 20, Pseudomonas
+2022-01-13 05:08:54 INFO::Fitting model to feature number 21, ASV_62
+2022-01-13 05:08:54 INFO::Fitting model to feature number 22, Campylobacter
+2022-01-13 05:08:55 INFO::Fitting model to feature number 23, Bergeyella
+2022-01-13 05:08:55 INFO::Fitting model to feature number 24, ASV_68
+2022-01-13 05:08:55 INFO::Fitting model to feature number 25, ASV_77
+2022-01-13 05:08:55 INFO::Fitting model to feature number 26, Dolosigranulum
+2022-01-13 05:08:55 INFO::Fitting model to feature number 27, Corynebacterium
+2022-01-13 05:08:55 INFO::Fitting model to feature number 28, Streptobacillus
+2022-01-13 05:08:55 INFO::Fitting model to feature number 29, Oribacterium
+2022-01-13 05:08:55 INFO::Fitting model to feature number 30, ASV_112
+2022-01-13 05:08:56 INFO::Fitting model to feature number 31, Stomatobaculum
+2022-01-13 05:08:56 INFO::Fitting model to feature number 32, Lachnoanaerobaculum
+2022-01-13 05:08:56 INFO::Fitting model to feature number 33, ASV_120
+2022-01-13 05:08:56 INFO::Fitting model to feature number 34, ASV_126
+2022-01-13 05:08:56 INFO::Fitting model to feature number 35, Mannheimia
+2022-01-13 05:08:56 INFO::Fitting model to feature number 36, TM7x
+2022-01-13 05:08:56 INFO::Fitting model to feature number 37, Tropheryma
+2022-01-13 05:08:57 INFO::Fitting model to feature number 38, Solobacterium
+2022-01-13 05:08:57 INFO::Fitting model to feature number 39, Peptostreptococcus
+2022-01-13 05:08:57 INFO::Fitting model to feature number 40, Abiotrophia
+2022-01-13 05:08:57 INFO::Fitting model to feature number 41, Oceanivirga
+2022-01-13 05:08:57 INFO::Fitting model to feature number 42, ASV_157
+2022-01-13 05:08:58 INFO::Fitting model to feature number 43, ASV_163
+2022-01-13 05:08:58 INFO::Fitting model to feature number 44, Bordetella
+2022-01-13 05:08:58 INFO::Fitting model to feature number 45, ASV_180
+2022-01-13 05:08:59 INFO::Fitting model to feature number 46, ASV_182
+2022-01-13 05:08:59 INFO::Fitting model to feature number 47, ASV_187
+2022-01-13 05:08:59 INFO::Fitting model to feature number 48, Treponema
+2022-01-13 05:08:59 INFO::Fitting model to feature number 49, Eikenella
+2022-01-13 05:08:59 INFO::Fitting model to feature number 50, ASV_203
+2022-01-13 05:08:59 INFO::Fitting model to feature number 51, ASV_205
+2022-01-13 05:08:59 INFO::Fitting model to feature number 52, ASV_209
+2022-01-13 05:08:59 INFO::Fitting model to feature number 53, F0058
+2022-01-13 05:09:00 INFO::Fitting model to feature number 54, ASV_214
+2022-01-13 05:09:00 INFO::Fitting model to feature number 55, ASV_216
+2022-01-13 05:09:00 INFO::Fitting model to feature number 56, Conchiformibius
+2022-01-13 05:09:00 INFO::Fitting model to feature number 57, Hydrogenophaga
+2022-01-13 05:09:00 INFO::Fitting model to feature number 58, Catonella
+2022-01-13 05:09:00 INFO::Fitting model to feature number 59, Candidatus_Saccharimonas
+2022-01-13 05:09:00 INFO::Fitting model to feature number 60, ASV_239
+2022-01-13 05:09:00 INFO::Fitting model to feature number 61, ASV_242
+2022-01-13 05:09:00 INFO::Fitting model to feature number 62, Mogibacterium
+2022-01-13 05:09:01 INFO::Fitting model to feature number 63, Atopobium
+2022-01-13 05:09:01 INFO::Fitting model to feature number 64, Selenomonas
+2022-01-13 05:09:01 INFO::Fitting model to feature number 65, ASV_260
+2022-01-13 05:09:01 INFO::Fitting model to feature number 66, Parvimonas
+2022-01-13 05:09:01 INFO::Fitting model to feature number 67, Cardiobacterium
+2022-01-13 05:09:01 INFO::Fitting model to feature number 68, ASV_280
+2022-01-13 05:09:01 INFO::Fitting model to feature number 69, ASV_283
+2022-01-13 05:09:01 INFO::Fitting model to feature number 70, Comamonas
+2022-01-13 05:09:02 INFO::Fitting model to feature number 71, Capnocytophaga
+2022-01-13 05:09:02 INFO::Fitting model to feature number 72, ASV_286
+2022-01-13 05:09:02 INFO::Fitting model to feature number 73, Kingella
+2022-01-13 05:09:02 INFO::Fitting model to feature number 74, Butyrivibrio
+2022-01-13 05:09:02 INFO::Fitting model to feature number 75, ASV_307
+2022-01-13 05:09:02 INFO::Fitting model to feature number 76, Mycoplasma
+2022-01-13 05:09:02 INFO::Fitting model to feature number 77, Tannerella
+2022-01-13 05:09:02 INFO::Fitting model to feature number 78, ASV_329
+2022-01-13 05:09:03 INFO::Fitting model to feature number 79, ASV_331
+2022-01-13 05:09:03 INFO::Fitting model to feature number 80, Filifactor
+2022-01-13 05:09:03 INFO::Fitting model to feature number 81, Dialister
+2022-01-13 05:09:03 INFO::Fitting model to feature number 82, ASV_339
+2022-01-13 05:09:03 INFO::Fitting model to feature number 83, Peptococcus
+2022-01-13 05:09:03 INFO::Fitting model to feature number 84, Staphylococcus
+2022-01-13 05:09:03 INFO::Fitting model to feature number 85, Hyphomicrobium
+2022-01-13 05:09:03 INFO::Fitting model to feature number 86, ASV_383
+2022-01-13 05:09:03 INFO::Fitting model to feature number 87, Psychrobacter
+2022-01-13 05:09:04 INFO::Fitting model to feature number 88, ASV_409
+2022-01-13 05:09:04 INFO::Fitting model to feature number 89, F0332
+2022-01-13 05:09:04 INFO::Fitting model to feature number 90, ASV_422
+2022-01-13 05:09:04 INFO::Fitting model to feature number 91, ASV_428
+2022-01-13 05:09:04 INFO::Fitting model to feature number 92, Peptoanaerobacter
+2022-01-13 05:09:04 INFO::Fitting model to feature number 93, Lentimicrobium
+2022-01-13 05:09:04 INFO::Fitting model to feature number 94, Delftia
+2022-01-13 05:09:04 INFO::Fitting model to feature number 95, Sphingopyxis
+2022-01-13 05:09:04 INFO::Fitting model to feature number 96, Lactobacillus
+2022-01-13 05:09:04 INFO::Fitting model to feature number 97, ASV_461
+2022-01-13 05:09:05 INFO::Fitting model to feature number 98, ASV_472
+2022-01-13 05:09:05 INFO::Fitting model to feature number 99, ASV_485
+2022-01-13 05:09:05 INFO::Fitting model to feature number 100, Amnipila
+2022-01-13 05:09:05 INFO::Fitting model to feature number 101, Rodentibacter
+2022-01-13 05:09:05 INFO::Fitting model to feature number 102, Bulleidia
+2022-01-13 05:09:05 INFO::Fitting model to feature number 103, Anaeroglobus
+2022-01-13 05:09:05 INFO::Fitting model to feature number 104, Shuttleworthia
+2022-01-13 05:09:05 INFO::Fitting model to feature number 105, ASV_508
+2022-01-13 05:09:05 INFO::Fitting model to feature number 106, Rikenellaceae_RC9_gut_group
+2022-01-13 05:09:06 INFO::Fitting model to feature number 107, ASV_525
+2022-01-13 05:09:06 INFO::Fitting model to feature number 108, Sneathia
+2022-01-13 05:09:06 INFO::Fitting model to feature number 109, Alysiella
+2022-01-13 05:09:06 INFO::Fitting model to feature number 110, ASV_529
+2022-01-13 05:09:06 INFO::Fitting model to feature number 111, ASV_540
+2022-01-13 05:09:06 INFO::Fitting model to feature number 112, Centipeda
+2022-01-13 05:09:06 INFO::Fitting model to feature number 113, ASV_561
+2022-01-13 05:09:06 INFO::Fitting model to feature number 114, ASV_586
+2022-01-13 05:09:06 INFO::Fitting model to feature number 115, Defluviitaleaceae_UCG.011
+2022-01-13 05:09:07 INFO::Fitting model to feature number 116, ASV_591
+2022-01-13 05:09:07 INFO::Fitting model to feature number 117, ASV_596
+2022-01-13 05:09:07 INFO::Fitting model to feature number 118, ASV_613
+2022-01-13 05:09:07 INFO::Fitting model to feature number 119, Johnsonella
+2022-01-13 05:09:07 INFO::Fitting model to feature number 120, ASV_639
+2022-01-13 05:09:07 INFO::Fitting model to feature number 121, ASV_644
+2022-01-13 05:09:07 INFO::Fitting model to feature number 122, ASV_653
+2022-01-13 05:09:07 INFO::Fitting model to feature number 123, ASV_682
+2022-01-13 05:09:07 INFO::Fitting model to feature number 124, ASV_689
+2022-01-13 05:09:08 INFO::Fitting model to feature number 125, Family_XIII_UCG.001
+2022-01-13 05:09:08 INFO::Fitting model to feature number 126, Fretibacterium
+2022-01-13 05:09:08 INFO::Fitting model to feature number 127, ASV_767
+2022-01-13 05:09:08 INFO::Fitting model to feature number 128, ASV_817
+2022-01-13 05:09:08 INFO::Fitting model to feature number 129, ASV_821
+2022-01-13 05:09:08 INFO::Fitting model to feature number 130, ASV_844
+2022-01-13 05:09:08 INFO::Fitting model to feature number 131, ASV_854
+2022-01-13 05:09:09 INFO::Fitting model to feature number 132, ASV_860
+2022-01-13 05:09:09 INFO::Fitting model to feature number 133, ASV_861
+2022-01-13 05:09:09 INFO::Fitting model to feature number 134, ASV_894
+2022-01-13 05:09:09 INFO::Fitting model to feature number 135, ASV_897
+2022-01-13 05:09:09 INFO::Fitting model to feature number 136, Olsenella
+2022-01-13 05:09:09 INFO::Fitting model to feature number 137, Scardovia
+2022-01-13 05:09:09 INFO::Fitting model to feature number 138, Acinetobacter
+2022-01-13 05:09:09 INFO::Fitting model to feature number 139, ASV_934
+2022-01-13 05:09:10 INFO::Fitting model to feature number 140, Prevotellaceae_YAB2003_group
+2022-01-13 05:09:10 INFO::Fitting model to feature number 141, Mobiluncus
+2022-01-13 05:09:10 INFO::Fitting model to feature number 142, ASV_1004
+2022-01-13 05:09:10 INFO::Fitting model to feature number 143, Desulfomicrobium
+2022-01-13 05:09:10 INFO::Fitting model to feature number 144, ASV_1054
+2022-01-13 05:09:10 INFO::Fitting model to feature number 145, ASV_1095
+2022-01-13 05:09:10 INFO::Fitting model to feature number 146, ASV_1121
+2022-01-13 05:09:11 INFO::Fitting model to feature number 147, ASV_1202
+2022-01-13 05:09:11 INFO::Fitting model to feature number 148, ASV_1234
+2022-01-13 05:09:11 INFO::Fitting model to feature number 149, ASV_1258
+2022-01-13 05:09:11 INFO::Fitting model to feature number 150, ASV_1272
+2022-01-13 05:09:11 INFO::Fitting model to feature number 151, ASV_1306
+2022-01-13 05:09:11 INFO::Fitting model to feature number 152, ASV_1325
+2022-01-13 05:09:11 INFO::Fitting model to feature number 153, Pantoea
+2022-01-13 05:09:12 INFO::Fitting model to feature number 154, ASV_1343
+2022-01-13 05:09:12 INFO::Fitting model to feature number 155, ASV_1398
+2022-01-13 05:09:12 INFO::Fitting model to feature number 156, ASV_1415
+2022-01-13 05:09:12 INFO::Fitting model to feature number 157, ASV_1456
+2022-01-13 05:09:12 INFO::Fitting model to feature number 158, Desulfobulbus
+2022-01-13 05:09:12 INFO::Fitting model to feature number 159, ASV_1531
+2022-01-13 05:09:12 INFO::Fitting model to feature number 160, Roseburia
+2022-01-13 05:09:13 INFO::Fitting model to feature number 161, Phocaeicola
+2022-01-13 05:09:13 INFO::Fitting model to feature number 162, Pseudoramibacter
+2022-01-13 05:09:13 INFO::Counting total values for each feature
+2022-01-13 05:09:13 INFO::Writing residuals to file ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly/residuals.rds
+2022-01-13 05:09:13 INFO::Writing all results to file (ordered by increasing q-values): ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly/all_results.tsv
+2022-01-13 05:09:13 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.050000 ) to file (ordered by increasing q-values): ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly/significant_results.tsv
+2022-01-13 05:09:13 INFO::Writing heatmap of significant results to file: ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly/heatmap.pdf
+2022-01-13 05:09:13 INFO::Writing association plots (one for each significant association) to output folder: ./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly
+2022-01-13 05:09:13 INFO::Plotting associations from most to least significant, grouped by metadata
+2022-01-13 05:09:13 INFO::Plotting data for metadata number 1, fev1z
+2022-01-13 05:09:13 INFO::Creating scatter plot for continuous data, fev1z vs Neisseria
+2022-01-13 05:09:14 INFO::Creating scatter plot for continuous data, fev1z vs Veillonella
+2022-01-13 05:09:14 INFO::Creating scatter plot for continuous data, fev1z vs Gemella
+2022-01-13 05:09:14 INFO::Creating scatter plot for continuous data, fev1z vs Prevotella
+2022-01-13 05:09:14 INFO::Creating scatter plot for continuous data, fev1z vs Rothia
+2022-01-13 05:09:15 INFO::Creating scatter plot for continuous data, fev1z vs Granulicatella
+2022-01-13 05:09:15 INFO::Creating scatter plot for continuous data, fev1z vs Streptococcus
+2022-01-13 05:09:15 INFO::Creating scatter plot for continuous data, fev1z vs Fusobacterium
+2022-01-13 05:09:15 INFO::Creating scatter plot for continuous data, fev1z vs Alloprevotella
+2022-01-13 05:09:15 INFO::Creating scatter plot for continuous data, fev1z vs Leptotrichia
+2022-01-13 05:09:16 INFO::Creating scatter plot for continuous data, fev1z vs Actinomyces
+2022-01-13 05:09:16 INFO::Creating scatter plot for continuous data, fev1z vs Campylobacter
+2022-01-13 05:09:16 INFO::Creating scatter plot for continuous data, fev1z vs Stomatobaculum
+2022-01-13 05:09:16 INFO::Creating scatter plot for continuous data, fev1z vs Porphyromonas
+2022-01-13 05:09:16 INFO::Creating scatter plot for continuous data, fev1z vs Lautropia
+2022-01-13 05:09:17 INFO::Creating scatter plot for continuous data, fev1z vs Lachnoanaerobaculum
+2022-01-13 05:09:19 INFO::Plotting data for metadata number 2, visit12m_azm
+2022-01-13 05:09:19 INFO::Creating boxplot for categorical data, visit12m_azm vs Lautropia
+2022-01-13 05:09:19 INFO::Creating boxplot for categorical data, visit12m_azm vs F0058
+2022-01-13 05:09:19 INFO::Creating boxplot for categorical data, visit12m_azm vs Rothia
+2022-01-13 05:09:19 INFO::Creating boxplot for categorical data, visit12m_azm vs Treponema
+2022-01-13 05:09:20 INFO::Creating boxplot for categorical data, visit12m_azm vs Veillonella
+2022-01-13 05:09:20 INFO::Creating boxplot for categorical data, visit12m_azm vs Aggregatibacter
+2022-01-13 05:09:20 INFO::Creating boxplot for categorical data, visit12m_azm vs Moraxella
+2022-01-13 05:09:20 INFO::Creating boxplot for categorical data, visit12m_azm vs Peptoanaerobacter
+2022-01-13 05:09:20 INFO::Creating boxplot for categorical data, visit12m_azm vs Atopobium
+2022-01-13 05:09:21 INFO::Creating boxplot for categorical data, visit12m_azm vs Shuttleworthia
+2022-01-13 05:09:23 INFO::Plotting data for metadata number 3, visit
+2022-01-13 05:09:23 INFO::Creating boxplot for categorical data, visit vs Lachnoanaerobaculum

@@ -1,0 +1,120 @@
+---
+title: "LME analysis using MaasLIn2"
+output: html_notebook
+Date: 12th January, 2022
+Author: Regina Esinam Abotsi, Department of Molecular and Cell Biology, University of Cape Town, South Africa
+---
+
+
+```{r}
+library(Maaslin2); packageVersion("Maaslin2") 
+library(phyloseq)
+```
+
+```{r}
+# Read in phyloseq object
+trial <- readRDS("data/breathe_sputum_phyloseq_trial_13Dec2021.RDS")
+
+#Subsets of only AZM
+
+AZM <-subset_samples(trial, trial_arm=="AZM")#441
+AZM#441
+
+#read in metadata which has the manually generated interaction terms
+cova<-read.csv("data/data_for_regression20thDec2021NAs.csv", stringsAsFactors = TRUE, row.names = 1)
+
+#add new metadata that has the manually created interaction terms to the phyloseq object so that ASVs can be identified by name
+
+trial2<-trial
+sample_data(trial2)<-cova
+trial
+trial2
+```
+
+
+```{r}
+# merge taxa to the Genus rank level
+
+trial2f<-tax_glom(trial2, taxrank = rank_names(trial2)[6])
+taxa_names(trial2f)<-as.character(tax_table(trial2f)[,6])
+OTU.trial2f<-otu_table(trial2f)
+mean(OTU.trial2f==0)
+trial2f
+
+
+
+#Filtering
+trial2
+trial2f
+trial2fg <- filter_taxa(trial2f, function(x) sum(x > 0) > (0.005*length(x)), TRUE)   #removing species not seen > 1/2% of samples
+trial2fg
+```
+
+
+
+
+#FEV1z
+```{r}
+mas1 <- Maaslin2(
+  input_data = data.frame(otu_table(trial2fg)),
+  input_metadata = data.frame(sample_data(trial2fg)),
+  output = "./MaAsLin2TSS_Log_visit_fgFINALFEV1zonly",
+  min_abundance = 0.0,
+  min_prevalence = 0.0,
+  normalization = "TSS",
+  transform = "LOG",
+  analysis_method = "LM",
+  max_significance = 0.05,
+  random_effects ="studyno",
+  fixed_effects = c("visit", "trial_arm", "fev1z","visit12m","visit18m","visit12m_azm", "visit18m_azm" ),
+  correction = "BH",
+  standardize = FALSE,
+  cores = 1,
+  reference=c('trial_arm,Placebo', 'visit,Week 0'))
+```
+
+
+
+#hospitalisation 
+ 
+```{r}
+mas1 <- Maaslin2(
+  input_data = data.frame(otu_table(trial2fg)),
+  input_metadata = data.frame(sample_data(trial2fg)),
+  output = "./MaAsLin2TSS_Log_visit_fgFINALhos_only",
+  min_abundance = 0.0,
+  min_prevalence = 0.0,
+  normalization = "TSS",
+  transform = "LOG",
+  analysis_method = "LM",
+  max_significance = 0.05,
+  random_effects ="studyno",
+  fixed_effects = c("visit", "trial_arm", "hospitalised12m","visit12m","visit18m","visit12m_azm", "visit18m_azm" ),
+  correction = "BH",
+  standardize = FALSE,
+  cores = 1,
+  reference=c('trial_arm,Placebo', 'visit,Week 0'))
+```
+
+
+#acute exarcebation
+
+```{r}
+mas1 <- Maaslin2(
+  input_data = data.frame(otu_table(trial2fg)),
+  input_metadata = data.frame(sample_data(trial2fg)),
+  output = "./MaAsLin2TSS_Log_visit_fgFINALacute_only",
+  min_abundance = 0.0,
+  min_prevalence = 0.0,
+  normalization = "TSS",
+  transform = "LOG",
+  analysis_method = "LM",
+  max_significance = 0.05,
+  random_effects ="studyno",
+  fixed_effects = c("visit", "trial_arm", "acut_exac12m","visit12m","visit18m","visit12m_azm", "visit18m_azm" ),
+  correction = "BH",
+  standardize = FALSE,
+  cores = 1,
+  reference=c('trial_arm,Placebo', 'visit,Week 0'))
+```
+
